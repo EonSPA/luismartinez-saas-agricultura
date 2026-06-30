@@ -14,15 +14,15 @@
   *{box-sizing:border-box}
   body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#16224a 0,var(--bg) 55%);
     color:var(--txt);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
-  header{display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line);
-    background:rgba(10,15,30,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+  header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);
+    background:rgba(10,15,30,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:10;flex-wrap:wrap}
   .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--info));
     display:grid;place-items:center;font-weight:800;color:#06122b}
-  h1{font-size:18px;margin:0;letter-spacing:.2px}
+  h1{font-size:17px;margin:0;letter-spacing:.2px}
   .sub{color:var(--muted);font-size:12px}
   .spacer{flex:1}
   .status-pill{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
-    padding:8px 12px;border-radius:999px;font-size:13px}
+    padding:7px 11px;border-radius:999px;font-size:13px;white-space:nowrap}
   .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px rgba(52,211,153,.18)}
   .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18)}
   .signal{display:flex;align-items:flex-end;gap:2px;height:16px}
@@ -30,12 +30,24 @@
   .signal i.on{background:var(--good)}
   .bat{position:relative;width:34px;height:16px;border:2px solid var(--muted);border-radius:3px}
   .bat:after{content:"";position:absolute;right:-4px;top:4px;width:3px;height:6px;background:var(--muted);border-radius:0 2px 2px 0}
-  .bat span{position:absolute;left:1px;top:1px;bottom:1px;background:var(--good);border-radius:1px}
-  main{padding:24px;max-width:1280px;margin:0 auto}
+  .bat span{position:absolute;left:1px;top:1px;bottom:1px;background:var(--good);border-radius:1px;transition:width .4s}
+  .alarmpill{cursor:pointer}
+  .alarmpill.has{border-color:var(--bad);color:var(--bad);box-shadow:0 0 0 3px rgba(251,113,133,.12)}
+  .alarmpill.has .dot{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18);animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.35}}
+  nav.tabs{display:flex;gap:6px;padding:0 22px;border-bottom:1px solid var(--line);background:rgba(10,15,30,.4);
+    position:sticky;top:67px;z-index:9;flex-wrap:wrap}
+  nav.tabs button{background:none;border:none;color:var(--muted);padding:13px 14px;cursor:pointer;font-size:14px;
+    border-bottom:2px solid transparent;font-weight:500}
+  nav.tabs button.active{color:var(--txt);border-bottom-color:var(--accent)}
+  nav.tabs button:hover{color:var(--txt)}
+  main{padding:20px 22px;max-width:1320px;margin:0 auto}
+  .view{display:none}.view.active{display:block}
   .grid{display:grid;gap:16px}
   .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
   .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
     border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .card.alarm{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad),var(--shadow)}
   .kpi .top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
   .kpi .val{font-size:30px;font-weight:700;margin-top:6px;display:flex;align-items:baseline;gap:6px}
   .kpi .unit{font-size:13px;color:var(--muted);font-weight:500}
@@ -49,7 +61,9 @@
   .card h3{margin:0 0 4px;font-size:14px}
   .card .hint{color:var(--muted);font-size:12px;margin-bottom:10px}
   canvas.chart{width:100%;height:240px;display:block}
+  canvas.chartbig{width:100%;height:340px;display:block}
   .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+  .legend span{cursor:default}
   .legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
   .aqi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%}
   .aqi .ring{position:relative;width:160px;height:160px}
@@ -61,22 +75,42 @@
   th:first-child,td:first-child{text-align:left}
   th{color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--panel)}
   tbody tr:hover{background:rgba(63,167,255,.06)}
-  .tablewrap{max-height:300px;overflow:auto;border-radius:10px}
+  .tablewrap{max-height:340px;overflow:auto;border-radius:10px}
   .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
   .btn{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 14px;border-radius:10px;
     cursor:pointer;font-size:13px;display:inline-flex;gap:7px;align-items:center}
   .btn:hover{border-color:var(--accent)}
   .btn.primary{background:linear-gradient(135deg,var(--accent),var(--info));border:none;color:#06122b;font-weight:600}
-  input.f{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 10px;border-radius:10px;font-size:13px}
+  .btn.danger{border-color:var(--bad);color:var(--bad)}
+  .btn.sm{padding:5px 10px;font-size:12px}
+  .seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:none;border:none;color:var(--muted);padding:7px 12px;cursor:pointer;font-size:13px}
+  .seg button.active{background:rgba(63,167,255,.16);color:var(--txt)}
+  input.f,select.f{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:7px 9px;border-radius:9px;font-size:13px}
+  input.num{width:78px;text-align:right}
   .src{font-size:12px;color:var(--muted)}
   .src b{color:var(--warn)}
   footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
   a{color:var(--accent)}
-  .modal{position:fixed;inset:0;background:rgba(4,8,18,.7);display:none;place-items:center;z-index:20}
+  .modal{position:fixed;inset:0;background:rgba(4,8,18,.7);display:none;place-items:center;z-index:30}
   .modal.open{display:grid}
-  .modal .card{max-width:420px;width:92%}
+  .modal .card{max-width:440px;width:92%}
   .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
   .modal input{width:100%}
+  .stat{display:flex;gap:22px;flex-wrap:wrap;margin:4px 0 14px}
+  .stat div{font-size:13px;color:var(--muted)}
+  .stat b{display:block;font-size:22px;color:var(--txt);font-weight:700}
+  .banner{margin:0 0 16px;border-radius:14px;border:1px solid var(--bad);background:rgba(251,113,133,.08);
+    padding:12px 16px;display:none}
+  .banner.show{display:block}
+  .banner .bt{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--bad);margin-bottom:6px}
+  .banner ul{margin:0;padding-left:18px;font-size:13px}
+  .cfgtable td,.cfgtable th{text-align:center}
+  .cfgtable td:first-child,.cfgtable th:first-child{text-align:left}
+  .lvl{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
+  .lvl.alarm{background:rgba(251,113,133,.16);color:var(--bad)}
+  .lvl.clear{background:rgba(52,211,153,.16);color:var(--good)}
+  .empty{color:var(--muted);font-size:13px;padding:18px;text-align:center}
 </style>
 </head>
 <body>
@@ -87,6 +121,7 @@
     <div class="sub">ESP32-S3 · A76XX/SIM7670 · estación de calidad del aire</div>
   </div>
   <div class="spacer"></div>
+  <div class="status-pill alarmpill" id="alarmPill" title="Alarmas activas"><span class="dot" id="alarmDot" style="background:var(--good)"></span><span id="alarmTxt">Sin alarmas</span></div>
   <div class="status-pill"><span class="dot" id="connDot"></span><span id="connTxt">En línea</span></div>
   <div class="status-pill" title="Señal 4G (AT+CSQ)">
     <span class="signal" id="sig"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
@@ -98,75 +133,165 @@
   </div>
 </header>
 
+<nav class="tabs">
+  <button data-tab="realtime" class="active">📈 Tiempo real</button>
+  <button data-tab="history">🗂️ Históricos</button>
+  <button data-tab="alarms">🔔 Alarmas</button>
+</nav>
+
 <main>
   <div class="toolbar">
     <button class="btn primary" id="playBtn">⏸ Pausar</button>
-    <button class="btn" id="thingBtn">🔗 Conectar ThingSpeak</button>
+    <div class="seg" id="srcSeg">
+      <button data-src="demo" class="active">Demo</button>
+      <button data-src="thingspeak">ThingSpeak</button>
+    </div>
+    <button class="btn" id="notifBtn">🔕 Activar notificaciones</button>
     <span class="src" id="srcLabel">Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s</span>
     <div class="spacer"></div>
     <span class="sub" id="clock"></span>
   </div>
 
-  <!-- KPIs -->
-  <div class="grid kpis" id="kpis"></div>
-
-  <!-- Charts -->
-  <div class="grid row2" style="margin-top:16px">
-    <div class="card">
-      <h3>Tendencia ambiental</h3>
-      <div class="hint">Temperatura (°C) y humedad (% rH) — AHT10</div>
-      <canvas class="chart" id="chartTH"></canvas>
-      <div class="legend">
-        <span><b style="background:#3fa7ff"></b>Temperatura °C</span>
-        <span><b style="background:#34d399"></b>Humedad %rH</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Índice de calidad del aire</h3>
-      <div class="hint">Estimado a partir de eCO2 y TVOC (SGP30)</div>
-      <div class="aqi">
-        <div class="ring"><canvas id="aqiRing" width="320" height="320" style="width:160px;height:160px"></canvas>
-          <div class="num"><b id="aqiVal">—</b><small id="aqiLbl">calculando…</small></div>
-        </div>
-        <div class="badge" id="aqiBadge">—</div>
-      </div>
-    </div>
+  <div class="banner" id="banner">
+    <div class="bt">⚠️ <span id="bannerTitle">Alarmas activas</span></div>
+    <ul id="bannerList"></ul>
   </div>
 
-  <div class="grid row2" style="margin-top:16px">
-    <div class="card">
-      <h3>Gases</h3>
-      <div class="hint">eCO2 (ppm) y TVOC (ppb) — SGP30</div>
-      <canvas class="chart" id="chartGas"></canvas>
-      <div class="legend">
-        <span><b style="background:#a78bfa"></b>eCO2 ppm</span>
-        <span><b style="background:#fbbf24"></b>TVOC ppb</span>
+  <!-- ===================== TIEMPO REAL ===================== -->
+  <section class="view active" id="view-realtime">
+    <div class="grid kpis" id="kpis"></div>
+    <div class="grid row2" style="margin-top:16px">
+      <div class="card">
+        <h3>Tendencia ambiental</h3>
+        <div class="hint">Temperatura (°C) y humedad (% rH) — AHT10</div>
+        <canvas class="chart" id="chartTH"></canvas>
+        <div class="legend">
+          <span><b style="background:#3fa7ff"></b>Temperatura °C</span>
+          <span><b style="background:#34d399"></b>Humedad %rH</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Índice de calidad del aire</h3>
+        <div class="hint">Estimado a partir de eCO₂ y TVOC (SGP30)</div>
+        <div class="aqi">
+          <div class="ring"><canvas id="aqiRing" width="320" height="320" style="width:160px;height:160px"></canvas>
+            <div class="num"><b id="aqiVal">—</b><small id="aqiLbl">calculando…</small></div>
+          </div>
+          <div class="badge" id="aqiBadge">—</div>
+        </div>
       </div>
     </div>
+    <div class="grid row2" style="margin-top:16px">
+      <div class="card">
+        <h3>Gases</h3>
+        <div class="hint">eCO₂ (ppm) y TVOC (ppb) — SGP30</div>
+        <canvas class="chart" id="chartGas"></canvas>
+        <div class="legend">
+          <span><b style="background:#a78bfa"></b>eCO₂ ppm</span>
+          <span><b style="background:#fbbf24"></b>TVOC ppb</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Lecturas recientes</h3>
+        <div class="hint">Últimas muestras del dispositivo</div>
+        <div class="tablewrap">
+          <table>
+            <thead><tr><th>Hora</th><th>T°C</th><th>%rH</th><th>eCO₂</th><th>TVOC</th><th>Lux</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== HISTÓRICOS ===================== -->
+  <section class="view" id="view-history">
+    <div class="toolbar">
+      <div class="seg" id="rangeSeg">
+        <button data-range="3600000">1 h</button>
+        <button data-range="21600000">6 h</button>
+        <button data-range="86400000" class="active">24 h</button>
+        <button data-range="604800000">7 d</button>
+        <button data-range="0">Todo</button>
+      </div>
+      <div class="seg" id="metricSeg"></div>
+      <div class="spacer"></div>
+      <button class="btn sm" id="csvBtn">⬇️ Exportar CSV</button>
+      <button class="btn sm danger" id="clearHistBtn">🗑️ Borrar históricos</button>
+    </div>
     <div class="card">
-      <h3>Lecturas recientes</h3>
-      <div class="hint">Últimas muestras del dispositivo</div>
+      <h3 id="histTitle">Histórico</h3>
+      <div class="hint" id="histHint">Selecciona sensor y rango</div>
+      <div class="stat" id="histStats"></div>
+      <canvas class="chartbig" id="chartHist"></canvas>
+      <div class="legend"><span id="histLegend"></span><span class="src" id="histCount" style="margin-left:auto"></span></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h3>Muestras (máx. 200 más recientes del rango)</h3>
       <div class="tablewrap">
         <table>
-          <thead><tr><th>Hora</th><th>T°C</th><th>%rH</th><th>eCO2</th><th>TVOC</th><th>Lux</th></tr></thead>
-          <tbody id="tbody"></tbody>
+          <thead><tr><th>Fecha y hora</th><th>T°C</th><th>%rH</th><th>eCO₂</th><th>TVOC</th><th>Lux</th><th>Bat V</th><th>CSQ</th></tr></thead>
+          <tbody id="histBody"></tbody>
         </table>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ===================== ALARMAS ===================== -->
+  <section class="view" id="view-alarms">
+    <div class="grid row2">
+      <div class="card">
+        <h3>Reglas de alarma</h3>
+        <div class="hint">Umbral alto/bajo y cambio brusco por sensor. Vacío = desactivado.</div>
+        <table class="cfgtable">
+          <thead><tr><th>Sensor</th><th>Mín</th><th>Máx</th><th>Δ cambio</th><th>Ventana</th></tr></thead>
+          <tbody id="cfgBody"></tbody>
+        </table>
+        <div style="margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <label class="src">Sin datos / offline tras
+            <input class="f num" id="offlineMin" type="number" min="1" step="1" style="width:60px"> min</label>
+          <div class="spacer"></div>
+          <button class="btn sm" id="resetCfg">Restaurar</button>
+          <button class="btn sm primary" id="saveCfg">Guardar reglas</button>
+        </div>
+      </div>
+      <div class="card" id="activeCard">
+        <h3>Alarmas activas</h3>
+        <div class="hint">Estado en tiempo real</div>
+        <div id="activeList"><div class="empty">Sin alarmas activas ✅</div></div>
+        <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
+          <label class="src"><input type="checkbox" id="soundChk" checked> Sonido al disparar</label>
+          <button class="btn sm" id="testAlarm">Probar alarma</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <h3 style="margin:0">Historial de eventos</h3>
+        <div class="spacer"></div>
+        <button class="btn sm danger" id="clearLog">Vaciar historial</button>
+      </div>
+      <div class="hint" style="margin-top:4px">Cada activación y reposición de alarma</div>
+      <div class="tablewrap" style="max-height:380px">
+        <table>
+          <thead><tr><th>Fecha y hora</th><th>Sensor</th><th>Tipo</th><th>Estado</th><th>Valor</th><th>Detalle</th></tr></thead>
+          <tbody id="logBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
   <footer>
     Dashboard de ejemplo · Proyecto
     <a href="https://github.com/Makerfabs/4G-LTE-CAT1-Air-Monitor" target="_blank" rel="noopener">Makerfabs 4G-LTE-CAT1-Air-Monitor</a>.
-    Los datos son simulados salvo que conectes un canal de ThingSpeak.
+    Históricos guardados localmente en tu navegador (IndexedDB). Datos simulados salvo que conectes ThingSpeak.
   </footer>
 </main>
 
-<!-- ThingSpeak modal -->
 <div class="modal" id="modal">
   <div class="card">
     <h3>Conectar a ThingSpeak</h3>
-    <div class="hint">Lee los campos del canal usado por el ejemplo <code>Transmit_the_detection_data_to_Thingspeak</code>.</div>
+    <div class="hint">Lee el canal usado por el ejemplo <code>Transmit_the_detection_data_to_Thingspeak</code>.</div>
     <label>Channel ID</label>
     <input class="f" id="tsChannel" placeholder="p.ej. 1234567">
     <label>Read API Key (opcional para canales públicos)</label>
@@ -175,59 +300,242 @@
       <button class="btn" id="tsCancel">Cancelar</button>
       <button class="btn primary" id="tsConnect">Conectar</button>
     </div>
-    <p class="src" style="margin-top:12px">Mapeo de campos esperado: 1=Temp, 2=Humedad, 3=eCO2, 4=TVOC, 5=Lux, 6=Batería.</p>
+    <p class="src" style="margin-top:12px">Mapeo: 1=Temp, 2=Humedad, 3=eCO₂, 4=TVOC, 5=Lux, 6=Batería.</p>
   </div>
 </div>
 
 <script>
 "use strict";
 
-// ---------- Definición de métricas ----------
+/* ============================================================
+   Metadatos de sensores
+   ============================================================ */
 const METRICS = [
-  {key:"temp",  label:"Temperatura", unit:"°C",  color:"#3fa7ff", base:24,  fmt:v=>v.toFixed(1),
-   status:v=> v<18||v>30 ? "warn" : "good"},
-  {key:"hum",   label:"Humedad",     unit:"%rH", color:"#34d399", base:48,  fmt:v=>v.toFixed(0),
-   status:v=> v<30||v>70 ? "warn" : "good"},
-  {key:"eco2",  label:"eCO₂",        unit:"ppm", color:"#a78bfa", base:600, fmt:v=>v.toFixed(0),
-   status:v=> v>1500 ? "bad" : v>1000 ? "warn" : "good"},
-  {key:"tvoc",  label:"TVOC",        unit:"ppb", color:"#fbbf24", base:120, fmt:v=>v.toFixed(0),
-   status:v=> v>660 ? "bad" : v>250 ? "warn" : "good"},
-  {key:"lux",   label:"Luz",         unit:"lux", color:"#22d3ee", base:340, fmt:v=>v.toFixed(0),
+  {key:"temp", label:"Temperatura", unit:"°C",  color:"#3fa7ff", fmt:v=>v.toFixed(1),
+   status:v=> v<18||v>30?"warn":"good"},
+  {key:"hum",  label:"Humedad",     unit:"%rH", color:"#34d399", fmt:v=>v.toFixed(0),
+   status:v=> v<30||v>70?"warn":"good"},
+  {key:"eco2", label:"eCO₂",        unit:"ppm", color:"#a78bfa", fmt:v=>v.toFixed(0),
+   status:v=> v>1500?"bad":v>1000?"warn":"good"},
+  {key:"tvoc", label:"TVOC",        unit:"ppb", color:"#fbbf24", fmt:v=>v.toFixed(0),
+   status:v=> v>660?"bad":v>250?"warn":"good"},
+  {key:"lux",  label:"Luz",         unit:"lux", color:"#22d3ee", fmt:v=>v.toFixed(0),
    status:v=> "good"},
-  {key:"bat",   label:"Batería",     unit:"V",   color:"#f472b6", base:4.0, fmt:v=>v.toFixed(2),
-   status:v=> v<3.5 ? "bad" : v<3.7 ? "warn" : "good"},
+  {key:"bat",  label:"Batería",     unit:"V",   color:"#f472b6", fmt:v=>v.toFixed(2),
+   status:v=> v<3.5?"bad":v<3.7?"warn":"good"},
 ];
-const MAXPTS = 40;
+// csq se rastrea para alarmas/cabecera pero no es tarjeta KPI
+const CSQ_META = {key:"csq", label:"Señal 4G", unit:"CSQ", color:"#60a5fa", fmt:v=>v.toFixed(0)};
+const ALL = [...METRICS, CSQ_META];
+const byKey = Object.fromEntries(ALL.map(m=>[m.key,m]));
+const MAXLIVE = 40;       // puntos en gráficas de tiempo real
+const RECENT_MAX = 1200;  // buffer en memoria para cambio brusco (~1h a 3s)
 const STATUS_TXT = {good:"Normal", warn:"Atención", bad:"Alto"};
 
-// ---------- Estado ----------
-let state = { running:true, mode:"demo", series:{}, times:[], csq:0, batPct:0 };
-METRICS.forEach(m=> state.series[m.key]=[]);
-
-// ---------- Generador de datos simulados ----------
-function nextSimSample(){
-  const t = Date.now()/1000;
-  const wave = (amp,period,ph=0)=> amp*Math.sin(t/period+ph);
-  const noise = a=> (Math.random()-0.5)*a;
-  const s = {
-    temp: 24 + wave(2.5,90) + noise(0.4),
-    hum:  48 + wave(8,120,1) + noise(2),
-    lux:  Math.max(0, 340 + wave(260,140,2) + noise(40)),
-    bat:  3.95 - (state.series.bat.length*0.0008) + noise(0.01),
+/* ============================================================
+   IndexedDB — históricos y log de alarmas
+   ============================================================ */
+const DB_NAME="airmon", DB_VER=1; let db;
+function openDB(){return new Promise((res,rej)=>{
+  const r=indexedDB.open(DB_NAME,DB_VER);
+  r.onupgradeneeded=e=>{const d=e.target.result;
+    if(!d.objectStoreNames.contains("readings")) d.createObjectStore("readings",{keyPath:"t"});
+    if(!d.objectStoreNames.contains("alarms")) d.createObjectStore("alarms",{keyPath:"id",autoIncrement:true});
   };
-  // gases correlacionados: picos ocasionales
-  const spike = Math.random()<0.07 ? Math.random()*800 : 0;
-  s.eco2 = 520 + wave(120,70,3) + spike + noise(40);
-  s.tvoc = 90  + wave(60,60,4)  + spike*0.6 + noise(20);
-  return s;
+  r.onsuccess=e=>{db=e.target.result;res(db);}; r.onerror=()=>rej(r.error);
+});}
+function tx(store,mode){return db.transaction(store,mode).objectStore(store);}
+function putReading(rec){return new Promise((res,rej)=>{const q=tx("readings","readwrite").put(rec);q.onsuccess=res;q.onerror=()=>rej(q.error);});}
+function bulkPut(store,rows){return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");const s=t.objectStore(store);rows.forEach(r=>s.put(r));t.oncomplete=res;t.onerror=()=>rej(t.error);});}
+function countReadings(){return new Promise((res,rej)=>{const q=tx("readings","readonly").count();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);});}
+function getRange(fromT,toT){return new Promise((res,rej)=>{
+  const range=fromT? IDBKeyRange.bound(fromT,toT):null;
+  const out=[];const q=tx("readings","readonly").openCursor(range);
+  q.onsuccess=e=>{const c=e.target.result; if(c){out.push(c.value);c.continue();} else res(out);};
+  q.onerror=()=>rej(q.error);
+});}
+function clearStore(store){return new Promise((res,rej)=>{const q=tx(store,"readwrite").clear();q.onsuccess=res;q.onerror=()=>rej(q.error);});}
+function logAlarm(ev){return new Promise((res,rej)=>{const q=tx("alarms","readwrite").add(ev);q.onsuccess=res;q.onerror=()=>rej(q.error);});}
+function getAlarms(limit){return new Promise((res,rej)=>{
+  const out=[];const q=tx("alarms","readonly").openCursor(null,"prev");
+  q.onsuccess=e=>{const c=e.target.result; if(c&&out.length<limit){out.push(c.value);c.continue();} else res(out);};
+  q.onerror=()=>rej(q.error);
+});}
+
+/* ============================================================
+   Configuración de alarmas (localStorage)
+   ============================================================ */
+const DEFAULT_CFG={
+  temp:{low:5,  high:32,  rate:5,   win:300},
+  hum :{low:20, high:80,  rate:25,  win:300},
+  eco2:{low:null,high:1500,rate:600, win:300},
+  tvoc:{low:null,high:660, rate:300, win:300},
+  lux :{low:null,high:null,rate:null,win:300},
+  bat :{low:3.5,high:null, rate:null,win:300},
+  csq :{low:8,  high:null, rate:null,win:300},
+  offlineMin:2
+};
+function loadCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.cfg"));return c&&c.temp?c:structuredClone(DEFAULT_CFG);}catch(e){return structuredClone(DEFAULT_CFG);}}
+function saveCfgLS(){localStorage.setItem("airmon.cfg",JSON.stringify(S.cfg));}
+
+/* ============================================================
+   Estado
+   ============================================================ */
+const S={
+  running:true, source:"demo",
+  liveT:[], live:Object.fromEntries(ALL.map(m=>[m.key,[]])),
+  recentT:[], recent:Object.fromEntries(ALL.map(m=>[m.key,[]])),
+  lastT:0, csq:0, batPct:0,
+  active:{}, cfg:loadCfg(),
+  view:"realtime", sound:true, notify:false,
+  ts:{channel:null,key:null},
+};
+
+/* ============================================================
+   Generación de datos
+   ============================================================ */
+function genSeed(t){ // determinista, para sembrar histórico
+  const s=t/1000;
+  const w=(a,p,ph)=>a*Math.sin(s/p+ph);
+  const dn=(t%86400000)/86400000;             // 0..1 a lo largo del día
+  const dayT=Math.sin((dn-0.25)*2*Math.PI);   // pico de tarde
+  const spikePh=Math.floor(t/(1800000));       // cada 30 min
+  const spike=(spikePh%17===0)?900:(spikePh%29===0)?1500:0;
+  return {
+    t,
+    temp:+(22+dayT*4+w(0.6,40,1)).toFixed(2),
+    hum :+(52-dayT*12+w(3,55,2)).toFixed(1),
+    eco2:+(480+w(120,30,3)+spike+Math.max(0,dayT)*120).toFixed(0),
+    tvoc:+(80+w(50,25,4)+spike*0.5).toFixed(0),
+    lux :+Math.max(0,(Math.max(0,dayT)*900+w(40,12,2))).toFixed(0),
+    bat :+(4.05-dn*0.35).toFixed(3),
+    csq :Math.round(20+w(6,0.5,1)),
+  };
+}
+let batDrain=0;
+function genLive(){ // en vivo (demo) con algo de ruido
+  const now=Date.now(), s=now/1000;
+  const w=(a,p,ph=0)=>a*Math.sin(s/p+ph), nz=a=>(Math.random()-0.5)*a;
+  const spike=Math.random()<0.06?Math.random()*900:0;
+  batDrain+=0.0006;
+  return {
+    t:now,
+    temp:+(24+w(2.5,90)+nz(0.4)).toFixed(2),
+    hum :+(48+w(8,120,1)+nz(2)).toFixed(1),
+    eco2:+(520+w(120,70,3)+spike+nz(40)).toFixed(0),
+    tvoc:+(90+w(60,60,4)+spike*0.6+nz(20)).toFixed(0),
+    lux :+Math.max(0,340+w(260,140,2)+nz(40)).toFixed(0),
+    bat :+Math.max(3.3,3.98-batDrain+nz(0.01)).toFixed(3),
+    csq :Math.max(0,Math.min(31,Math.round(20+w(6,9)+nz(3)))),
+  };
 }
 
-// ---------- AQI estimado (0-100, mayor = peor) ----------
-function computeAQI(eco2, tvoc){
-  const c = Math.min(100, Math.max(0, (eco2-400)/16));   // 400→0, 2000→100
-  const v = Math.min(100, Math.max(0, tvoc/6.6));          // 0→0, 660→100
-  const score = Math.round(c*0.55 + v*0.45);
-  let lbl="Excelente", cls="good";
+/* ============================================================
+   Ingesta de una muestra
+   ============================================================ */
+async function ingest(rec, persist=true){
+  // buffers en memoria
+  S.liveT.push(rec.t); if(S.liveT.length>MAXLIVE)S.liveT.shift();
+  S.recentT.push(rec.t); if(S.recentT.length>RECENT_MAX)S.recentT.shift();
+  ALL.forEach(m=>{
+    const v=rec[m.key];
+    S.live[m.key].push(v); if(S.live[m.key].length>MAXLIVE)S.live[m.key].shift();
+    S.recent[m.key].push(v); if(S.recent[m.key].length>RECENT_MAX)S.recent[m.key].shift();
+  });
+  S.lastT=rec.t;
+  S.csq=rec.csq;
+  S.batPct=Math.round(Math.min(100,Math.max(0,(rec.bat-3.3)/(4.2-3.3)*100)));
+  if(persist){ try{await putReading(rec);}catch(e){console.warn(e);} }
+  evaluateAlarms(rec);
+  if(S.view==="realtime") renderRealtime();
+  renderHeader();
+}
+
+/* ============================================================
+   Motor de alarmas
+   ============================================================ */
+const TYPE_TXT={high:"Umbral alto",low:"Umbral bajo",rate:"Cambio brusco",offline:"Sin datos"};
+function valueAgo(key,secs){
+  const target=Date.now()-secs*1000;
+  const ts=S.recentT;
+  for(let i=ts.length-1;i>=0;i--){ if(ts[i]<=target) return S.recent[key][i]; }
+  return null;
+}
+function setActive(akey, info){
+  if(!S.active[akey]){ // flanco de subida
+    S.active[akey]={...info, since:Date.now()};
+    onAlarmRaise(S.active[akey]);
+    logAlarm({t:Date.now(),metric:info.metric,type:info.type,level:"alarm",value:info.value,msg:info.msg});
+    return true;
+  } else { S.active[akey].value=info.value; S.active[akey].msg=info.msg; }
+  return false;
+}
+function clearActive(akey){
+  if(S.active[akey]){
+    const a=S.active[akey]; delete S.active[akey];
+    logAlarm({t:Date.now(),metric:a.metric,type:a.type,level:"clear",value:a.value,msg:byKey[a.metric].label+" normalizado"});
+    renderAlarms();
+  }
+}
+function evaluateAlarms(rec){
+  let changed=false;
+  ALL.forEach(m=>{
+    const c=S.cfg[m.key]||{}; const v=rec[m.key]; if(v==null)return;
+    // Umbral alto
+    const kHigh=m.key+":high";
+    if(c.high!=null && v>c.high){ if(setActive(kHigh,{metric:m.key,type:"high",value:v,msg:`${m.label} alto: ${m.fmt(v)} ${m.unit} (> ${c.high})`}))changed=true; }
+    else if(S.active[kHigh] && v < c.high-Math.abs(c.high)*0.02){ clearActive(kHigh); changed=true; }
+    // Umbral bajo
+    const kLow=m.key+":low";
+    if(c.low!=null && v<c.low){ if(setActive(kLow,{metric:m.key,type:"low",value:v,msg:`${m.label} bajo: ${m.fmt(v)} ${m.unit} (< ${c.low})`}))changed=true; }
+    else if(S.active[kLow] && v > c.low+Math.abs(c.low)*0.02){ clearActive(kLow); changed=true; }
+    // Cambio brusco
+    if(c.rate!=null){
+      const past=valueAgo(m.key,c.win||300);
+      if(past!=null){ const d=Math.abs(v-past);
+        const kR=m.key+":rate";
+        if(d>c.rate){ if(setActive(kR,{metric:m.key,type:"rate",value:v,msg:`${m.label} cambio brusco: Δ${d.toFixed(1)} ${m.unit} en ${Math.round((c.win||300)/60)} min`,expire:Date.now()+45000}))changed=true; }
+      }
+    }
+  });
+  if(changed) renderAlarms();
+}
+function offlineWatch(){
+  const k="system:offline";
+  const tout=(S.cfg.offlineMin||2)*60000;
+  if(S.lastT && Date.now()-S.lastT>tout){
+    setActive(k,{metric:"csq",type:"offline",value:0,msg:`Sin lecturas desde hace ${Math.round((Date.now()-S.lastT)/60000)} min`});
+  } else if(S.active[k]){ clearActive(k); }
+  // expirar alarmas de cambio brusco
+  let exp=false;
+  Object.keys(S.active).forEach(k=>{const a=S.active[k]; if(a.expire&&Date.now()>a.expire){delete S.active[k];exp=true;}});
+  if(exp) renderAlarms();
+  renderHeader();
+}
+function onAlarmRaise(a){
+  if(S.sound) beep(a.type==="rate"?660:440);
+  if(S.notify && "Notification" in window && Notification.permission==="granted"){
+    try{new Notification("⚠️ Alarma: "+byKey[a.metric].label,{body:a.msg});}catch(e){}
+  }
+}
+let actx;
+function beep(freq){
+  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.frequency.value=freq;o.type="sine";o.connect(g);g.connect(actx.destination);
+    g.gain.setValueAtTime(.12,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.4);
+    o.start();o.stop(actx.currentTime+.4);
+  }catch(e){}
+}
+
+/* ============================================================
+   AQI estimado
+   ============================================================ */
+function computeAQI(eco2,tvoc){
+  const c=Math.min(100,Math.max(0,(eco2-400)/16));
+  const v=Math.min(100,Math.max(0,tvoc/6.6));
+  const score=Math.round(c*0.55+v*0.45);
+  let lbl="Excelente",cls="good";
   if(score>75){lbl="Insalubre";cls="bad";}
   else if(score>50){lbl="Pobre";cls="bad";}
   else if(score>30){lbl="Moderado";cls="warn";}
@@ -235,22 +543,36 @@ function computeAQI(eco2, tvoc){
   return {score,lbl,cls};
 }
 
-// ---------- Push de una muestra al estado ----------
-function pushSample(s, time){
-  state.times.push(time); if(state.times.length>MAXPTS) state.times.shift();
-  METRICS.forEach(m=>{
-    const arr=state.series[m.key];
-    arr.push(s[m.key]); if(arr.length>MAXPTS) arr.shift();
-  });
-  // CSQ 0-31 derivado (en demo)
-  state.csq = state.mode==="demo" ? Math.round(18+Math.sin(Date.now()/9000)*6+Math.random()*3) : state.csq;
-  const last=s.bat ?? 3.9;
-  state.batPct = Math.round(Math.min(100,Math.max(0,(last-3.3)/(4.2-3.3)*100)));
-  render();
+/* ============================================================
+   Render — cabecera y banner
+   ============================================================ */
+function renderHeader(){
+  const sig=document.getElementById("sig").children;
+  const bars=Math.round(S.csq/31*5);
+  for(let i=0;i<5;i++) sig[i].className=i<bars?"on":"";
+  document.getElementById("csq").textContent="CSQ "+S.csq;
+  document.getElementById("batFill").style.width=S.batPct+"%";
+  document.getElementById("batFill").style.background=S.batPct<20?"var(--bad)":S.batPct<40?"var(--warn)":"var(--good)";
+  document.getElementById("batTxt").textContent=S.batPct+"%";
+  const n=Object.keys(S.active).length;
+  const pill=document.getElementById("alarmPill");
+  pill.classList.toggle("has",n>0);
+  document.getElementById("alarmTxt").textContent=n?`${n} alarma${n>1?"s":""}`:"Sin alarmas";
+  if(!n)document.getElementById("alarmDot").style.background="var(--good)";
+  // banner
+  const arr=Object.values(S.active);
+  const b=document.getElementById("banner");
+  b.classList.toggle("show",arr.length>0);
+  if(arr.length){
+    document.getElementById("bannerTitle").textContent=`${arr.length} alarma${arr.length>1?"s":""} activa${arr.length>1?"s":""}`;
+    document.getElementById("bannerList").innerHTML=arr.map(a=>`<li>${a.msg}</li>`).join("");
+  }
 }
 
-// ---------- Render ----------
-const kpiBox = document.getElementById("kpis");
+/* ============================================================
+   Render — tiempo real
+   ============================================================ */
+const kpiBox=document.getElementById("kpis");
 function buildKpis(){
   kpiBox.innerHTML="";
   METRICS.forEach(m=>{
@@ -262,169 +584,316 @@ function buildKpis(){
     kpiBox.appendChild(el);
   });
 }
-function render(){
+function renderRealtime(){
   METRICS.forEach(m=>{
-    const arr=state.series[m.key]; if(!arr.length) return;
+    const arr=S.live[m.key]; if(!arr.length)return;
     const v=arr[arr.length-1];
     document.getElementById("vl-"+m.key).textContent=m.fmt(v);
-    const st=m.status(v);
+    // estado: alarma activa manda
+    const hasAlarm=S.active[m.key+":high"]||S.active[m.key+":low"]||S.active[m.key+":rate"];
+    const st=hasAlarm?"bad":m.status(v);
     const bd=document.getElementById("bd-"+m.key);
-    bd.textContent=STATUS_TXT[st]; bd.className="badge b-"+st;
-    drawSpark(document.getElementById("sp-"+m.key), arr, m.color);
+    bd.textContent=hasAlarm?"Alarma":STATUS_TXT[st]; bd.className="badge b-"+st;
+    document.getElementById("kpi-"+m.key).classList.toggle("alarm",!!hasAlarm);
+    drawSpark(document.getElementById("sp-"+m.key),arr,m.color);
   });
-  drawLine(document.getElementById("chartTH"),
-    [{data:state.series.temp,color:"#3fa7ff"},{data:state.series.hum,color:"#34d399"}]);
-  drawLine(document.getElementById("chartGas"),
-    [{data:state.series.eco2,color:"#a78bfa"},{data:state.series.tvoc,color:"#fbbf24"}]);
-  // AQI
-  const eco2=state.series.eco2.at(-1), tvoc=state.series.tvoc.at(-1);
-  if(eco2!=null){
-    const a=computeAQI(eco2,tvoc);
+  drawLine(document.getElementById("chartTH"),[{data:S.live.temp,color:"#3fa7ff"},{data:S.live.hum,color:"#34d399"}]);
+  drawLine(document.getElementById("chartGas"),[{data:S.live.eco2,color:"#a78bfa"},{data:S.live.tvoc,color:"#fbbf24"}]);
+  const eco2=S.live.eco2.at(-1),tvoc=S.live.tvoc.at(-1);
+  if(eco2!=null){const a=computeAQI(eco2,tvoc);
     document.getElementById("aqiVal").textContent=a.score;
     document.getElementById("aqiLbl").textContent="AQI estimado";
-    const badge=document.getElementById("aqiBadge");
-    badge.textContent=a.lbl; badge.className="badge b-"+a.cls;
-    drawRing(document.getElementById("aqiRing"), a.score, a.cls);
+    const badge=document.getElementById("aqiBadge");badge.textContent=a.lbl;badge.className="badge b-"+a.cls;
+    drawRing(document.getElementById("aqiRing"),a.score,a.cls);
   }
-  // Header
-  const sig=document.getElementById("sig").children;
-  const bars=Math.round(state.csq/31*5);
-  for(let i=0;i<5;i++) sig[i].className = i<bars ? "on":"";
-  document.getElementById("csq").textContent="CSQ "+state.csq;
-  document.getElementById("batFill").style.width=state.batPct+"%";
-  document.getElementById("batFill").style.background = state.batPct<20?"var(--bad)":state.batPct<40?"var(--warn)":"var(--good)";
-  document.getElementById("batTxt").textContent=state.batPct+"%";
-  // Tabla
-  renderTable();
+  renderLiveTable();
 }
-function renderTable(){
-  const tb=document.getElementById("tbody"); tb.innerHTML="";
-  const n=state.times.length;
+function renderLiveTable(){
+  const tb=document.getElementById("tbody");tb.innerHTML="";
+  const n=S.liveT.length;
   for(let i=n-1;i>=Math.max(0,n-12);i--){
-    const tr=document.createElement("tr");
-    const g=k=>state.series[k][i];
-    tr.innerHTML=`<td>${state.times[i]}</td><td>${g("temp").toFixed(1)}</td><td>${g("hum").toFixed(0)}</td>
+    const tr=document.createElement("tr");const g=k=>S.live[k][i];
+    tr.innerHTML=`<td>${fmtTime(S.liveT[i])}</td><td>${g("temp").toFixed(1)}</td><td>${g("hum").toFixed(0)}</td>
       <td>${g("eco2").toFixed(0)}</td><td>${g("tvoc").toFixed(0)}</td><td>${g("lux").toFixed(0)}</td>`;
     tb.appendChild(tr);
   }
 }
 
-// ---------- Dibujo en canvas ----------
-function fitCanvas(cv){
-  const dpr=window.devicePixelRatio||1, r=cv.getBoundingClientRect();
-  if(cv.width!==Math.round(r.width*dpr)||cv.height!==Math.round(r.height*dpr)){
-    cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr);
+/* ============================================================
+   Render — históricos
+   ============================================================ */
+let histMetric="temp", histRange=86400000;
+function buildMetricSeg(){
+  const seg=document.getElementById("metricSeg");seg.innerHTML="";
+  METRICS.forEach((m,i)=>{const b=document.createElement("button");b.textContent=m.label;b.dataset.m=m.key;
+    if(m.key===histMetric)b.className="active";
+    b.onclick=()=>{histMetric=m.key;[...seg.children].forEach(c=>c.classList.toggle("active",c.dataset.m===m.key));loadHistory();};
+    seg.appendChild(b);});
+}
+async function loadHistory(){
+  const m=byKey[histMetric];
+  const from=histRange?Date.now()-histRange:0;
+  let rows=await getRange(from,Date.now()+1);
+  document.getElementById("histTitle").textContent=m.label+" — histórico";
+  document.getElementById("histLegend").innerHTML=`<b style="display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:${m.color}"></b>${m.label} (${m.unit})`;
+  document.getElementById("histCount").textContent=rows.length+" muestras";
+  if(!rows.length){
+    document.getElementById("histHint").textContent="No hay datos en este rango todavía";
+    document.getElementById("histStats").innerHTML="";
+    drawHistory(document.getElementById("chartHist"),[],m);
+    document.getElementById("histBody").innerHTML='<tr><td colspan="8" class="empty">Sin muestras</td></tr>';
+    return;
   }
-  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
-  return {ctx,w:r.width,h:r.height};
+  const vals=rows.map(r=>r[histMetric]);
+  const mn=Math.min(...vals),mx=Math.max(...vals),avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+  document.getElementById("histHint").textContent=`${fmtDate(rows[0].t)} → ${fmtDate(rows.at(-1).t)}`;
+  document.getElementById("histStats").innerHTML=
+    `<div>Mín<b>${m.fmt(mn)} ${m.unit}</b></div><div>Máx<b>${m.fmt(mx)} ${m.unit}</b></div>
+     <div>Media<b>${m.fmt(avg)} ${m.unit}</b></div><div>Actual<b>${m.fmt(vals.at(-1))} ${m.unit}</b></div>`;
+  drawHistory(document.getElementById("chartHist"),downsample(rows,420),m);
+  // tabla últimas 200
+  const tb=document.getElementById("histBody");tb.innerHTML="";
+  rows.slice(-200).reverse().forEach(r=>{const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${fmtDate(r.t)}</td><td>${r.temp.toFixed(1)}</td><td>${r.hum.toFixed(0)}</td>
+      <td>${r.eco2.toFixed(0)}</td><td>${r.tvoc.toFixed(0)}</td><td>${r.lux.toFixed(0)}</td>
+      <td>${r.bat.toFixed(2)}</td><td>${r.csq}</td>`;tb.appendChild(tr);});
+}
+function downsample(rows,target){
+  if(rows.length<=target)return rows;
+  const step=rows.length/target,out=[];
+  for(let i=0;i<target;i++)out.push(rows[Math.floor(i*step)]);
+  return out;
+}
+
+/* ============================================================
+   Render — alarmas (config, activas, log)
+   ============================================================ */
+function buildCfgForm(){
+  const tb=document.getElementById("cfgBody");tb.innerHTML="";
+  ALL.forEach(m=>{
+    const c=S.cfg[m.key]||{};
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${m.label} <span class="src">${m.unit}</span></td>
+      <td><input class="f num" data-k="${m.key}" data-f="low"  type="number" step="any" value="${c.low ??""}"></td>
+      <td><input class="f num" data-k="${m.key}" data-f="high" type="number" step="any" value="${c.high??""}"></td>
+      <td><input class="f num" data-k="${m.key}" data-f="rate" type="number" step="any" value="${c.rate??""}"></td>
+      <td><select class="f" data-k="${m.key}" data-f="win">
+        ${[60,120,300,600,900].map(s=>`<option value="${s}" ${(c.win||300)===s?"selected":""}>${s/60} min</option>`).join("")}
+      </select></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById("offlineMin").value=S.cfg.offlineMin||2;
+}
+function readCfgForm(){
+  document.querySelectorAll("#cfgBody input,#cfgBody select").forEach(el=>{
+    const k=el.dataset.k,f=el.dataset.f;S.cfg[k]=S.cfg[k]||{};
+    if(f==="win")S.cfg[k].win=+el.value;
+    else S.cfg[k][f]=el.value===""?null:+el.value;
+  });
+  S.cfg.offlineMin=+document.getElementById("offlineMin").value||2;
+  saveCfgLS();
+}
+function renderAlarms(){
+  const arr=Object.entries(S.active);
+  const box=document.getElementById("activeList");
+  document.getElementById("activeCard").classList.toggle("alarm",arr.length>0);
+  if(!arr.length){box.innerHTML='<div class="empty">Sin alarmas activas ✅</div>';}
+  else{box.innerHTML=arr.map(([k,a])=>{
+    const sev=a.type==="rate"?"warn":"bad";
+    return `<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
+      <span class="badge b-${sev}">${TYPE_TXT[a.type]}</span>
+      <span>${a.msg}</span><span class="spacer" style="flex:1"></span>
+      <span class="src">${fmtTime(a.since)}</span></div>`;}).join("");}
+  renderLog();
+  renderHeader();
+}
+async function renderLog(){
+  const rows=await getAlarms(200);
+  const tb=document.getElementById("logBody");
+  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="empty">Sin eventos registrados</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>{const m=byKey[r.metric]||{label:r.metric,unit:""};
+    return `<tr><td>${fmtDate(r.t)}</td><td>${m.label}</td><td>${TYPE_TXT[r.type]||r.type}</td>
+      <td><span class="lvl ${r.level}">${r.level==="alarm"?"DISPARO":"REPUESTO"}</span></td>
+      <td>${r.value!=null?(m.fmt?m.fmt(r.value):r.value)+" "+(m.unit||""):"—"}</td>
+      <td class="src" style="text-align:left">${r.msg||""}</td></tr>`;}).join("");
+}
+
+/* ============================================================
+   Dibujo en canvas
+   ============================================================ */
+function fitCanvas(cv){
+  const dpr=window.devicePixelRatio||1,r=cv.getBoundingClientRect();
+  if(cv.width!==Math.round(r.width*dpr)||cv.height!==Math.round(r.height*dpr)){cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);}
+  const ctx=cv.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w:r.width,h:r.height};
 }
 function drawSpark(cv,data,color){
-  const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
-  if(data.length<2) return;
-  const mn=Math.min(...data), mx=Math.max(...data), rng=(mx-mn)||1;
-  const x=i=>i/(data.length-1)*w, y=v=>h-4-((v-mn)/rng)*(h-8);
-  ctx.beginPath(); data.forEach((v,i)=> i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin="round"; ctx.stroke();
-  ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
-  const grd=ctx.createLinearGradient(0,0,0,h); grd.addColorStop(0,color+"44"); grd.addColorStop(1,color+"00");
-  ctx.fillStyle=grd; ctx.fill();
+  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);if(data.length<2)return;
+  const mn=Math.min(...data),mx=Math.max(...data),rng=(mx-mn)||1;
+  const x=i=>i/(data.length-1)*w,y=v=>h-4-((v-mn)/rng)*(h-8);
+  ctx.beginPath();data.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
+  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+  const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,color+"44");g.addColorStop(1,color+"00");ctx.fillStyle=g;ctx.fill();
 }
 function drawLine(cv,series){
-  const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
+  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);
   const pad={l:6,r:6,t:10,b:18};
-  // grid
-  ctx.strokeStyle="#27314f"; ctx.lineWidth=1;
+  ctx.strokeStyle="#27314f";ctx.lineWidth=1;
   for(let i=0;i<=4;i++){const yy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();}
-  series.forEach(s=>{
-    const d=s.data; if(d.length<2) return;
-    const mn=Math.min(...d), mx=Math.max(...d), rng=(mx-mn)||1;
-    const x=i=>pad.l+i/(d.length-1)*(w-pad.l-pad.r);
-    const y=v=>pad.t+(1-(v-mn)/rng)*(h-pad.t-pad.b);
-    ctx.beginPath(); d.forEach((v,i)=> i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
-    ctx.strokeStyle=s.color; ctx.lineWidth=2.2; ctx.lineJoin="round"; ctx.stroke();
-    const last=d.length-1;
-    ctx.beginPath(); ctx.arc(x(last),y(d[last]),3.2,0,7); ctx.fillStyle=s.color; ctx.fill();
+  series.forEach(s=>{const d=s.data;if(d.length<2)return;
+    const mn=Math.min(...d),mx=Math.max(...d),rng=(mx-mn)||1;
+    const x=i=>pad.l+i/(d.length-1)*(w-pad.l-pad.r),y=v=>pad.t+(1-(v-mn)/rng)*(h-pad.t-pad.b);
+    ctx.beginPath();d.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
+    ctx.strokeStyle=s.color;ctx.lineWidth=2.2;ctx.lineJoin="round";ctx.stroke();
+    const l=d.length-1;ctx.beginPath();ctx.arc(x(l),y(d[l]),3.2,0,7);ctx.fillStyle=s.color;ctx.fill();
   });
 }
+function drawHistory(cv,rows,m){
+  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);
+  const pad={l:50,r:12,t:12,b:26};
+  if(rows.length<2){ctx.fillStyle="#8a96b3";ctx.font="13px system-ui";ctx.fillText("Sin datos en el rango",pad.l,h/2);return;}
+  const vals=rows.map(r=>r[m.key]);let mn=Math.min(...vals),mx=Math.max(...vals);
+  if(mn===mx){mn-=1;mx+=1;} const pd=(mx-mn)*0.08;mn-=pd;mx+=pd;
+  const t0=rows[0].t,t1=rows.at(-1).t,tr=(t1-t0)||1;
+  const X=t=>pad.l+(t-t0)/tr*(w-pad.l-pad.r),Y=v=>pad.t+(1-(v-mn)/(mx-mn))*(h-pad.t-pad.b);
+  // grid + eje Y
+  ctx.strokeStyle="#27314f";ctx.fillStyle="#8a96b3";ctx.font="11px system-ui";ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,yy=Y(v);
+    ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();
+    ctx.fillText(m.fmt(v),6,yy+3);}
+  // eje X (tiempo)
+  for(let i=0;i<=4;i++){const t=t0+tr*i/4,xx=X(t);
+    ctx.fillText(fmtAxis(t,tr),xx-(i===4?42:i===0?0:18),h-8);}
+  // área + línea
+  ctx.beginPath();rows.forEach((r,i)=>{const x=X(r.t),y=Y(r[m.key]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+  ctx.strokeStyle=m.color;ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
+  ctx.lineTo(X(t1),Y(mn));ctx.lineTo(X(t0),Y(mn));ctx.closePath();
+  const g=ctx.createLinearGradient(0,pad.t,0,h-pad.b);g.addColorStop(0,m.color+"33");g.addColorStop(1,m.color+"00");ctx.fillStyle=g;ctx.fill();
+}
 function drawRing(cv,score,cls){
-  const ctx=cv.getContext("2d"), w=cv.width, h=cv.height, cx=w/2, cy=h/2, r=w/2-26;
-  ctx.clearRect(0,0,w,h);
+  const ctx=cv.getContext("2d"),w=cv.width,cx=w/2,cy=w/2,r=w/2-26;ctx.clearRect(0,0,w,w);
   const col=cls==="bad"?"#fb7185":cls==="warn"?"#fbbf24":"#34d399";
-  ctx.lineWidth=24; ctx.lineCap="round";
-  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle="#27314f"; ctx.stroke();
-  const a0=-Math.PI/2, a1=a0+Math.PI*2*(score/100);
-  ctx.beginPath(); ctx.arc(cx,cy,r,a0,a1); ctx.strokeStyle=col; ctx.stroke();
+  ctx.lineWidth=24;ctx.lineCap="round";
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle="#27314f";ctx.stroke();
+  const a0=-Math.PI/2;ctx.beginPath();ctx.arc(cx,cy,r,a0,a0+Math.PI*2*(score/100));ctx.strokeStyle=col;ctx.stroke();
 }
 
-// ---------- Loop ----------
+/* ============================================================
+   Utilidades de fecha
+   ============================================================ */
+const fmtTime=t=>new Date(t).toLocaleTimeString("es-ES",{hour12:false});
+const fmtDate=t=>new Date(t).toLocaleString("es-ES",{hour12:false});
+function fmtAxis(t,span){const d=new Date(t);
+  return span>86400000? d.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"})
+    : d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});}
+
+/* ============================================================
+   Bucle y controles
+   ============================================================ */
 let timer=null;
-function tick(){
-  if(!state.running || state.mode!=="demo") return;
-  const now=new Date();
-  pushSample(nextSimSample(), now.toLocaleTimeString("es-ES",{hour12:false}));
-}
-function startTimer(){ clearInterval(timer); timer=setInterval(tick,3000); }
+function tickDemo(){ if(!S.running||S.source!=="demo")return; ingest(genLive()); }
+function startTimer(){clearInterval(timer);timer=setInterval(tickDemo,3000);}
 
-// seed
-(function seed(){
-  buildKpis();
-  for(let i=0;i<MAXPTS;i++){
-    pushSampleSilent(nextSimSample(), new Date(Date.now()-(MAXPTS-i)*3000).toLocaleTimeString("es-ES",{hour12:false}));
+function switchTab(tab){
+  S.view=tab;
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+tab));
+  if(tab==="realtime")renderRealtime();
+  if(tab==="history")loadHistory();
+  if(tab==="alarms")renderAlarms();
+}
+
+/* ============================================================
+   Arranque
+   ============================================================ */
+(async function init(){
+  buildKpis();buildCfgForm();buildMetricSeg();
+  await openDB();
+  // sembrar 24h de históricos si está vacío
+  if(await countReadings()===0){
+    const now=Date.now(),start=now-24*3600*1000,rows=[];
+    for(let t=start;t<=now;t+=60000)rows.push(genSeed(t));
+    await bulkPut("readings",rows);
+    // algunos eventos de alarma de ejemplo en el log
+    await bulkPut("alarms",[
+      {t:now-3600000*6,metric:"eco2",type:"high",level:"alarm",value:1612,msg:"eCO₂ alto: 1612 ppm (> 1500)"},
+      {t:now-3600000*6+300000,metric:"eco2",type:"high",level:"clear",value:980,msg:"eCO₂ normalizado"},
+      {t:now-3600000*2,metric:"temp",type:"rate",level:"alarm",value:29.4,msg:"Temperatura cambio brusco: Δ6.1 °C en 5 min"},
+    ]);
   }
-  render(); startTimer(); updateClock();
+  // precargar buffers en vivo con las últimas muestras del histórico
+  const recent=(await getRange(Date.now()-RECENT_MAX*60000,Date.now()+1)).slice(-RECENT_MAX);
+  recent.slice(-MAXLIVE).forEach(r=>{S.liveT.push(r.t);ALL.forEach(m=>S.live[m.key].push(r[m.key]));});
+  recent.forEach(r=>{S.recentT.push(r.t);ALL.forEach(m=>S.recent[m.key].push(r[m.key]));});
+  if(recent.length){const r=recent.at(-1);S.lastT=r.t;S.csq=r.csq;S.batPct=Math.round(Math.min(100,Math.max(0,(r.bat-3.3)/(4.2-3.3)*100)));}
+  renderRealtime();renderHeader();renderAlarms();
+  startTimer();setInterval(offlineWatch,5000);updateClock();
 })();
-function pushSampleSilent(s,time){
-  state.times.push(time);
-  METRICS.forEach(m=> state.series[m.key].push(s[m.key]));
-}
 
-// ---------- Controles ----------
+function updateClock(){document.getElementById("clock").textContent="Actualizado: "+new Date().toLocaleTimeString("es-ES");setTimeout(updateClock,1000);}
+
+/* --- listeners --- */
+document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.getElementById("playBtn").onclick=function(){
-  state.running=!state.running;
-  this.textContent=state.running?"⏸ Pausar":"▶ Reanudar";
-  document.getElementById("connDot").className="dot"+(state.running?"":" off");
-  document.getElementById("connTxt").textContent=state.running?"En línea":"Pausado";
+  S.running=!S.running;this.textContent=S.running?"⏸ Pausar":"▶ Reanudar";
+  document.getElementById("connDot").className="dot"+(S.running?"":" off");
+  document.getElementById("connTxt").textContent=S.running?"En línea":"Pausado";
 };
-function updateClock(){
-  document.getElementById("clock").textContent="Última actualización: "+new Date().toLocaleTimeString("es-ES");
-  requestAnimationFrame(()=>setTimeout(updateClock,1000));
-}
-window.addEventListener("resize",render);
-
-// ---------- ThingSpeak (datos reales opcionales) ----------
+document.getElementById("srcSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.src==="thingspeak"){document.getElementById("modal").classList.add("open");}
+  else{S.source="demo";[...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="demo"));
+    document.getElementById("srcLabel").innerHTML='Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s';}
+};
+document.getElementById("notifBtn").onclick=async function(){
+  if(!("Notification" in window)){alert("Este navegador no soporta notificaciones");return;}
+  const p=await Notification.requestPermission();S.notify=p==="granted";
+  this.textContent=S.notify?"🔔 Notificaciones activas":"🔕 Notificaciones bloqueadas";
+};
+// históricos
+document.getElementById("rangeSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  histRange=+b.dataset.range;[...document.getElementById("rangeSeg").children].forEach(c=>c.classList.toggle("active",c===b));loadHistory();};
+document.getElementById("csvBtn").onclick=async()=>{
+  const from=histRange?Date.now()-histRange:0;const rows=await getRange(from,Date.now()+1);
+  const head="fecha,timestamp,temp,hum,eco2,tvoc,lux,bat,csq\n";
+  const body=rows.map(r=>[new Date(r.t).toISOString(),r.t,r.temp,r.hum,r.eco2,r.tvoc,r.lux,r.bat,r.csq].join(",")).join("\n");
+  const blob=new Blob([head+body],{type:"text/csv"});const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download="airmonitor_historico.csv";a.click();URL.revokeObjectURL(a.href);
+};
+document.getElementById("clearHistBtn").onclick=async()=>{if(confirm("¿Borrar todos los históricos almacenados?")){await clearStore("readings");loadHistory();}};
+// alarmas
+document.getElementById("saveCfg").onclick=()=>{readCfgForm();alert("Reglas guardadas");};
+document.getElementById("resetCfg").onclick=()=>{S.cfg=structuredClone(DEFAULT_CFG);saveCfgLS();buildCfgForm();};
+document.getElementById("soundChk").onchange=e=>S.sound=e.target.checked;
+document.getElementById("testAlarm").onclick=()=>{
+  setActive("test:high",{metric:"temp",type:"high",value:35,msg:"Prueba de alarma: Temperatura 35 °C",expire:Date.now()+8000});
+  renderAlarms();
+};
+document.getElementById("clearLog").onclick=async()=>{if(confirm("¿Vaciar el historial de eventos?")){await clearStore("alarms");renderLog();}};
+document.getElementById("alarmPill").onclick=()=>switchTab("alarms");
+// ThingSpeak
 const modal=document.getElementById("modal");
-document.getElementById("thingBtn").onclick=()=>modal.classList.add("open");
 document.getElementById("tsCancel").onclick=()=>modal.classList.remove("open");
-document.getElementById("tsConnect").onclick=async ()=>{
-  const ch=document.getElementById("tsChannel").value.trim();
-  const key=document.getElementById("tsKey").value.trim();
+document.getElementById("tsConnect").onclick=async()=>{
+  const ch=document.getElementById("tsChannel").value.trim(),key=document.getElementById("tsKey").value.trim();
   if(!ch){alert("Indica el Channel ID");return;}
-  modal.classList.remove("open");
-  state.mode="thingspeak";
+  modal.classList.remove("open");S.source="thingspeak";S.ts={channel:ch,key};
+  [...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="thingspeak"));
   document.getElementById("srcLabel").innerHTML=`Fuente: <b>ThingSpeak canal ${ch}</b> · sondeo cada 15 s`;
-  const poll=async ()=>{
+  const poll=async()=>{ if(!S.running)return;
     try{
-      const url=`https://api.thingspeak.com/channels/${ch}/feeds.json?results=${MAXPTS}`+(key?`&api_key=${key}`:"");
-      const r=await fetch(url); if(!r.ok) throw new Error("HTTP "+r.status);
-      const j=await r.json();
-      // reset series
-      state.times=[]; METRICS.forEach(m=>state.series[m.key]=[]);
-      j.feeds.forEach(f=>{
-        const time=new Date(f.created_at).toLocaleTimeString("es-ES",{hour12:false});
-        pushSampleSilent({
-          temp:+f.field1||0, hum:+f.field2||0, eco2:+f.field3||0,
-          tvoc:+f.field4||0, lux:+f.field5||0, bat:+f.field6||3.9
-        }, time);
-      });
-      render();
-    }catch(e){
-      document.getElementById("srcLabel").innerHTML=`Fuente: <b>error ThingSpeak</b> (${e.message}) — volviendo a demo`;
-      state.mode="demo";
-    }
+      const url=`https://api.thingspeak.com/channels/${ch}/feeds.json?results=20`+(key?`&api_key=${key}`:"");
+      const r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);
+      const j=await r.json();const feeds=j.feeds||[];
+      for(const f of feeds){
+        const rec={t:new Date(f.created_at).getTime(),temp:+f.field1||0,hum:+f.field2||0,eco2:+f.field3||0,
+          tvoc:+f.field4||0,lux:+f.field5||0,bat:+f.field6||3.9,csq:+f.field7||20};
+        if(rec.t>S.lastT) await ingest(rec);
+      }
+    }catch(e){document.getElementById("srcLabel").innerHTML=`Fuente: <b>error ThingSpeak</b> (${e.message})`;}
   };
-  await poll();
-  clearInterval(timer); timer=setInterval(()=>{ if(state.running) poll(); },15000);
+  await poll();clearInterval(timer);timer=setInterval(poll,15000);
 };
+window.addEventListener("resize",()=>{if(S.view==="realtime")renderRealtime();else if(S.view==="history")loadHistory();});
 </script>
 </body>
 </html>
