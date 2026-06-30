@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Plataforma SaaS de monitoreo agrícola inteligente: estaciones 4G, sensores, alarmas y analítica de campo.">
+<title>[Marca] — Monitoreo agrícola inteligente</title>
+<style>
+  :root{
+    --bg:#0a0f1d;--bg2:#0e1426;--panel:#141d33;--panel2:#1a2440;--line:#283450;
+    --txt:#eaf0fb;--muted:#9aa6c4;--brand:#52e3a4;--brand2:#3fa7ff;--accent:#a78bfa;
+    --good:#34d399;--warn:#fbbf24;--bad:#fb7185;--shadow:0 10px 40px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;min-height:100vh}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);
+    color:var(--txt);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+  .btn:hover{border-color:var(--brand)}
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#04121e}
+  .btn.ghost{background:transparent}
+  .btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+  .btn.lg{padding:14px 24px;font-size:15px}
+  .btn.block{width:100%;justify-content:center}
+  .muted{color:var(--muted)}
+  .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    color:var(--brand);background:rgba(82,227,164,.1);padding:5px 11px;border-radius:999px}
+  /* ---------- top nav (marketing) ---------- */
+  .nav{position:sticky;top:0;z-index:30;background:rgba(10,15,29,.82);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+  .nav .inner{display:flex;align-items:center;gap:22px;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px}
+  .brand .mark{width:32px;height:32px}
+  .nav .links{display:flex;gap:22px;margin-left:14px}
+  .nav .links a{color:var(--muted);font-size:14px;font-weight:500}
+  .nav .links a:hover{color:var(--txt)}
+  .nav .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+  .navtoggle{display:none;background:none;border:none;color:var(--txt);font-size:22px;cursor:pointer}
+  /* ---------- hero ---------- */
+  .hero{position:relative;overflow:hidden;padding:72px 0 64px;
+    background:radial-gradient(900px 460px at 80% -10%,rgba(63,167,255,.16),transparent 60%),
+               radial-gradient(700px 420px at 5% 0%,rgba(82,227,164,.12),transparent 55%)}
+  .hero h1{font-size:50px;line-height:1.05;letter-spacing:-1px;max-width:13ch;margin:16px 0}
+  .hero p.lead{font-size:19px;color:var(--muted);max-width:54ch;margin-bottom:26px}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero .stats{display:flex;gap:34px;margin-top:40px;flex-wrap:wrap}
+  .hero .stats b{font-size:26px;display:block}
+  .hero .stats span{font-size:13px;color:var(--muted)}
+  .heroart{position:absolute;right:-40px;top:60px;width:480px;max-width:42vw;opacity:.95;display:none}
+  @media(min-width:980px){.heroart{display:block}.hero{padding-bottom:90px}}
+  /* ---------- sections ---------- */
+  section.block{padding:62px 0;border-top:1px solid var(--line)}
+  .h2{font-size:32px;letter-spacing:-.5px;margin-bottom:8px}
+  .sub{color:var(--muted);max-width:60ch;margin-bottom:34px}
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:600px){.g3,.g4,.g2{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+  .card .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;
+    background:rgba(82,227,164,.12);margin-bottom:14px}
+  .card h3{font-size:17px;margin-bottom:6px}
+  .card p{font-size:14px;color:var(--muted)}
+  .steps{counter-reset:s}
+  .step{display:flex;gap:16px;align-items:flex-start;padding:16px 0}
+  .step .n{counter-increment:s;flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
+    font-weight:800;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e}
+  .step .n:before{content:counter(s)}
+  /* ---------- pricing ---------- */
+  .toggle{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:8px}
+  .toggle button{border:none;background:none;color:var(--muted);padding:8px 16px;border-radius:999px;cursor:pointer;font-size:13px;font-weight:600}
+  .toggle button.on{background:rgba(82,227,164,.16);color:var(--txt)}
+  .price{font-size:40px;font-weight:800;letter-spacing:-1px}
+  .price small{font-size:14px;font-weight:500;color:var(--muted)}
+  .plan{position:relative;display:flex;flex-direction:column}
+  .plan.pop{border-color:var(--brand);box-shadow:0 0 0 1px var(--brand),var(--shadow)}
+  .plan .pill{position:absolute;top:-12px;left:22px;background:var(--brand);color:#04121e;font-size:11px;font-weight:800;
+    padding:3px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.4px}
+  .feat{list-style:none;margin:16px 0;display:flex;flex-direction:column;gap:9px}
+  .feat li{font-size:13.5px;display:flex;gap:9px;color:var(--muted)}
+  .feat li:before{content:"✓";color:var(--brand);font-weight:800}
+  .feat li.no{color:#5b6582}
+  .feat li.no:before{content:"—";color:#4a5572}
+  /* ---------- products ---------- */
+  .prod img,.prodimg{width:100%;height:150px;border-radius:12px;display:grid;place-items:center;font-size:46px;
+    background:radial-gradient(120px 80px at 50% 30%,rgba(63,167,255,.2),transparent),var(--bg2);margin-bottom:14px}
+  .prod .row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+  .prod .p{font-size:20px;font-weight:800}
+  /* ---------- checkout ---------- */
+  .checkout{display:grid;grid-template-columns:1.4fr 1fr;gap:22px;align-items:start}
+  @media(max-width:860px){.checkout{grid-template-columns:1fr}}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+  .field input,.field select{width:100%;background:var(--bg2);border:1px solid var(--line);color:var(--txt);
+    padding:11px 12px;border-radius:11px;font-size:14px}
+  .litem{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .litem .q{display:flex;gap:8px;align-items:center}
+  .iconbtn{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--txt);cursor:pointer;font-size:14px;line-height:1}
+  .total{display:flex;justify-content:space-between;font-size:20px;font-weight:800;margin-top:14px}
+  /* ---------- auth ---------- */
+  .authwrap{min-height:72vh;display:grid;place-items:center;padding:40px 0}
+  .authcard{width:100%;max-width:420px}
+  .rolebtns{display:grid;gap:10px;margin-top:6px}
+  .rolebtn{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border:1px solid var(--line);
+    background:var(--bg2);border-radius:12px;cursor:pointer;color:var(--txt)}
+  .rolebtn:hover{border-color:var(--brand)}
+  .rolebtn .ri{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex:0 0 auto}
+  .rolebtn b{font-size:14px}.rolebtn span{font-size:12px;color:var(--muted)}
+  /* ---------- app shell (RBAC) ---------- */
+  .appshell{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+  .side{background:var(--bg2);border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+  .side .brand{margin:4px 8px 18px}
+  .side nav{display:flex;flex-direction:column;gap:3px}
+  .side nav a{display:flex;gap:11px;align-items:center;padding:10px 12px;border-radius:11px;color:var(--muted);font-size:14px;font-weight:500;cursor:pointer}
+  .side nav a:hover{background:rgba(255,255,255,.04);color:var(--txt)}
+  .side nav a.on{background:rgba(82,227,164,.14);color:var(--txt)}
+  .side .sep{font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin:16px 12px 6px;color:#65718f}
+  .appmain{min-width:0;display:flex;flex-direction:column}
+  .apptop{height:62px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 22px;position:sticky;top:0;background:rgba(10,15,29,.85);backdrop-filter:blur(8px);z-index:5}
+  .apptop .who{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));display:grid;place-items:center;font-weight:800;color:#04121e;font-size:13px}
+  .rolebadge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(167,139,250,.16);color:var(--accent)}
+  .appbody{padding:24px 22px;max-width:1100px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.appshell{grid-template-columns:1fr}.side{position:fixed;z-index:40;left:-260px;transition:.2s;width:248px}.side.open{left:0}}
+  .kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:16px}
+  .kpi .l{font-size:12px;color:var(--muted)}
+  .kpi .v{font-size:26px;font-weight:800;margin-top:4px}
+  .kpi .d{font-size:12px;margin-top:4px}
+  .up{color:var(--good)}.down{color:var(--bad)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+  tbody tr:hover{background:rgba(255,255,255,.025)}
+  .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .b-good{background:rgba(52,211,153,.15);color:var(--good)}
+  .b-warn{background:rgba(251,191,36,.15);color:var(--warn)}
+  .b-bad{background:rgba(251,113,133,.15);color:var(--bad)}
+  .b-muted{background:rgba(154,166,196,.14);color:var(--muted)}
+  .panelcard{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .panelcard h3{padding:14px 16px;font-size:15px;border-bottom:1px solid var(--line)}
+  .denied{text-align:center;padding:60px 20px;color:var(--muted)}
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:40px 0;color:var(--muted);font-size:13px}
+  footer .cols{display:flex;gap:60px;flex-wrap:wrap;margin-bottom:24px}
+  footer h4{color:var(--txt);font-size:13px;margin-bottom:10px}
+  footer a{display:block;color:var(--muted);padding:3px 0}
+  footer a:hover{color:var(--txt)}
+  .cartdot{position:relative}
+  .cartdot b{position:absolute;top:-6px;right:-8px;background:var(--brand);color:#04121e;font-size:10px;font-weight:800;border-radius:999px;padding:1px 5px}
+  .toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);
+    background:var(--brand);color:#04121e;padding:11px 18px;border-radius:12px;font-weight:700;font-size:13px;
+    opacity:0;transition:.3s;z-index:60;pointer-events:none}
+  .toast.show{opacity:1}
+  @media(max-width:760px){.nav .links{display:none}.navtoggle{display:block}.hero h1{font-size:36px}.h2{font-size:26px}}
+  .compare{overflow:auto}
+  .compare table{min-width:640px}
+  .center{text-align:center}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ====================================================================
+   [Marca] — sitio SaaS (landing + tienda + checkout + login + plataforma RBAC)
+   Marca placeholder: cambia BRAND en un solo lugar.
+   ==================================================================== */
+const BRAND = "[Marca]";
+const DASHBOARD_URL = "../dashboard/index.html";  // la plataforma de monitoreo ya construida
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtCLP = n => "$"+Math.round(n).toLocaleString("es-CL");
+const toast = m => {const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1900);};
+
+function mark(size=32){return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
+  <rect width="48" height="48" rx="12" fill="url(#bg)"/>
+  <path d="M14 30c4-1 6-5 6-10 0 6 3 9 7 9 3 0 5-2 6-5" stroke="#04121e" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <circle cx="34" cy="15" r="3.4" fill="#04121e"/>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#52e3a4"/><stop offset="1" stop-color="#3fa7ff"/></linearGradient></defs>
+</svg>`;}
+
+/* ---------- catálogo, planes, datos demo ---------- */
+const PRODUCTS = [
+  {id:"station", name:"Estación 4G LTE CAT1", emoji:"📡", price:189000, desc:"Nodo ESP32-S3 con módem 4G, batería LiPo y carcasa intemperie."},
+  {id:"sensors", name:"Kit de sensores ambientales", emoji:"🌡️", price:64000, desc:"Temp/Humedad (AHT10), gases (SGP30) y luz (BH1750)."},
+  {id:"solar",   name:"Panel solar + soporte", emoji:"🔆", price:42000, desc:"Autonomía energética para despliegue permanente en campo."},
+  {id:"gateway", name:"Gateway de campo", emoji:"🛰️", price:120000, desc:"Concentra múltiples estaciones y reenvía por 4G."},
+];
+const PLANS = [
+  {id:"starter", name:"Starter", m:0, y:0, tagline:"Para probar en un campo",
+   feats:[["Hasta 2 estaciones",1],["Tiempo real y alarmas",1],["Históricos 7 días",1],["1 usuario",1],["Mapa de sensores",0],["Reportes PDF/Excel",0],["Roles y equipo",0],["Soporte prioritario",0]]},
+  {id:"pro", name:"Pro", m:29000, y:290000, pop:true, tagline:"Para productores y fundos",
+   feats:[["Hasta 15 estaciones",1],["Tiempo real y alarmas",1],["Históricos 1 año",1],["Hasta 10 usuarios",1],["Mapa de sensores",1],["Reportes PDF/Excel",1],["Roles y equipo",1],["Soporte prioritario",0]]},
+  {id:"empresa", name:"Empresa", m:0, y:0, tagline:"Multi-campo y agroindustria", custom:true,
+   feats:[["Estaciones ilimitadas",1],["Tiempo real y alarmas",1],["Históricos ilimitados",1],["Usuarios ilimitados",1],["Mapa de sensores",1],["Reportes + API",1],["Roles y jerarquía completa",1],["Soporte 24/7 + SLA",1]]},
+];
+const USECASES = [
+  {emoji:"❄️",t:"Alerta de heladas",d:"Avisos tempranos por temperatura crítica para activar riego o calefactores."},
+  {emoji:"💧",t:"Gestión de riego",d:"Humedad y clima para regar en el momento justo y ahorrar agua."},
+  {emoji:"🌬️",t:"Clima y calidad del aire",d:"Temperatura, humedad, CO₂ y luz por parcela, en vivo e histórico."},
+  {emoji:"📈",t:"Decisiones con datos",d:"Tendencias y reportes para optimizar rendimiento por temporada."},
+];
+const MODULES = [
+  {emoji:"📈",t:"Tiempo real",d:"Lecturas de cada sensor al instante, con tarjetas y gráficas."},
+  {emoji:"🗂️",t:"Históricos",d:"Series por rango con exportación a CSV, Excel y PDF."},
+  {emoji:"🔔",t:"Alarmas",d:"Umbrales, cambios bruscos y caída de señal, con notificaciones."},
+  {emoji:"🗺️",t:"Mapa de sensores",d:"Geolocaliza estaciones y entra a la ficha de cada una."},
+  {emoji:"📋",t:"Reportes",d:"Informes por estación y periodo, listos para compartir."},
+  {emoji:"🔌",t:"API e integraciones",d:"Conecta con ThingSpeak, MQTT o tu propio backend."},
+];
+const DEMO_USERS = {
+  "super@demo.cl":{role:"superadmin", name:"Diego (Plataforma)", org:"[Marca]"},
+  "admin@demo.cl":{role:"account_admin", name:"María (AgroDemo)", org:"AgroDemo SpA"},
+  "campo@demo.cl":{role:"field_supervisor", name:"Pedro (Fundo Sur)", org:"AgroDemo SpA"},
+};
+const ROLES = {
+  superadmin:{label:"Super Admin", ico:"🛡️", level:0, color:"var(--accent)"},
+  account_admin:{label:"Admin de Cuenta", ico:"🏢", level:1, color:"var(--brand2)"},
+  field_supervisor:{label:"Supervisor de Campo", ico:"🌾", level:2, color:"var(--brand)"},
+};
+
+/* ---------- estado (carrito, sesión, ciclo de pago) ---------- */
+const store = {
+  get cart(){try{return JSON.parse(localStorage.getItem("mk.cart"))||[]}catch(e){return[]}},
+  set cart(v){localStorage.setItem("mk.cart",JSON.stringify(v));updateCartCount();},
+  get session(){try{return JSON.parse(localStorage.getItem("mk.session"))}catch(e){return null}},
+  set session(v){v?localStorage.setItem("mk.session",JSON.stringify(v)):localStorage.removeItem("mk.session");},
+  billing:"y",
+};
+function addToCart(item){const c=store.cart;const ex=c.find(x=>x.id===item.id);if(ex)ex.qty++;else c.push({...item,qty:1});store.cart=c;toast("Añadido al carrito");}
+function cartCount(){return store.cart.reduce((s,i)=>s+i.qty,0);}
+function cartTotal(){return store.cart.reduce((s,i)=>s+i.price*i.qty,0);}
+function updateCartCount(){document.querySelectorAll("[data-cartcount]").forEach(e=>{const n=cartCount();e.innerHTML=n?`<b>${n}</b>`:"";});}
+
+/* ====================================================================
+   Router
+   ==================================================================== */
+const routes={};
+function go(hash){location.hash=hash;}
+function router(){
+  const raw=(location.hash.replace(/^#\/?/,"")||"").split("/");
+  const path=raw[0]||"home";
+  if(path==="app"){ return renderApp(raw.slice(1)); }
+  const view=routes[path]||routes.home;
+  document.getElementById("root").innerHTML = chromeTop() + view(raw.slice(1)) + chromeFoot();
+  bindCommon();
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",router);
+window.addEventListener("DOMContentLoaded",()=>{router();updateCartCount();});
+
+/* ---------- chrome marketing ---------- */
+function chromeTop(){
+  return `<div class="nav"><div class="wrap inner">
+    <a class="brand" href="#/home">${mark(32)} ${esc(BRAND)}</a>
+    <div class="links">
+      <a href="#/home">Producto</a>
+      <a href="#/productos">Hardware</a>
+      <a href="#/planes">Planes</a>
+      <a href="#/home#como">Cómo funciona</a>
+    </div>
+    <div class="right">
+      <a class="btn ghost sm cartdot" href="#/checkout" title="Carrito">🛒<span data-cartcount></span></a>
+      <a class="btn ghost sm" href="#/login">Entrar</a>
+      <a class="btn primary sm" href="#/planes">Empezar</a>
+    </div>
+  </div></div>`;
+}
+function chromeFoot(){
+  return `<footer><div class="wrap">
+    <div class="cols">
+      <div style="flex:1;min-width:200px"><div class="brand" style="font-size:16px">${mark(26)} ${esc(BRAND)}</div>
+        <p class="muted" style="margin-top:10px;max-width:30ch">Monitoreo agrícola inteligente: estaciones 4G, sensores y analítica de campo.</p></div>
+      <div><h4>Producto</h4><a href="#/home">Características</a><a href="#/productos">Hardware</a><a href="#/planes">Planes</a><a href="${DASHBOARD_URL}" target="_blank">Demo en vivo</a></div>
+      <div><h4>Plataforma</h4><a href="#/login">Iniciar sesión</a><a href="#/planes">Crear cuenta</a><a href="#/home#roles">Roles</a></div>
+      <div><h4>Recursos</h4><a href="#/home">Soporte</a><a href="#/home">Documentación</a><a href="#/home">Estado del sistema</a></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);padding-top:18px">
+      <span>© ${"2026"} ${esc(BRAND)}. Marca y precios de demostración.</span>
+      <span>Hecho con la plataforma de monitoreo · <a href="${DASHBOARD_URL}" target="_blank" style="display:inline;color:var(--brand)">abrir dashboard</a></span>
+    </div>
+  </div></footer>`;
+}
+
+/* ====================================================================
+   Vistas marketing
+   ==================================================================== */
+routes.home=()=>`
+  <header class="hero"><div class="wrap">
+    <span class="tag">SaaS · AgTech</span>
+    <h1>El campo, bajo control en tiempo real.</h1>
+    <p class="lead">Estaciones 4G y sensores que miden clima, humedad y calidad del aire en cada parcela. Alarmas, históricos y mapas en una sola plataforma.</p>
+    <div class="cta">
+      <a class="btn primary lg" href="#/planes">Ver planes</a>
+      <a class="btn ghost lg" href="${DASHBOARD_URL}" target="_blank">Probar la demo en vivo →</a>
+    </div>
+    <div class="stats">
+      <div><b>4G LTE</b><span>conectividad sin WiFi</span></div>
+      <div><b>−40…85 °C</b><span>operación a la intemperie</span></div>
+      <div><b>6+ sensores</b><span>clima y calidad del aire</span></div>
+      <div><b>24/7</b><span>alarmas y monitoreo</span></div>
+    </div>
+    <div class="heroart card" style="padding:14px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Estación · Fundo Sur</div>
+      ${miniChart()}
+      <div style="display:flex;gap:10px;margin-top:10px">
+        ${miniKpi("Temp","23.4°","up")}${miniKpi("Humedad","48%","")}${miniKpi("eCO₂","1180","down")}
+      </div>
+    </div>
+  </div></header>
+
+  <section class="block" id="modulos"><div class="wrap">
+    <div class="tag">Plataforma</div><h2 class="h2">Todo lo que necesitas para monitorear</h2>
+    <p class="sub">Una plataforma SaaS multiempresa con roles y jerarquía, lista para escalar de un campo a toda la agroindustria.</p>
+    <div class="grid g3">${MODULES.map(m=>`<div class="card"><div class="ico">${m.emoji}</div><h3>${m.t}</h3><p>${m.d}</p></div>`).join("")}</div>
+  </div></section>
+
+  <section class="block" id="como"><div class="wrap">
+    <div class="tag">Cómo funciona</div><h2 class="h2">En marcha en 3 pasos</h2>
+    <div class="grid g2" style="margin-top:20px"><div class="steps">
+      <div class="step"><div class="n"></div><div><h3>Instala la estación</h3><p class="muted">Coloca el nodo 4G con sus sensores en la parcela. Energía por batería o panel solar.</p></div></div>
+      <div class="step"><div class="n"></div><div><h3>Conéctate por 4G</h3><p class="muted">Sin WiFi: la estación envía datos por celular. Provisión guiada desde la app.</p></div></div>
+      <div class="step"><div class="n"></div><div><h3>Monitorea y recibe alarmas</h3><p class="muted">Tiempo real, históricos, mapa y avisos. Invita a tu equipo con roles.</p></div></div>
+    </div>
+    <div class="card" style="display:grid;place-items:center;min-height:240px">${miniChart(true)}</div>
+    </div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <div class="tag">Casos de uso</div><h2 class="h2">Pensado para el agro</h2>
+    <div class="grid g4">${USECASES.map(u=>`<div class="card"><div class="ico">${u.emoji}</div><h3>${u.t}</h3><p>${u.d}</p></div>`).join("")}</div>
+  </div></section>
+
+  <section class="block" id="roles"><div class="wrap">
+    <div class="tag">Multiempresa</div><h2 class="h2">Roles con jerarquía</h2>
+    <p class="sub">Cada perfil ve y administra solo lo que le corresponde. Control de acceso de extremo a extremo.</p>
+    <div class="grid g3">
+      ${roleCard("superadmin","Administra empresas, planes, facturación y toda la flota de dispositivos.")}
+      ${roleCard("account_admin","Gestiona los usuarios, campos, dispositivos y el plan de su empresa.")}
+      ${roleCard("field_supervisor","Supervisa sus campos y estaciones, atiende alarmas y genera reportes.")}
+    </div>
+  </div></section>
+
+  <section class="block"><div class="wrap center">
+    <h2 class="h2">¿Listo para llevar tus campos a otro nivel?</h2>
+    <p class="sub" style="margin:0 auto 22px">Empieza gratis con el plan Starter o agenda una demo guiada.</p>
+    <a class="btn primary lg" href="#/planes">Ver planes</a>
+  </div></section>`;
+
+function roleCard(r,desc){const R=ROLES[r];return `<div class="card"><div class="ico" style="background:${R.color}22">${R.ico}</div>
+  <h3>${R.label}</h3><p>${desc}</p></div>`;}
+function miniKpi(l,v,d){return `<div style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:10px;color:var(--muted)">${l}</div><div style="font-size:16px;font-weight:800">${v}</div></div>`;}
+function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><polyline fill="none" stroke="#52e3a4" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#3fa7ff" stroke-width="2" opacity=".7" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
+
+/* ---------- productos ---------- */
+routes.productos=()=>`
+  <section class="block"><div class="wrap">
+    <div class="tag">Hardware</div><h2 class="h2">Equipos para el campo</h2>
+    <p class="sub">Estaciones y accesorios listos para desplegar. Combínalos con cualquier plan del software.</p>
+    <div class="grid g4">
+      ${PRODUCTS.map(p=>`<div class="card prod"><div class="prodimg">${p.emoji}</div>
+        <h3>${p.name}</h3><p>${p.desc}</p>
+        <div class="row"><span class="p">${fmtCLP(p.price)}</span>
+        <button class="btn primary sm" data-add="${p.id}">Añadir</button></div></div>`).join("")}
+    </div>
+    <div class="card" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
+      <div><h3>¿No sabes qué necesitas?</h3><p class="muted">Cuéntanos tu cultivo y superficie y armamos el kit.</p></div>
+      <a class="btn" href="#/login">Hablar con ventas</a>
+    </div>
+  </div></section>`;
+
+/* ---------- planes ---------- */
+routes.planes=()=>{
+  const y=store.billing==="y";
+  return `<section class="block"><div class="wrap">
+    <div class="center"><div class="tag">Planes</div><h2 class="h2">Precios simples, escala cuando quieras</h2>
+    <p class="sub" style="margin:0 auto 18px">Cambia de plan en cualquier momento. Sin permanencia.</p>
+    <div class="toggle"><button data-bill="m" class="${y?"":"on"}">Mensual</button><button data-bill="y" class="${y?"on":""}">Anual <span style="color:var(--brand)">−17%</span></button></div></div>
+    <div class="grid g3" style="margin-top:26px">
+      ${PLANS.map(p=>{
+        const price = p.custom?null:(y?p.y:p.m);
+        const label = p.custom?`<div class="price">A medida</div>`:(price===0?`<div class="price">Gratis</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`);
+        return `<div class="card plan ${p.pop?"pop":""}">${p.pop?'<span class="pill">Más popular</span>':""}
+          <h3 style="font-size:20px">${p.name}</h3><p class="muted" style="font-size:13px">${p.tagline}</p>
+          <div style="margin:14px 0">${label}</div>
+          <ul class="feat">${p.feats.map(f=>`<li class="${f[1]?"":"no"}">${f[0]}</li>`).join("")}</ul>
+          <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/login">Contactar ventas</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">${price===0?"Empezar gratis":"Elegir "+p.name}</button>`}</div>
+        </div>`;}).join("")}
+    </div>
+    <div class="compare card" style="margin-top:26px">
+      <h3 style="margin-bottom:10px">Comparativa</h3>
+      <table><thead><tr><th>Característica</th>${PLANS.map(p=>`<th>${p.name}</th>`).join("")}</tr></thead>
+      <tbody>${PLANS[0].feats.map((_,i)=>`<tr><td>${PLANS[1].feats[i][0]}</td>${PLANS.map(p=>`<td>${p.feats[i][1]?'<span style="color:var(--brand)">✓</span>':'<span class="muted">—</span>'}</td>`).join("")}</tr>`).join("")}</tbody></table>
+    </div>
+  </div></section>`;
+};
+
+/* ---------- checkout (simulado) ---------- */
+routes.checkout=()=>{
+  const c=store.cart;
+  if(!c.length) return `<section class="block"><div class="wrap center" style="padding:60px 0">
+    <h2 class="h2">Tu carrito está vacío</h2><p class="sub" style="margin:0 auto 20px">Añade un plan o equipos para continuar.</p>
+    <a class="btn primary" href="#/planes">Ver planes</a> <a class="btn" href="#/productos">Ver hardware</a></div></section>`;
+  return `<section class="block"><div class="wrap">
+    <h2 class="h2">Finalizar compra</h2><p class="sub">Pago simulado para demostración — no se realiza ningún cobro.</p>
+    <div class="checkout">
+      <div class="card">
+        <h3 style="margin-bottom:12px">Datos de facturación</h3>
+        <div class="field"><label>Empresa / Nombre</label><input id="ck_name" placeholder="AgroDemo SpA"></div>
+        <div class="grid g2"><div class="field"><label>RUT</label><input id="ck_rut" placeholder="76.123.456-7"></div>
+        <div class="field"><label>Email</label><input id="ck_email" placeholder="tu@correo.cl"></div></div>
+        <div class="field"><label>Dirección</label><input placeholder="Camino al fundo km 4, Región"></div>
+        <h3 style="margin:18px 0 12px">Pago</h3>
+        <div class="field"><label>Número de tarjeta</label><input placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
+        <div class="grid g2"><div class="field"><label>Vencimiento</label><input placeholder="12/29"></div>
+        <div class="field"><label>CVC</label><input placeholder="123" inputmode="numeric"></div></div>
+        <button class="btn primary block lg" id="payBtn">Pagar ${fmtCLP(cartTotal())}</button>
+        <p class="muted center" style="font-size:12px;margin-top:10px">🔒 Demo · listo para integrar Stripe</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">Resumen</h3>
+        ${c.map(i=>`<div class="litem"><div><div>${esc(i.name)}</div><div class="muted" style="font-size:12px">${fmtCLP(i.price)} c/u</div></div>
+          <div class="q"><button class="iconbtn" data-dec="${i.id}">−</button><span>${i.qty}</span><button class="iconbtn" data-inc="${i.id}">+</button>
+          <button class="iconbtn" data-del="${i.id}" title="Quitar">✕</button></div></div>`).join("")}
+        <div class="litem" style="border:none"><span class="muted">Subtotal</span><span>${fmtCLP(cartTotal())}</span></div>
+        <div class="litem" style="border:none;margin-top:-8px"><span class="muted">IVA (19%)</span><span>${fmtCLP(cartTotal()*0.19)}</span></div>
+        <div class="total"><span>Total</span><span>${fmtCLP(cartTotal()*1.19)}</span></div>
+      </div>
+    </div>
+  </div></section>`;
+};
+
+/* ---------- login + selector de rol ---------- */
+routes.login=()=>`
+  <section class="authwrap"><div class="wrap authcard">
+    <div class="card">
+      <div class="brand" style="justify-content:center;margin-bottom:6px">${mark(30)} ${esc(BRAND)}</div>
+      <p class="muted center" style="margin-bottom:18px">Entra a la plataforma</p>
+      <div class="field"><label>Email</label><input id="lg_email" placeholder="tu@empresa.cl" value="admin@demo.cl"></div>
+      <div class="field"><label>Contraseña</label><input id="lg_pass" type="password" placeholder="••••••••" value="demo"></div>
+      <button class="btn primary block" id="loginBtn">Iniciar sesión</button>
+      <div class="muted center" style="font-size:12px;margin:16px 0 8px">o entra como (demo):</div>
+      <div class="rolebtns">
+        ${Object.entries(DEMO_USERS).map(([email,u])=>{const R=ROLES[u.role];return `<button class="rolebtn" data-demo="${email}">
+          <span class="ri" style="background:${R.color}22">${R.ico}</span>
+          <span style="flex:1"><b>${R.label}</b><br><span>${esc(u.name)} · ${esc(u.org)}</span></span><span class="muted">→</span></button>`;}).join("")}
+      </div>
+      <p class="muted center" style="font-size:12px;margin-top:16px">¿No tienes cuenta? <a href="#/planes" style="color:var(--brand)">Crea una</a></p>
+    </div>
+  </div></section>`;
+
+/* ====================================================================
+   Plataforma con RBAC
+   ==================================================================== */
+const NAV = {
+  superadmin:[
+    ["resumen","Resumen","📊"],["empresas","Empresas","🏢"],["planes","Planes y MRR","💳"],
+    ["usuarios","Usuarios","👥"],["dispositivos","Dispositivos","📡"],["ajustes","Ajustes","⚙️"],
+  ],
+  account_admin:[
+    ["resumen","Resumen","📊"],["campos","Campos","🌾"],["dispositivos","Dispositivos","📡"],
+    ["usuarios","Equipo","👥"],["facturacion","Facturación","💳"],["ajustes","Ajustes","⚙️"],
+  ],
+  field_supervisor:[
+    ["resumen","Resumen","📊"],["campos","Mis campos","🌾"],["estaciones","Estaciones","📡"],
+    ["alarmas","Alarmas","🔔"],["reportes","Reportes","📋"],
+  ],
+};
+function renderApp(parts){
+  const sess=store.session;
+  if(!sess){ location.hash="#/login"; return; }
+  const page=parts[0]||"resumen";
+  const allowed=NAV[sess.role].map(n=>n[0]);
+  const root=document.getElementById("root");
+  root.innerHTML=`<div class="appshell">
+    <aside class="side" id="side">
+      <a class="brand" href="#/home">${mark(28)} ${esc(BRAND)}</a>
+      <div class="sep">${esc(sess.org)}</div>
+      <nav>${NAV[sess.role].map(n=>`<a data-nav="${n[0]}" class="${n[0]===page?"on":""}">${n[2]} ${n[1]}</a>`).join("")}</nav>
+      <div class="sep">Monitoreo</div>
+      <nav><a href="${DASHBOARD_URL}" target="_blank">🛰️ Abrir dashboard en vivo</a></nav>
+    </aside>
+    <div class="appmain">
+      <div class="apptop">
+        <button class="iconbtn" id="burger" style="width:34px;height:34px">☰</button>
+        <strong>${(NAV[sess.role].find(n=>n[0]===page)||[,"—"])[1]}</strong>
+        <div class="who">
+          <span class="rolebadge" style="color:${ROLES[sess.role].color}">${ROLES[sess.role].ico} ${ROLES[sess.role].label}</span>
+          <span class="avatar">${esc(sess.name[0])}</span>
+          <button class="btn ghost sm" id="logout">Salir</button>
+        </div>
+      </div>
+      <div class="appbody" id="appbody">${allowed.includes(page)?appPage(sess,page):deniedView()}</div>
+    </div>
+  </div>`;
+  bindApp(sess);
+}
+function deniedView(){return `<div class="denied"><h2>Sin acceso</h2><p>Tu rol no tiene permiso para esta sección.</p></div>`;}
+
+/* ---------- páginas de la plataforma (datos demo, por rol) ---------- */
+function kpi(l,v,d,cls){return `<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div>${d?`<div class="d ${cls||""}">${d}</div>`:""}</div>`;}
+function tableCard(title,head,rows){return `<div class="panelcard" style="margin-top:18px"><h3>${title}</h3>
+  <div style="overflow:auto"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead>
+  <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;}
+const bdg=(t,c)=>`<span class="badge b-${c}">${t}</span>`;
+
+function appPage(sess,page){
+  const R=sess.role;
+  if(page==="resumen"){
+    if(R==="superadmin") return `<div class="kpis">
+      ${kpi("Empresas","24","+3 este mes","up")}${kpi("MRR","$3.480.000","+12%","up")}
+      ${kpi("Dispositivos","412","98% en línea","")}${kpi("Alarmas activas","7","−2 vs ayer","down")}</div>
+      ${tableCard("Empresas recientes",["Empresa","Plan","Dispositivos","Estado"],[
+        ["AgroDemo SpA","Pro","15",bdg("Activa","good")],["Viñas del Maule","Empresa","82",bdg("Activa","good")],
+        ["Frutícola Norte","Pro","9",bdg("Pago pendiente","warn")],["Hortalizas Sur","Starter","2",bdg("Trial","muted")]])}`;
+    if(R==="account_admin") return `<div class="kpis">
+      ${kpi("Campos","6","","")}${kpi("Estaciones","15","14 en línea","")}
+      ${kpi("Usuarios","8 / 10","plan Pro","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
+      ${tableCard("Estado de campos",["Campo","Estaciones","Última alarma","Estado"],[
+        ["Fundo Sur","6","Helada 04:12",bdg("Atención","warn")],["Parcela Río","4","—",bdg("Normal","good")],
+        ["Cuartel A","3","eCO₂ alto",bdg("Normal","good")],["Invernadero 1","2","—",bdg("Normal","good")]])}`;
+    return `<div class="kpis">
+      ${kpi("Mis campos","2","","")}${kpi("Estaciones","9","9 en línea","")}
+      ${kpi("Alarmas activas","1","helada","")}${kpi("Batería media","82%","","up")}</div>
+      ${tableCard("Mis estaciones",["Estación","Campo","Temp","Estado"],[
+        ["AME-01","Fundo Sur","2.1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C",bdg("Normal","good")],
+        ["AME-07","Cuartel A","8.0 °C",bdg("Normal","good")]])}`;
+  }
+  if(page==="empresas") return tableCard("Empresas (tenants)",["Empresa","Plan","Usuarios","Dispositivos","MRR","Estado"],[
+    ["AgroDemo SpA","Pro","8","15","$290.000",bdg("Activa","good")],["Viñas del Maule","Empresa","34","82","$0 (anual)",bdg("Activa","good")],
+    ["Frutícola Norte","Pro","5","9","$29.000",bdg("Pendiente","warn")],["Hortalizas Sur","Starter","1","2","$0",bdg("Trial","muted")]]);
+  if(page==="planes") return `<div class="kpis">${kpi("MRR","$3.480.000","+12%","up")}${kpi("ARR","$41.760.000","","")}${kpi("Suscripciones","22","","")}${kpi("Churn","1.8%","−0.3","down")}</div>
+    ${tableCard("Suscripciones por plan",["Plan","Empresas","Ingreso mensual","Tendencia"],[
+      ["Starter","9","$0","+2"],["Pro","11","$319.000","+1"],["Empresa","4","$3.161.000","="]])}`;
+  if(page==="usuarios"){
+    const scope = R==="superadmin"?"todas las empresas":esc(sess.org);
+    return `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <p class="muted">Usuarios de ${scope}</p><button class="btn primary sm" data-invite>+ Invitar usuario</button></div>
+      ${tableCard("Usuarios",["Nombre","Email","Rol","Estado"],[
+        ["María Pérez","admin@demo.cl",bdg("Admin de Cuenta","muted"),bdg("Activo","good")],
+        ["Pedro Soto","campo@demo.cl",bdg("Supervisor","muted"),bdg("Activo","good")],
+        ["Ana Díaz","ana@demo.cl",bdg("Supervisor","muted"),bdg("Invitado","warn")],
+        ["Luis Rojas","luis@demo.cl",bdg("Supervisor","muted"),bdg("Activo","good")]])}`;
+  }
+  if(page==="dispositivos") return tableCard("Dispositivos",["ID","Campo","Señal","Batería","Estado"],[
+    ["AME-01","Fundo Sur","CSQ 24","81%",bdg("En línea","good")],["AME-02","Fundo Sur","CSQ 19","76%",bdg("En línea","good")],
+    ["AME-07","Cuartel A","CSQ 8","42%",bdg("Señal baja","warn")],["AME-09","Parcela Río","—","—",bdg("Sin datos","bad")]]);
+  if(page==="campos") return `<div class="kpis">${kpi("Campos","6","")}${kpi("Hectáreas","148","")}${kpi("Estaciones","15","")}${kpi("Alarmas hoy","3","")}</div>
+    ${tableCard("Campos",["Campo","Hectáreas","Estaciones","Cultivo","Estado"],[
+      ["Fundo Sur","42","6","Cerezos",bdg("Atención","warn")],["Parcela Río","30","4","Vid",bdg("Normal","good")],
+      ["Cuartel A","20","3","Hortalizas",bdg("Normal","good")],["Invernadero 1","6","2","Tomate",bdg("Normal","good")]])}`;
+  if(page==="estaciones") return tableCard("Estaciones",["Estación","Campo","Temp","Humedad","Batería","Estado"],[
+    ["AME-01","Fundo Sur","2.1 °C","88%","81%",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C","72%","76%",bdg("Normal","good")],
+    ["AME-07","Cuartel A","8.0 °C","60%","42%",bdg("Batería baja","warn")]]);
+  if(page==="alarmas") return tableCard("Alarmas",["Fecha","Estación","Tipo","Valor","Estado"],[
+    ["Hoy 04:12","AME-01","Helada","2.1 °C",bdg("Activa","bad")],["Ayer 16:40","AME-07","Batería baja","3.4 V",bdg("Atendida","good")],
+    ["Ayer 10:05","AME-02","eCO₂ alto","1612 ppm",bdg("Repuesta","good")]]);
+  if(page==="reportes") return `<div class="grid g2">
+    ${["Resumen semanal · Fundo Sur","Heladas del mes","Calidad de aire · Cuartel A","Consumo y batería"].map(t=>`<div class="card"><h3>${t}</h3><p class="muted">Informe generado a partir de los históricos.</p><div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm" data-rep>PDF</button><button class="btn sm" data-rep>Excel</button></div></div>`).join("")}</div>`;
+  if(page==="facturacion") return `<div class="kpis">${kpi("Plan","Pro","")}${kpi("Próximo cobro","01/07","$290.000")}${kpi("Estaciones","15 / 15","límite del plan")}${kpi("Usuarios","8 / 10","")}</div>
+    <div class="card" style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div><h3>Plan Pro · anual</h3><p class="muted">Renueva el 1 de julio de 2026.</p></div>
+    <div style="display:flex;gap:8px"><a class="btn sm" href="#/planes">Cambiar plan</a><button class="btn sm">Método de pago</button></div></div>
+    ${tableCard("Historial de pagos",["Fecha","Concepto","Monto","Estado"],[
+      ["01/07/2025","Plan Pro anual","$290.000",bdg("Pagado","good")],["01/07/2024","Plan Pro anual","$290.000",bdg("Pagado","good")]])}`;
+  if(page==="ajustes") return `<div class="card"><h3 style="margin-bottom:12px">Ajustes${R==="superadmin"?" de plataforma":" de empresa"}</h3>
+    <div class="field"><label>Nombre</label><input value="${esc(sess.org)}"></div>
+    <div class="field"><label>Zona horaria</label><select><option>America/Santiago</option><option>UTC</option></select></div>
+    <div class="field"><label>Idioma</label><select><option>Español</option><option>English</option></select></div>
+    <button class="btn primary sm" data-save>Guardar</button></div>`;
+  return deniedView();
+}
+
+/* ====================================================================
+   Bindings
+   ==================================================================== */
+function bindCommon(){
+  updateCartCount();
+  document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{const p=PRODUCTS.find(x=>x.id===b.dataset.add);addToCart({id:p.id,name:p.name,price:p.price});});
+  document.querySelectorAll("[data-bill]").forEach(b=>b.onclick=()=>{store.billing=b.dataset.bill;router();});
+  document.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{const p=PLANS.find(x=>x.id===b.dataset.plan);
+    if(p.m===0&&p.y===0){store.session={...DEMO_USERS["admin@demo.cl"],email:"admin@demo.cl"};toast("Cuenta Starter creada (demo)");go("#/app");return;}
+    addToCart({id:"plan_"+p.id,name:"Plan "+p.name+(store.billing==="y"?" (anual)":" (mensual)"),price:store.billing==="y"?p.y:p.m});go("#/checkout");});
+  // checkout
+  document.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.inc);i.qty++;store.cart=c;router();});
+  document.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.dec);i.qty=Math.max(1,i.qty-1);store.cart=c;router();});
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{store.cart=store.cart.filter(x=>x.id!==b.dataset.del);router();});
+  const pay=document.getElementById("payBtn");
+  if(pay)pay.onclick=()=>{const total=fmtCLP(cartTotal()*1.19);store.cart=[];document.getElementById("root").innerHTML=chromeTop()+confirmView(total)+chromeFoot();bindCommon();window.scrollTo(0,0);};
+  // login
+  const lb=document.getElementById("loginBtn");
+  if(lb)lb.onclick=()=>{const email=(document.getElementById("lg_email").value||"").trim().toLowerCase();
+    const u=DEMO_USERS[email]||{role:"account_admin",name:email.split("@")[0]||"Usuario",org:"AgroDemo SpA"};
+    store.session={...u,email};toast("Bienvenido/a");go("#/app");};
+  document.querySelectorAll("[data-demo]").forEach(b=>b.onclick=()=>{const email=b.dataset.demo;store.session={...DEMO_USERS[email],email};go("#/app");});
+  // nav móvil
+  const tg=document.querySelector(".navtoggle");if(tg)tg.onclick=()=>document.querySelector(".nav .links").style.display="flex";
+}
+function confirmView(total){return `<section class="block"><div class="wrap center" style="padding:60px 0">
+  <div style="font-size:54px">✅</div><h2 class="h2">¡Compra confirmada!</h2>
+  <p class="sub" style="margin:6px auto 20px">Pago simulado por <b>${total}</b>. Te enviamos el acceso a la plataforma por correo (demo).</p>
+  <a class="btn primary lg" href="#/login">Entrar a la plataforma</a> <a class="btn" href="#/home">Volver al inicio</a></div></section>`;}
+function bindApp(sess){
+  document.querySelectorAll("[data-nav]").forEach(a=>a.onclick=()=>go("#/app/"+a.dataset.nav));
+  const lo=document.getElementById("logout");if(lo)lo.onclick=()=>{store.session=null;go("#/home");};
+  const bg=document.getElementById("burger");if(bg)bg.onclick=()=>document.getElementById("side").classList.toggle("open");
+  document.querySelectorAll("[data-invite]").forEach(b=>b.onclick=()=>toast("Invitación enviada (demo)"));
+  document.querySelectorAll("[data-rep]").forEach(b=>b.onclick=()=>toast("Generando reporte (demo)…"));
+  document.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>toast("Ajustes guardados (demo)"));
+}
+</script>
+</body>
+</html>
