@@ -3,7 +3,7 @@ name: Deploy GitHub Pages
 # Publica el sitio SaaS (web/) y el dashboard (dashboard/) en GitHub Pages.
 on:
   push:
-    branches: ["claude/4g-lte-air-monitor-integration-2f7fey"]
+    branches: ["main"]
     paths:
       - "web/**"
       - "dashboard/**"
