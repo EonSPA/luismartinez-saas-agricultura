@@ -181,7 +181,7 @@ const fmtCLP = n => "$"+Math.round(n).toLocaleString("es-CL");
 const toast = m => {const el=document.getElementById("toast");el.textContent=m;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1900);};
 
 /* ---------- i18n (ES/EN) ---------- */
-let lang = localStorage.getItem("mk.lang")||"es";
+let lang = "es"; try{ lang = localStorage.getItem("mk.lang")||"es"; }catch(e){}
 const I18N = {
   es:{
     nav_product:"Producto",nav_hw:"Hardware",nav_plans:"Planes",nav_how:"Cómo funciona",nav_help:"Ayuda",nav_resources:"Recursos",
@@ -235,7 +235,7 @@ const I18N = {
   },
 };
 const t = k => (I18N[lang] && I18N[lang][k]) || I18N.es[k] || k;
-function setLang(l){lang=l;localStorage.setItem("mk.lang",l);router();}
+function setLang(l){lang=l;try{localStorage.setItem("mk.lang",l);}catch(e){}router();}
 
 function mark(size=32){return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
   <rect width="48" height="48" rx="12" fill="url(#bg)"/>
@@ -292,12 +292,18 @@ const ROLES = {
   visor:{label:"Visor", ico:"👁️", level:5, color:"var(--muted)"},
 };
 
-/* ---------- estado (carrito, sesión, ciclo de pago) ---------- */
+/* ---------- estado (carrito, sesión, ciclo de pago) ----------
+   Resistente a entornos donde localStorage está bloqueado (visor/iframe):
+   cae a memoria para que la navegación nunca se rompa. */
+const _mem={};
+function lsGet(k){try{const v=localStorage.getItem(k);return v==null?(_mem[k]??null):v;}catch(e){return _mem[k]??null;}}
+function lsSet(k,v){_mem[k]=v;try{localStorage.setItem(k,v);}catch(e){}}
+function lsDel(k){delete _mem[k];try{localStorage.removeItem(k);}catch(e){}}
 const store = {
-  get cart(){try{return JSON.parse(localStorage.getItem("mk.cart"))||[]}catch(e){return[]}},
-  set cart(v){localStorage.setItem("mk.cart",JSON.stringify(v));updateCartCount();},
-  get session(){try{return JSON.parse(localStorage.getItem("mk.session"))}catch(e){return null}},
-  set session(v){v?localStorage.setItem("mk.session",JSON.stringify(v)):localStorage.removeItem("mk.session");},
+  get cart(){try{return JSON.parse(lsGet("mk.cart"))||[]}catch(e){return[]}},
+  set cart(v){lsSet("mk.cart",JSON.stringify(v));updateCartCount();},
+  get session(){try{return JSON.parse(lsGet("mk.session"))}catch(e){return null}},
+  set session(v){v?lsSet("mk.session",JSON.stringify(v)):lsDel("mk.session");},
   billing:"y",
 };
 function addToCart(item){const c=store.cart;const ex=c.find(x=>x.id===item.id);if(ex)ex.qty++;else c.push({...item,qty:1});store.cart=c;toast("Añadido al carrito");}
