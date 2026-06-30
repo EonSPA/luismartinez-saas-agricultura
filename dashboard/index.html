@@ -134,6 +134,42 @@
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--good);color:#06200f;
     padding:10px 18px;border-radius:10px;font-weight:600;font-size:13px;opacity:0;transition:opacity .3s;z-index:40;pointer-events:none}
   .toast.show{opacity:1}
+  /* mapa */
+  .maplayout{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:stretch}
+  @media(max-width:920px){.maplayout{grid-template-columns:1fr}}
+  .mapbox{position:relative;height:580px;border-radius:16px;overflow:hidden;border:1px solid var(--line);
+    background:#0c1326}
+  #gmap{position:absolute;inset:0}
+  .fallmap{position:absolute;inset:0;background:
+     linear-gradient(0deg,rgba(63,167,255,.05),rgba(63,167,255,.05)),
+     repeating-linear-gradient(0deg,transparent 0 38px,rgba(120,140,180,.06) 38px 39px),
+     repeating-linear-gradient(90deg,transparent 0 38px,rgba(120,140,180,.06) 38px 39px),
+     radial-gradient(900px 500px at 30% 20%,#16223f 0,#0c1326 70%)}
+  .fallmap:before{content:"";position:absolute;left:8%;top:62%;width:84%;height:7px;background:rgba(96,165,250,.18);
+    border-radius:6px;transform:rotate(-9deg);box-shadow:0 60px 0 -1px rgba(96,165,250,.12)}
+  .fallmap .wm{position:absolute;right:12px;bottom:8px;font-size:10px;color:var(--muted)}
+  .pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:2;text-align:center;transition:transform .12s}
+  .pin:hover{z-index:5}
+  .pin .head{width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(45deg);margin:0 auto;
+    border:2px solid rgba(255,255,255,.85);box-shadow:0 4px 10px rgba(0,0,0,.5)}
+  .pin .dotc{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#0c1326}
+  .pin .lbl{font-size:10px;font-weight:600;margin-top:3px;background:rgba(10,15,30,.8);padding:1px 6px;border-radius:6px;white-space:nowrap;display:inline-block}
+  .pin.sel{transform:translate(-50%,-100%) scale(1.25)}
+  .mapside{display:flex;flex-direction:column;gap:12px}
+  .stlist{max-height:170px;overflow:auto}
+  .stitem{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;border:1px solid transparent}
+  .stitem:hover{background:rgba(63,167,255,.06)}
+  .stitem.sel{background:rgba(63,167,255,.1);border-color:var(--line)}
+  .stitem .nm{font-size:13px;font-weight:600}
+  .stitem .co{font-size:11px;color:var(--muted)}
+  .mreadings{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}
+  .mreading{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
+  .mreading small{font-size:10px;color:var(--muted);display:block}
+  .mreading b{font-size:16px}
+  .coordrow{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .coordrow input{width:100%}
+  .expbtns{display:flex;gap:8px;margin-top:12px}
+  .expbtns .btn{flex:1;justify-content:center}
 </style>
 </head>
 <body>
@@ -160,6 +196,7 @@
   <button data-tab="realtime" class="active">📈 Tiempo real</button>
   <button data-tab="history">🗂️ Históricos</button>
   <button data-tab="alarms">🔔 Alarmas</button>
+  <button data-tab="map">🗺️ Mapa</button>
   <button data-tab="config">⚙️ Configuración</button>
 </nav>
 
@@ -301,6 +338,26 @@
           <thead><tr><th>Fecha y hora</th><th>Sensor</th><th>Tipo</th><th>Estado</th><th>Valor</th><th>Detalle</th></tr></thead>
           <tbody id="logBody"></tbody>
         </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== MAPA ===================== -->
+  <section class="view" id="view-map">
+    <div class="toolbar">
+      <span class="src">Posiciona cada sensor por geolocalización sobre el mapa. Haz clic en un marcador para ver su ficha, histórico y exportarlo.</span>
+      <div class="spacer"></div>
+      <button class="btn sm" id="addStation">➕ Añadir estación</button>
+    </div>
+    <div class="maplayout">
+      <div class="mapbox" id="mapbox"></div>
+      <div class="mapside">
+        <div class="card">
+          <h3>Estaciones</h3>
+          <div class="hint" id="mapModeHint">—</div>
+          <div class="stlist" id="stList"></div>
+        </div>
+        <div class="card" id="stDetail"><div class="empty">Selecciona una estación en el mapa</div></div>
       </div>
     </div>
   </section>
@@ -857,6 +914,7 @@ function switchTab(tab){
   if(tab==="history")loadHistory();
   if(tab==="alarms")renderAlarms();
   if(tab==="config")renderConfig();
+  if(tab==="map")renderMap();
 }
 
 /* ============================================================
@@ -975,6 +1033,7 @@ const DEFAULT_DEVCFG={
   },
   wifi:{ apSsid:"Makerfabs-", apPwd:"12345678", staSsid:"", staPwd:"" },
   power:{ reportSec:3600, readSec:3, deepSleep:true },
+  map:{ gmapsKey:"", centerLat:-33.4489, centerLng:-70.6693, zoom:13 },
 };
 function loadDevCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.devcfg"));return deepMerge(structuredClone(DEFAULT_DEVCFG),c||{});}catch(e){return structuredClone(DEFAULT_DEVCFG);}}
 function saveDevCfg(){localStorage.setItem("airmon.devcfg",JSON.stringify(DEVCFG));}
@@ -1062,6 +1121,12 @@ const SCHEMA=[
     {p:"power.reportSec",l:"Intervalo de reporte",t:"num",u:"s",h:"DEFAULT_SLEEP_TIME"},
     {p:"power.readSec",l:"Intervalo de lectura",t:"num",u:"s"},
     {p:"power.deepSleep",l:"Deep sleep entre reportes",t:"bool"},
+  ]},
+  {id:"map",title:"🗺️ Mapa / Geolocalización",hint:"Google Maps para posicionar los sensores (pestaña Mapa)",fields:[
+    {p:"map.gmapsKey",l:"Google Maps API key",t:"text",h:"vacío = mapa de respaldo"},
+    {p:"map.centerLat",l:"Centro · latitud",t:"num"},
+    {p:"map.centerLng",l:"Centro · longitud",t:"num"},
+    {p:"map.zoom",l:"Zoom inicial",t:"num"},
   ]},
 ];
 function renderConfig(){
@@ -1172,6 +1237,238 @@ document.getElementById("cfgReset").onclick=()=>{if(confirm("¿Restaurar la conf
 document.getElementById("cfgImport").onclick=()=>document.getElementById("cfgFile").click();
 document.getElementById("cfgFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
   r.onload=()=>{try{DEVCFG=deepMerge(structuredClone(DEFAULT_DEVCFG),JSON.parse(r.result));saveDevCfg();renderConfig();toast("Configuración importada");}catch(err){toast("JSON inválido");}};r.readAsText(f);};
+
+/* ============================================================
+   MAPA · estaciones geolocalizadas + exportación
+   ============================================================ */
+const DEFAULT_STATIONS=[
+  {id:"AirM01",name:"Oficina central",lat:-33.4372,lng:-70.6506},
+  {id:"AirM02",name:"Bodega norte",  lat:-33.4180,lng:-70.6700},
+  {id:"AirM03",name:"Planta sur",    lat:-33.4720,lng:-70.6400,hot:true},
+  {id:"AirM04",name:"Patio exterior",lat:-33.4505,lng:-70.6850},
+  {id:"AirM05",name:"Laboratorio",   lat:-33.4290,lng:-70.6120},
+];
+function loadStations(){try{const s=JSON.parse(localStorage.getItem("airmon.stations"));return Array.isArray(s)&&s.length?s:structuredClone(DEFAULT_STATIONS);}catch(e){return structuredClone(DEFAULT_STATIONS);}}
+function saveStations(){localStorage.setItem("airmon.stations",JSON.stringify(STATIONS));}
+let STATIONS=loadStations();
+let mapSelId=null, gMap=null, gMarkers={};
+const hashId=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h;};
+
+function genStationReading(st,t){
+  const h=hashId(st.id), s=t/1000;
+  const w=(a,p,ph)=>a*Math.sin(s/p+ph);
+  const day=Math.sin(((t%86400000)/86400000-0.25)*2*Math.PI);
+  const ecoBase=st.hot?1250:460+(h%160);
+  return {
+    t,
+    temp:+(19+(h%6)+day*4+w(0.6,40,1)).toFixed(2),
+    hum:+(45+(h%15)-day*10+w(3,55,2)).toFixed(1),
+    eco2:+Math.max(380,ecoBase+w(140,30,h%6)+(st.hot?Math.max(0,day)*500:0)).toFixed(0),
+    tvoc:+Math.max(0,70+(h%40)+w(50,25,4)+(st.hot?180:0)).toFixed(0),
+    lux:+Math.max(0,Math.max(0,day)*900+w(40,12,2)).toFixed(0),
+    bat:+(3.7+((h%30)/100)).toFixed(2),
+    csq:18+(h%12),
+  };
+}
+function stationLatest(st){return genStationReading(st,Date.now());}
+function stationHistory(st){const out=[],now=Date.now();for(let t=now-24*3600*1000;t<=now;t+=300000)out.push(genStationReading(st,t));return out;}
+function stationStatus(st){const r=stationLatest(st);if(r.eco2>1500||r.temp>32||r.tvoc>660)return"bad";if(r.eco2>1000||r.temp>30)return"warn";return"good";}
+const STCOL={good:"#34d399",warn:"#fbbf24",bad:"#fb7185"};
+
+function renderMap(){
+  const box=document.getElementById("mapbox");
+  const key=DEVCFG.map.gmapsKey;
+  if(key){ tryGoogle(key,box); document.getElementById("mapModeHint").textContent="Google Maps · "+STATIONS.length+" estaciones"; }
+  else { renderFallbackMap(box); document.getElementById("mapModeHint").textContent="Mapa de respaldo (sin API key) · "+STATIONS.length+" estaciones"; }
+  renderStationList();
+  if(mapSelId)renderStationDetail(mapSelId);
+}
+function tryGoogle(key,box){
+  loadGoogleMaps(key).then(()=>buildGoogleMap(box)).catch(()=>{ renderFallbackMap(box);
+    document.getElementById("mapModeHint").textContent="No se pudo cargar Google Maps · usando respaldo"; });
+}
+let gmapsPromise=null;
+function loadGoogleMaps(key){
+  if(window.google&&window.google.maps)return Promise.resolve();
+  if(gmapsPromise)return gmapsPromise;
+  gmapsPromise=new Promise((res,rej)=>{const s=document.createElement("script");
+    s.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(key);
+    s.async=true;s.onload=res;s.onerror=rej;document.head.appendChild(s);
+    setTimeout(()=>rej(new Error("timeout")),8000);});
+  return gmapsPromise;
+}
+function buildGoogleMap(box){
+  box.innerHTML='<div id="gmap"></div>';
+  const center={lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
+  gMap=new google.maps.Map(document.getElementById("gmap"),{center,zoom:+DEVCFG.map.zoom||13,
+    mapTypeControl:false,streetViewControl:false,styles:DARK_MAP_STYLE});
+  gMarkers={};
+  STATIONS.forEach(st=>{
+    const m=new google.maps.Marker({position:{lat:+st.lat,lng:+st.lng},map:gMap,title:st.name,
+      icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:STCOL[stationStatus(st)],fillOpacity:1,strokeColor:"#fff",strokeWeight:2}});
+    m.addListener("click",()=>selectStation(st.id));
+    gMarkers[st.id]=m;
+  });
+}
+function renderFallbackMap(box){
+  const b=bbox();
+  box.innerHTML='<div class="fallmap"><span class="wm">mapa esquemático · configura una API key de Google Maps en Ajustes</span></div>';
+  const fm=box.firstChild;
+  STATIONS.forEach(st=>{
+    const x=10+(( +st.lng-b.minLng)/((b.maxLng-b.minLng)||1))*80;
+    const y=100-(10+((+st.lat-b.minLat)/((b.maxLat-b.minLat)||1))*80);
+    const col=STCOL[stationStatus(st)];
+    const pin=document.createElement("div");pin.className="pin"+(st.id===mapSelId?" sel":"");
+    pin.style.left=x+"%";pin.style.top=y+"%";
+    pin.innerHTML=`<div class="head" style="background:${col}"></div><div class="dotc"></div><div class="lbl">${st.name}</div>`;
+    pin.onclick=()=>selectStation(st.id);
+    fm.appendChild(pin);
+  });
+}
+function bbox(){
+  const lats=STATIONS.map(s=>+s.lat),lngs=STATIONS.map(s=>+s.lng);
+  let minLat=Math.min(...lats),maxLat=Math.max(...lats),minLng=Math.min(...lngs),maxLng=Math.max(...lngs);
+  const pl=(maxLat-minLat)*0.25||0.01,pg=(maxLng-minLng)*0.25||0.01;
+  return {minLat:minLat-pl,maxLat:maxLat+pl,minLng:minLng-pg,maxLng:maxLng+pg};
+}
+function renderStationList(){
+  const box=document.getElementById("stList");box.innerHTML="";
+  STATIONS.forEach(st=>{
+    const el=document.createElement("div");el.className="stitem"+(st.id===mapSelId?" sel":"");
+    el.innerHTML=`<span class="dot" style="background:${STCOL[stationStatus(st)]}"></span>
+      <div style="flex:1"><div class="nm">${st.name}</div><div class="co">${st.id} · ${(+st.lat).toFixed(4)}, ${(+st.lng).toFixed(4)}</div></div>`;
+    el.onclick=()=>selectStation(st.id);box.appendChild(el);
+  });
+}
+function selectStation(id){
+  mapSelId=id;
+  document.querySelectorAll(".pin").forEach(p=>p.classList.remove("sel"));
+  renderMap(); // refresca selección y detalle
+  if(gMap&&gMarkers[id])gMap.panTo(gMarkers[id].getPosition());
+}
+function renderStationDetail(id){
+  const st=STATIONS.find(s=>s.id===id);if(!st)return;
+  const r=stationLatest(st),hist=stationHistory(st);
+  const vals=hist.map(h=>h.temp),mn=Math.min(...vals),mx=Math.max(...vals);
+  const pts=downsample(hist,40).map((h,i,a)=>{const x=i/(a.length-1)*250;const y=60-((h.temp-mn)/((mx-mn)||1))*52-4;return x+","+y;}).join(" ");
+  const stt=stationStatus(st);
+  document.getElementById("stDetail").innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px">
+      <span class="dot" style="background:${STCOL[stt]}"></span>
+      <div style="flex:1"><h3 style="margin:0">${st.name}</h3><div class="hint" style="margin:0">${st.id} · ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}</div></div>
+      <span class="badge b-${stt}">${stt==="bad"?"Alerta":stt==="warn"?"Atención":"Normal"}</span>
+    </div>
+    <div class="mreadings">
+      <div class="mreading"><small>Temp</small><b>${r.temp.toFixed(1)}</b><small>°C</small></div>
+      <div class="mreading"><small>Humedad</small><b>${r.hum.toFixed(0)}</b><small>%rH</small></div>
+      <div class="mreading"><small>eCO₂</small><b>${r.eco2.toFixed(0)}</b><small>ppm</small></div>
+      <div class="mreading"><small>TVOC</small><b>${r.tvoc.toFixed(0)}</b><small>ppb</small></div>
+      <div class="mreading"><small>Luz</small><b>${r.lux.toFixed(0)}</b><small>lux</small></div>
+      <div class="mreading"><small>Batería</small><b>${r.bat.toFixed(2)}</b><small>V</small></div>
+    </div>
+    <div class="hint" style="margin:0 0 4px">Temperatura · últimas 24 h</div>
+    <svg width="100%" height="64" viewBox="0 0 250 64" preserveAspectRatio="none" style="background:var(--panel);border:1px solid var(--line);border-radius:10px">
+      <polyline fill="none" stroke="#3fa7ff" stroke-width="2" points="${pts}"/></svg>
+    <div class="coordrow">
+      <input class="f" id="stLat" type="number" step="any" value="${st.lat}" placeholder="lat">
+      <input class="f" id="stLng" type="number" step="any" value="${st.lng}" placeholder="lng">
+      <button class="btn sm" id="geoBtn" title="Usar mi ubicación">📍</button>
+    </div>
+    <div class="expbtns">
+      <button class="btn sm" id="expPDF">📄 PDF</button>
+      <button class="btn sm" id="expCSV">📑 CSV</button>
+      <button class="btn sm" id="expXLS">📊 Excel</button>
+    </div>
+    <button class="btn sm danger" id="delStation" style="margin-top:8px;width:100%;justify-content:center">Eliminar estación</button>`;
+  // listeners detalle
+  const upd=()=>{st.lat=+document.getElementById("stLat").value;st.lng=+document.getElementById("stLng").value;saveStations();renderMap();};
+  document.getElementById("stLat").onchange=upd;
+  document.getElementById("stLng").onchange=upd;
+  document.getElementById("geoBtn").onclick=()=>{
+    if(!navigator.geolocation){toast("Geolocalización no disponible");return;}
+    navigator.geolocation.getCurrentPosition(p=>{st.lat=+p.coords.latitude.toFixed(6);st.lng=+p.coords.longitude.toFixed(6);saveStations();renderMap();toast("Ubicación asignada");},
+      ()=>toast("No se pudo obtener la ubicación"));
+  };
+  document.getElementById("delStation").onclick=()=>{if(confirm("¿Eliminar "+st.name+"?")){STATIONS=STATIONS.filter(s=>s.id!==st.id);mapSelId=null;saveStations();renderMap();document.getElementById("stDetail").innerHTML='<div class="empty">Selecciona una estación en el mapa</div>';}};
+  document.getElementById("expCSV").onclick=()=>exportCSV(st,hist);
+  document.getElementById("expXLS").onclick=()=>exportExcel(st,hist);
+  document.getElementById("expPDF").onclick=()=>exportPDF(st,hist);
+}
+document.getElementById("addStation").onclick=()=>{
+  const n=STATIONS.length+1;const st={id:"AirM"+String(n).padStart(2,"0"),name:"Estación "+n,lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
+  STATIONS.push(st);saveStations();selectStation(st.id);toast("Estación añadida");
+};
+
+/* -------- Exportadores -------- */
+const EXP_HEAD=["Fecha/hora","Temp °C","Humedad %rH","eCO2 ppm","TVOC ppb","Luz lux","Batería V","CSQ"];
+const expRows=hist=>hist.map(r=>[new Date(r.t).toLocaleString("es-ES",{hour12:false}),r.temp,r.hum,r.eco2,r.tvoc,r.lux,r.bat,r.csq]);
+function dl(name,content,mime){const blob=new Blob([content],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);toast("Descargado "+name);}
+function exportCSV(st,hist){
+  const rows=expRows(hist);
+  const csv=[EXP_HEAD.join(","),...rows.map(r=>r.map(c=>typeof c==="string"&&c.includes(",")?`"${c}"`:c).join(","))].join("\n");
+  dl(`${st.id}_historico.csv`,"﻿"+csv,"text/csv;charset=utf-8");
+}
+function xmlEsc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function exportExcel(st,hist){
+  const rows=expRows(hist);
+  let x='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n';
+  x+='<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+  x+='<Worksheet ss:Name="'+xmlEsc(st.name).slice(0,28)+'"><Table>\n';
+  x+='<Row>'+EXP_HEAD.map(h=>`<Cell ss:StyleID="h"><Data ss:Type="String">${xmlEsc(h)}</Data></Cell>`).join("")+'</Row>\n';
+  rows.forEach(r=>{x+='<Row>'+r.map(c=>{const num=typeof c==="number";return `<Cell><Data ss:Type="${num?"Number":"String"}">${num?c:xmlEsc(c)}</Data></Cell>`;}).join("")+'</Row>\n';});
+  x+='</Table></Worksheet>\n<Styles><Style ss:ID="h"><Font ss:Bold="1"/></Style></Styles>\n</Workbook>';
+  dl(`${st.id}_historico.xls`,x,"application/vnd.ms-excel");
+}
+// ---- PDF mínimo (texto) ----
+function ascii(s){return String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/°/g," deg").replace(/²/g,"2").replace(/[–—]/g,"-").replace(/[^\x20-\x7e]/g,"");}
+function pdfEsc(s){return s.replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");}
+function buildPDF(pages){
+  const W=595.28,H=841.89,F1=3,F2=4,obj={};
+  obj[F1]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
+  obj[F2]="<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>";
+  const kids=[];
+  pages.forEach((lines,i)=>{
+    const pg=5+2*i,co=6+2*i;kids.push(pg);
+    let st="BT\n";
+    lines.forEach(l=>{st+=`/${l.font==="mono"?"F2":"F1"} ${l.size||10} Tf\n1 0 0 1 ${l.x||40} ${(H-l.y).toFixed(1)} Tm\n(${pdfEsc(ascii(l.text))}) Tj\n`;});
+    st+="ET";
+    obj[co]=`<< /Length ${st.length} >>\nstream\n${st}\nendstream`;
+    obj[pg]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 ${F1} 0 R /F2 ${F2} 0 R >> >> /Contents ${co} 0 R >>`;
+  });
+  obj[1]="<< /Type /Catalog /Pages 2 0 R >>";
+  obj[2]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
+  const max=4+2*pages.length;let pdf="%PDF-1.4\n";const off=[];
+  for(let n=1;n<=max;n++){off[n]=pdf.length;pdf+=`${n} 0 obj\n${obj[n]}\nendobj\n`;}
+  const xp=pdf.length;pdf+=`xref\n0 ${max+1}\n0000000000 65535 f \n`;
+  for(let n=1;n<=max;n++)pdf+=String(off[n]).padStart(10,"0")+" 00000 n \n";
+  pdf+=`trailer\n<< /Size ${max+1} /Root 1 0 R >>\nstartxref\n${xp}\n%%EOF`;
+  return pdf;
+}
+function exportPDF(st,hist){
+  const pages=[];let page=[],y=54;const bottom=800;
+  const push=(text,size=10,font="normal",x=40)=>{page.push({x,y,text,size,font});y+=size*1.5;if(y>bottom){pages.push(page);page=[];y=54;}};
+  const r=hist.at(-1),vals=hist.map(h=>h.temp);
+  const mn=Math.min(...vals),mx=Math.max(...vals),avg=vals.reduce((a,b)=>a+b,0)/vals.length;
+  push("Air Monitor — Reporte de estacion",17);
+  push(`${st.name}  (${st.id})`,12);
+  push(`Coordenadas: ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}`,10);
+  push(`Generado: ${new Date().toLocaleString("es-ES")}`,10);y+=6;
+  push("Lecturas actuales",12);
+  push(`Temp ${r.temp.toFixed(1)} C   Humedad ${r.hum.toFixed(0)}%   eCO2 ${r.eco2.toFixed(0)} ppm   TVOC ${r.tvoc.toFixed(0)} ppb   Luz ${r.lux.toFixed(0)} lux`,10,"mono");
+  push(`Temperatura 24h:  min ${mn.toFixed(1)}   max ${mx.toFixed(1)}   media ${avg.toFixed(1)} C`,10,"mono");y+=6;
+  push(`Historico (ultimas 40 muestras de ${hist.length})`,12);
+  push("fecha/hora            Temp   Hum   eCO2  TVOC  Lux   Bat",9,"mono");
+  hist.slice(-40).reverse().forEach(h=>{
+    const f=new Date(h.t).toLocaleString("es-ES",{hour12:false}).padEnd(20," ");
+    push(`${f}  ${h.temp.toFixed(1).padStart(4)}  ${String(h.hum.toFixed(0)).padStart(4)}  ${String(h.eco2).padStart(5)}  ${String(h.tvoc).padStart(4)}  ${String(h.lux).padStart(4)}  ${h.bat.toFixed(2)}`,9,"mono");
+  });
+  pages.push(page);
+  dl(`${st.id}_reporte.pdf`,buildPDF(pages),"application/pdf");
+}
+// estilo oscuro de Google Maps
+const DARK_MAP_STYLE=[{elementType:"geometry",stylers:[{color:"#1b2440"}]},{elementType:"labels.text.fill",stylers:[{color:"#8a96b3"}]},
+  {elementType:"labels.text.stroke",stylers:[{color:"#0b1020"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#0d2137"}]},
+  {featureType:"road",elementType:"geometry",stylers:[{color:"#27314f"}]},{featureType:"poi",elementType:"geometry",stylers:[{color:"#1f2a47"}]}];
 </script>
 </body>
 </html>
