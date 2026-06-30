@@ -111,6 +111,29 @@
   .lvl.alarm{background:rgba(251,113,133,.16);color:var(--bad)}
   .lvl.clear{background:rgba(52,211,153,.16);color:var(--good)}
   .empty{color:var(--muted);font-size:13px;padding:18px;text-align:center}
+  /* configuración */
+  .cfgwrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px;align-items:start}
+  .cfgcard h3{display:flex;align-items:center;gap:8px}
+  .frow{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+  .frow:last-child{border-bottom:none}
+  .frow label{font-size:13px;color:var(--txt)}
+  .frow label small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .frow input,.frow select{width:100%}
+  .frow input[type=checkbox]{width:auto;justify-self:end}
+  .frow.span{grid-template-columns:1fr}
+  .pin{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:rgba(63,167,255,.1);
+    color:#9cc7ff;border:1px solid var(--line);border-radius:6px;padding:2px 6px}
+  .switchhdr{display:flex;align-items:center;justify-content:space-between;margin:-4px 0 8px}
+  .gen{margin-top:16px}
+  .gen .tabsx{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  pre.out{background:#0a0f1f;border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;
+    max-height:420px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;color:#c7d2e6;white-space:pre}
+  .pinmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+  .pinmap div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px}
+  .pinmap b{display:block;color:var(--muted);font-weight:500;font-size:11px}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--good);color:#06200f;
+    padding:10px 18px;border-radius:10px;font-weight:600;font-size:13px;opacity:0;transition:opacity .3s;z-index:40;pointer-events:none}
+  .toast.show{opacity:1}
 </style>
 </head>
 <body>
@@ -137,6 +160,7 @@
   <button data-tab="realtime" class="active">📈 Tiempo real</button>
   <button data-tab="history">🗂️ Históricos</button>
   <button data-tab="alarms">🔔 Alarmas</button>
+  <button data-tab="config">⚙️ Configuración</button>
 </nav>
 
 <main>
@@ -281,6 +305,35 @@
     </div>
   </section>
 
+  <!-- ===================== CONFIGURACIÓN ===================== -->
+  <section class="view" id="view-config">
+    <div class="toolbar">
+      <span class="src">Configuración del dispositivo y periféricos. Se guarda en el navegador y genera los artefactos para el firmware.</span>
+      <div class="spacer"></div>
+      <button class="btn sm" id="cfgImport">⬆️ Importar JSON</button>
+      <button class="btn sm danger" id="cfgReset">Restaurar valores</button>
+      <button class="btn sm primary" id="cfgSave">💾 Guardar</button>
+      <input type="file" id="cfgFile" accept="application/json" style="display:none">
+    </div>
+    <div class="cfgwrap" id="cfgSections"></div>
+
+    <div class="card gen" style="margin-top:16px">
+      <h3>Generar artefactos para el dispositivo</h3>
+      <div class="hint">A partir de la configuración de arriba se generan los archivos que necesita el ESP32-S3 y el módem.</div>
+      <div class="tabsx" id="genTabs">
+        <button class="btn sm primary" data-gen="configh">config.h (firmware)</button>
+        <button class="btn sm" data-gen="at">Comandos AT (módem)</button>
+        <button class="btn sm" data-gen="json">JSON de provisión</button>
+      </div>
+      <pre class="out" id="cfgOut"></pre>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn sm" id="genCopy">📋 Copiar</button>
+        <button class="btn sm" id="genDownload">⬇️ Descargar</button>
+        <span class="src" id="genNote" style="align-self:center"></span>
+      </div>
+    </div>
+  </section>
+
   <footer>
     Dashboard de ejemplo · Proyecto
     <a href="https://github.com/Makerfabs/4G-LTE-CAT1-Air-Monitor" target="_blank" rel="noopener">Makerfabs 4G-LTE-CAT1-Air-Monitor</a>.
@@ -303,6 +356,8 @@
     <p class="src" style="margin-top:12px">Mapeo: 1=Temp, 2=Humedad, 3=eCO₂, 4=TVOC, 5=Lux, 6=Batería.</p>
   </div>
 </div>
+
+<div class="toast" id="toast"></div>
 
 <script>
 "use strict";
@@ -801,6 +856,7 @@ function switchTab(tab){
   if(tab==="realtime")renderRealtime();
   if(tab==="history")loadHistory();
   if(tab==="alarms")renderAlarms();
+  if(tab==="config")renderConfig();
 }
 
 /* ============================================================
@@ -894,6 +950,228 @@ document.getElementById("tsConnect").onclick=async()=>{
   await poll();clearInterval(timer);timer=setInterval(poll,15000);
 };
 window.addEventListener("resize",()=>{if(S.view==="realtime")renderRealtime();else if(S.view==="history")loadHistory();});
+
+/* ============================================================
+   CONFIGURACIÓN DEL DISPOSITIVO Y PERIFÉRICOS
+   ============================================================ */
+const DEFAULT_DEVCFG={
+  device:{ id:"AirM01", name:"Estación de aire", location:"Sala", firmware:"fw_test v1.4" },
+  sensors:{
+    aht10:{ enabled:true, addr:"0x38", tempOffset:0, humOffset:0 },
+    sgp30:{ enabled:true, addr:"0x58", baseECO2:"", baseTVOC:"", warmupS:15 },
+    bh1750:{ enabled:true, addr:"0x23", mode:"CONT_HI_RES" },
+    pcf8563:{ enabled:true, addr:"0x51" },
+    battery:{ enabled:true, calFactor:2.0 },
+  },
+  i2c:{ sda:17, scl:18, freqkHz:100 },
+  gpio:{ power3v3:21, power1v8:48, button:8, led:47, batPin:14, rtcIrq:13,
+         modemRx:1, modemTx:2, gsmPwrkey:42, gsmRst:41, gsmDtr:39 },
+  modem:{ module:"A7670 (A76XX)", baud:115200, apn:"internet", apnUser:"", apnPass:"", simPin:"", netMode:"auto" },
+  cloud:{ target:"thingspeak",
+    thingspeak:{ writeKey:"BPO52QKI6G319JOY", channel:"" },
+    datacake:{ endpoint:"https://api.datacake.co/integrations/api/XXXXXXXX/", serial:"" },
+    mqtt:{ host:"mqtt.recreacloud.com", port:8885, tls:true, user:"", pass:"", clientId:"AirM01", topic:"airmonitor/AirM01" },
+    http:{ url:"" },
+  },
+  wifi:{ apSsid:"Makerfabs-", apPwd:"12345678", staSsid:"", staPwd:"" },
+  power:{ reportSec:3600, readSec:3, deepSleep:true },
+};
+function loadDevCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.devcfg"));return deepMerge(structuredClone(DEFAULT_DEVCFG),c||{});}catch(e){return structuredClone(DEFAULT_DEVCFG);}}
+function saveDevCfg(){localStorage.setItem("airmon.devcfg",JSON.stringify(DEVCFG));}
+function deepMerge(base,ext){for(const k in ext){if(ext[k]&&typeof ext[k]==="object"&&!Array.isArray(ext[k])){base[k]=deepMerge(base[k]||{},ext[k]);}else base[k]=ext[k];}return base;}
+let DEVCFG=loadDevCfg();
+const gp=p=>p.split(".").reduce((o,k)=>o?.[k],DEVCFG);
+const sp=(p,v)=>{const ks=p.split(".");let o=DEVCFG;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks.at(-1)]=v;};
+
+// Esquema de formularios
+const NETMODES=[["auto","Automático"],["lte","Solo 4G/LTE"],["gsm","Solo 2G/GSM"]];
+const SCHEMA=[
+  {id:"device",title:"🆔 Identidad del dispositivo",hint:"Identificación y ubicación de la estación",fields:[
+    {p:"device.id",l:"ID del sensor",t:"text",h:"DEFAULT_SENSOR_ID"},
+    {p:"device.name",l:"Nombre",t:"text"},
+    {p:"device.location",l:"Ubicación",t:"text"},
+    {p:"device.firmware",l:"Firmware",t:"text"},
+  ]},
+  {id:"i2c",title:"🔌 Bus I²C",hint:"Pines compartidos por todos los sensores",fields:[
+    {p:"i2c.sda",l:"SDA",t:"pin"},{p:"i2c.scl",l:"SCL",t:"pin"},
+    {p:"i2c.freqkHz",l:"Frecuencia",t:"num",u:"kHz"},
+  ]},
+  {id:"aht10",title:"🌡️ AHT10 · Temp/Humedad",hint:"Sensor de temperatura y humedad",toggle:"sensors.aht10.enabled",fields:[
+    {p:"sensors.aht10.addr",l:"Dirección I²C",t:"text"},
+    {p:"sensors.aht10.tempOffset",l:"Offset temperatura",t:"num",u:"°C"},
+    {p:"sensors.aht10.humOffset",l:"Offset humedad",t:"num",u:"%rH"},
+  ]},
+  {id:"sgp30",title:"💨 SGP30 · Gases",hint:"eCO₂ / TVOC / H₂ / Etanol",toggle:"sensors.sgp30.enabled",fields:[
+    {p:"sensors.sgp30.addr",l:"Dirección I²C",t:"text"},
+    {p:"sensors.sgp30.baseECO2",l:"Baseline eCO₂",t:"text",h:"calibración (hex/dec)"},
+    {p:"sensors.sgp30.baseTVOC",l:"Baseline TVOC",t:"text",h:"calibración (hex/dec)"},
+    {p:"sensors.sgp30.warmupS",l:"Calentamiento",t:"num",u:"s"},
+  ]},
+  {id:"bh1750",title:"💡 BH1750 · Luz",hint:"Sensor de iluminancia",toggle:"sensors.bh1750.enabled",fields:[
+    {p:"sensors.bh1750.addr",l:"Dirección I²C",t:"text"},
+    {p:"sensors.bh1750.mode",l:"Modo",t:"sel",opts:[["CONT_HI_RES","Continuo alta res."],["ONE_HI_RES","Una lectura alta res."],["CONT_LO_RES","Continuo baja res."]]},
+  ]},
+  {id:"pcf8563",title:"🕐 PCF8563 · RTC",hint:"Reloj de tiempo real",toggle:"sensors.pcf8563.enabled",fields:[
+    {p:"sensors.pcf8563.addr",l:"Dirección I²C",t:"text"},
+    {p:"gpio.rtcIrq",l:"Pin IRQ",t:"pin"},
+  ]},
+  {id:"battery",title:"🔋 Batería",hint:"Medición de tensión por ADC",toggle:"sensors.battery.enabled",fields:[
+    {p:"gpio.batPin",l:"Pin ADC",t:"pin"},
+    {p:"sensors.battery.calFactor",l:"Factor divisor",t:"num"},
+  ]},
+  {id:"modem",title:"📶 Módem 4G LTE",hint:"Conexión celular y operador (APN)",fields:[
+    {p:"modem.module",l:"Módulo",t:"sel",opts:[["A7670 (A76XX)","A7670 (A76XX)"],["SIM7670","SIM7670"]]},
+    {p:"modem.apn",l:"APN",t:"text",h:"del operador móvil"},
+    {p:"modem.apnUser",l:"Usuario APN",t:"text"},
+    {p:"modem.apnPass",l:"Contraseña APN",t:"pass"},
+    {p:"modem.simPin",l:"PIN de la SIM",t:"pass",h:"vacío si no tiene"},
+    {p:"modem.netMode",l:"Modo de red",t:"sel",opts:NETMODES},
+    {p:"modem.baud",l:"Baudios UART",t:"num"},
+    {p:"gpio.modemRx",l:"UART RX (ESP→módem)",t:"pin"},
+    {p:"gpio.modemTx",l:"UART TX (ESP→módem)",t:"pin"},
+    {p:"gpio.gsmPwrkey",l:"GSM PWRKEY",t:"pin"},
+    {p:"gpio.gsmRst",l:"GSM RST",t:"pin"},
+    {p:"gpio.gsmDtr",l:"GSM DTR",t:"pin"},
+  ]},
+  {id:"cloud",title:"☁️ Destino de datos",hint:"Plataforma a la que el dispositivo envía las lecturas",fields:[
+    {p:"cloud.target",l:"Plataforma",t:"sel",opts:[["thingspeak","ThingSpeak"],["datacake","Datacake"],["mqtt","MQTT(S)"],["http","HTTP propio"]]},
+    // thingspeak
+    {p:"cloud.thingspeak.writeKey",l:"Write API Key",t:"text",show:"thingspeak"},
+    {p:"cloud.thingspeak.channel",l:"Channel ID",t:"text",show:"thingspeak"},
+    // datacake
+    {p:"cloud.datacake.endpoint",l:"Endpoint URL",t:"text",show:"datacake"},
+    {p:"cloud.datacake.serial",l:"Serial del dispositivo",t:"text",show:"datacake"},
+    // mqtt
+    {p:"cloud.mqtt.host",l:"Broker host",t:"text",show:"mqtt"},
+    {p:"cloud.mqtt.port",l:"Puerto",t:"num",show:"mqtt"},
+    {p:"cloud.mqtt.tls",l:"TLS (MQTTS)",t:"bool",show:"mqtt"},
+    {p:"cloud.mqtt.user",l:"Usuario",t:"text",show:"mqtt"},
+    {p:"cloud.mqtt.pass",l:"Contraseña",t:"pass",show:"mqtt"},
+    {p:"cloud.mqtt.clientId",l:"Client ID",t:"text",show:"mqtt"},
+    {p:"cloud.mqtt.topic",l:"Topic",t:"text",show:"mqtt"},
+    // http
+    {p:"cloud.http.url",l:"URL destino",t:"text",show:"http"},
+  ]},
+  {id:"wifi",title:"📡 WiFi / Portal de config",hint:"Punto de acceso de configuración y red WiFi opcional",fields:[
+    {p:"wifi.apSsid",l:"AP SSID (config)",t:"text"},
+    {p:"wifi.apPwd",l:"AP contraseña",t:"pass"},
+    {p:"wifi.staSsid",l:"WiFi SSID",t:"text",h:"opcional"},
+    {p:"wifi.staPwd",l:"WiFi contraseña",t:"pass"},
+  ]},
+  {id:"power",title:"⏱️ Reporte y energía",hint:"Periodicidad de envío y ahorro de energía",fields:[
+    {p:"power.reportSec",l:"Intervalo de reporte",t:"num",u:"s",h:"DEFAULT_SLEEP_TIME"},
+    {p:"power.readSec",l:"Intervalo de lectura",t:"num",u:"s"},
+    {p:"power.deepSleep",l:"Deep sleep entre reportes",t:"bool"},
+  ]},
+];
+function renderConfig(){
+  const wrap=document.getElementById("cfgSections");wrap.innerHTML="";
+  // mapa de pines resumen
+  const g=DEVCFG.gpio;
+  const pins=[["3V3 EN","power3v3"],["1V8 EN","power1v8"],["SDA","sda*"],["SCL","scl*"],["Botón","button"],["LED","led"],
+    ["Batería","batPin"],["RTC IRQ","rtcIrq"],["Módem RX","modemRx"],["Módem TX","modemTx"],["PWRKEY","gsmPwrkey"],["RST","gsmRst"],["DTR","gsmDtr"]];
+  const pinVal=k=>k==="sda*"?DEVCFG.i2c.sda:k==="scl*"?DEVCFG.i2c.scl:g[k];
+  const mapCard=document.createElement("div");mapCard.className="card cfgcard";mapCard.style.gridColumn="1/-1";
+  mapCard.innerHTML=`<h3>📍 Mapa de pines (ESP32-S3)</h3><div class="hint">Asignación actual de GPIO</div>
+    <div class="pinmap">${pins.map(([n,k])=>`<div><b>${n}</b><span class="pin">GPIO ${pinVal(k)}</span></div>`).join("")}</div>`;
+  wrap.appendChild(mapCard);
+
+  SCHEMA.forEach(sec=>{
+    const card=document.createElement("div");card.className="card cfgcard";card.id="sec-"+sec.id;
+    let html=`<div class="switchhdr"><div><h3>${sec.title}</h3></div>`;
+    if(sec.toggle){const on=gp(sec.toggle);html+=`<label class="src">Activo <input type="checkbox" data-p="${sec.toggle}" ${on?"checked":""}></label>`;}
+    html+=`</div><div class="hint">${sec.hint}</div>`;
+    sec.fields.forEach(f=>{
+      if(f.show && DEVCFG.cloud.target!==f.show) return;
+      const v=gp(f.p)??"";
+      let ctrl;
+      if(f.t==="bool")ctrl=`<input type="checkbox" data-p="${f.p}" ${v?"checked":""}>`;
+      else if(f.t==="sel")ctrl=`<select class="f" data-p="${f.p}">${f.opts.map(o=>`<option value="${o[0]}" ${o[0]==v?"selected":""}>${o[1]}</option>`).join("")}</select>`;
+      else if(f.t==="num"||f.t==="pin")ctrl=`<input class="f" type="number" data-p="${f.p}" value="${v}">`;
+      else if(f.t==="pass")ctrl=`<input class="f" type="password" data-p="${f.p}" value="${v}">`;
+      else ctrl=`<input class="f" type="text" data-p="${f.p}" value="${v}">`;
+      const tag=f.t==="pin"?` <span class="pin">GPIO</span>`:f.u?` <small style="display:inline;color:var(--muted)">${f.u}</small>`:"";
+      html+=`<div class="frow"><label>${f.l}${tag}${f.h?`<small>${f.h}</small>`:""}</label>${ctrl}</div>`;
+    });
+    card.innerHTML=html;wrap.appendChild(card);
+  });
+  // listeners de inputs
+  wrap.querySelectorAll("[data-p]").forEach(el=>{
+    el.addEventListener("change",()=>{
+      const p=el.dataset.p;
+      let val=el.type==="checkbox"?el.checked:(el.type==="number"?(el.value===""?"":+el.value):el.value);
+      sp(p,val);saveDevCfg();
+      if(p==="cloud.target")renderConfig();           // refrescar campos dependientes
+      if(p.startsWith("i2c.")||p.startsWith("gpio."))renderConfig(); // refrescar mapa de pines
+    });
+  });
+  refreshGen();
+}
+
+/* -------- Generadores -------- */
+function genConfigH(){
+  const d=DEVCFG,s=d.sensors,g=d.gpio,c=d.cloud;
+  const yn=b=>b?1:0;
+  let o=`/* config.h — generado por el dashboard Air Monitor */\n#ifndef CONFIG_H\n#define CONFIG_H\n\n`;
+  o+=`// --- Identidad ---\n#define DEVICE_ID        "${d.device.id}"\n#define DEVICE_NAME      "${d.device.name}"\n#define DEVICE_LOCATION  "${d.device.location}"\n\n`;
+  o+=`// --- Bus I2C ---\n#define I2C_SDA   ${d.i2c.sda}\n#define I2C_SCL   ${d.i2c.scl}\n#define I2C_FREQ  ${d.i2c.freqkHz*1000}\n\n`;
+  o+=`// --- Pines / periféricos ---\n#define POWER_3V3 ${g.power3v3}\n#define POWER_1V8 ${g.power1v8}\n#define BUTTON_PIN ${g.button}\n#define LED_PIN ${g.led}\n#define BAT_PIN ${g.batPin}\n#define RTC_IRQ ${g.rtcIrq}\n#define IO_RXD2 ${g.modemRx}\n#define IO_TXD2 ${g.modemTx}\n#define IO_GSM_PWRKEY ${g.gsmPwrkey}\n#define IO_GSM_RST ${g.gsmRst}\n#define IO_GSM_DTR ${g.gsmDtr}\n\n`;
+  o+=`// --- Sensores (1=activo) ---\n#define EN_AHT10  ${yn(s.aht10.enabled)}   // addr ${s.aht10.addr}\n#define EN_SGP30  ${yn(s.sgp30.enabled)}   // addr ${s.sgp30.addr}\n#define EN_BH1750 ${yn(s.bh1750.enabled)}   // addr ${s.bh1750.addr}\n#define EN_PCF8563 ${yn(s.pcf8563.enabled)}  // addr ${s.pcf8563.addr}\n#define EN_BATTERY ${yn(s.battery.enabled)}\n`;
+  o+=`#define TEMP_OFFSET ${s.aht10.tempOffset}\n#define HUM_OFFSET  ${s.aht10.humOffset}\n#define BAT_CAL_FACTOR ${s.battery.calFactor}\n`;
+  if(s.sgp30.baseECO2||s.sgp30.baseTVOC)o+=`#define SGP30_BASE_ECO2 ${s.sgp30.baseECO2||0}\n#define SGP30_BASE_TVOC ${s.sgp30.baseTVOC||0}\n`;
+  o+=`\n// --- Módem 4G / APN ---\n#define MODEM_MODULE "${d.modem.module}"\n#define MODEM_BAUD ${d.modem.baud}\n#define APN "${d.modem.apn}"\n#define APN_USER "${d.modem.apnUser}"\n#define APN_PASS "${d.modem.apnPass}"\n#define SIM_PIN "${d.modem.simPin}"\n\n`;
+  o+=`// --- Reporte / energía ---\n#define REPORT_INTERVAL_S ${d.power.reportSec}\n#define READ_INTERVAL_S ${d.power.readSec}\n#define DEEP_SLEEP ${yn(d.power.deepSleep)}\n#define uS_TO_S_FACTOR 1000000ULL\n\n`;
+  o+=`// --- WiFi / portal AP ---\n#define AP_SSID "${d.wifi.apSsid}"\n#define AP_PWD  "${d.wifi.apPwd}"\n#define WIFI_SSID "${d.wifi.staSsid}"\n#define WIFI_PASS "${d.wifi.staPwd}"\n\n`;
+  o+=`// --- Destino de datos: ${c.target} ---\n`;
+  if(c.target==="thingspeak")o+=`#define TS_WRITE_KEY "${c.thingspeak.writeKey}"\n#define TS_CHANNEL "${c.thingspeak.channel}"\n`;
+  else if(c.target==="datacake")o+=`#define DATACAKE_URL "${c.datacake.endpoint}"\n#define DATACAKE_SERIAL "${c.datacake.serial}"\n`;
+  else if(c.target==="mqtt")o+=`#define MQTT_SERVER "${c.mqtt.host}"\n#define MQTT_PORT ${c.mqtt.port}\n#define MQTT_TLS ${yn(c.mqtt.tls)}\n#define MQTT_USER "${c.mqtt.user}"\n#define MQTT_PASS "${c.mqtt.pass}"\n#define MQTT_CLIENTID "${c.mqtt.clientId}"\n#define MQTT_TOPIC "${c.mqtt.topic}"\n`;
+  else o+=`#define HTTP_URL "${c.http.url}"\n`;
+  o+=`\n#endif\n`;
+  return o;
+}
+function genAT(){
+  const d=DEVCFG,c=d.cloud;
+  let o=`# Secuencia de comandos AT — ${d.modem.module}\n# Inicialización celular y conexión de datos\n\n`;
+  o+=`AT                       # comprobar módem\nATE0                     # eco off\n`;
+  if(d.modem.simPin)o+=`AT+CPIN=${d.modem.simPin}        # desbloquear SIM\n`;else o+=`AT+CPIN?                 # estado SIM (READY)\n`;
+  o+=`AT+CSQ                   # calidad de señal\nAT+CREG?                 # registro en red\nAT+CGDCONT=1,"IP","${d.modem.apn}"   # APN del operador\nAT+CGACT=1,1             # activar contexto PDP\nAT+CGPADDR=1             # IP asignada\n\n`;
+  if(c.target==="thingspeak"){
+    o+=`# --- Envío a ThingSpeak (HTTP GET) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","http://api.thingspeak.com/update?api_key=${c.thingspeak.writeKey}&field1=<T>&field2=<H>&field3=<TVOC>&field4=<eCO2>&field5=<H2>&field6=<Eth>&field7=<lux>&field8=<bat>"\nAT+HTTPACTION=0\nAT+HTTPTERM\n`;
+  }else if(c.target==="datacake"){
+    o+=`# --- Envío a Datacake (HTTP POST JSON) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${c.datacake.endpoint}"\nAT+HTTPPARA="CONTENT","application/json"\nAT+HTTPDATA=<len>,10000\n{"device":"${c.datacake.serial}","temperature":<T>,"humidity":<H>}\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
+  }else if(c.target==="mqtt"){
+    o+=`# --- Conexión MQTT${c.mqtt.tls?"S (TLS)":""} ---\nAT+CMQTTSTART\nAT+CMQTTACCQ=0,"${c.mqtt.clientId}",${c.mqtt.tls?1:0}\n`;
+    if(c.mqtt.tls)o+=`AT+CSSLCFG="sslversion",0,4\nAT+CSSLCFG="authmode",0,1\nAT+CMQTTSSLCFG=0,0\n`;
+    o+=`AT+CMQTTCONNECT=0,"tcp://${c.mqtt.host}:${c.mqtt.port}",60,1,"${c.mqtt.user}","${c.mqtt.pass}"\nAT+CMQTTTOPIC=0,${c.mqtt.topic.length}\n${c.mqtt.topic}\nAT+CMQTTPAYLOAD=0,<len>\n{"t":<T>,"h":<H>}\nAT+CMQTTPUB=0,1,60\n`;
+  }else{
+    o+=`# --- Envío HTTP propio ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${c.http.url}"\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
+  }
+  return o;
+}
+function genJSON(){return JSON.stringify(DEVCFG,null,2);}
+let genMode="configh";
+function refreshGen(){
+  const out=document.getElementById("cfgOut");
+  if(genMode==="configh"){out.textContent=genConfigH();document.getElementById("genNote").textContent="Pega este archivo como config.h junto al sketch.";}
+  else if(genMode==="at"){out.textContent=genAT();document.getElementById("genNote").textContent="Comandos AT para inicializar el módem y enviar datos.";}
+  else{out.textContent=genJSON();document.getElementById("genNote").textContent="Backup/restauración de toda la configuración.";}
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+
+// listeners de la pestaña configuración
+document.getElementById("genTabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;
+  genMode=b.dataset.gen;[...document.getElementById("genTabs").children].forEach(c=>{c.classList.toggle("primary",c.dataset.gen===genMode);});refreshGen();};
+document.getElementById("genCopy").onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("cfgOut").textContent);toast("Copiado al portapapeles");}catch(e){toast("No se pudo copiar");}};
+document.getElementById("genDownload").onclick=()=>{
+  const name=genMode==="configh"?"config.h":genMode==="at"?"comandos_at.txt":"airmonitor_config.json";
+  const blob=new Blob([document.getElementById("cfgOut").textContent],{type:"text/plain"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);toast("Descargado "+name);};
+document.getElementById("cfgSave").onclick=()=>{saveDevCfg();toast("Configuración guardada");};
+document.getElementById("cfgReset").onclick=()=>{if(confirm("¿Restaurar la configuración a los valores por defecto?")){DEVCFG=structuredClone(DEFAULT_DEVCFG);saveDevCfg();renderConfig();toast("Restaurado");}};
+document.getElementById("cfgImport").onclick=()=>document.getElementById("cfgFile").click();
+document.getElementById("cfgFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=()=>{try{DEVCFG=deepMerge(structuredClone(DEFAULT_DEVCFG),JSON.parse(r.result));saveDevCfg();renderConfig();toast("Configuración importada");}catch(err){toast("JSON inválido");}};r.readAsText(f);};
 </script>
 </body>
 </html>
