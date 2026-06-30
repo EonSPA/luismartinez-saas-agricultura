@@ -2,20 +2,32 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.thingspeak.com https://maps.googleapis.com https://*.googleapis.com; object-src 'none'; base-uri 'none'">
+<meta name="description" content="Monitor de calidad del aire 4G LTE CAT1: tiempo real, históricos, alarmas, mapa de sensores y configuración del dispositivo.">
+<meta name="theme-color" content="#0b1020">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Air Monitor">
 <title>4G LTE CAT1 Air Monitor — Dashboard</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
     --bg:#0b1020; --panel:#141b2e; --panel2:#1b2440; --line:#27314f;
-    --txt:#e7ecf6; --muted:#8a96b3; --accent:#3fa7ff;
+    --txt:#e7ecf6; --muted:#9aa6c4; --accent:#3fa7ff;
     --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --info:#a78bfa;
     --shadow:0 6px 24px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
   body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#16224a 0,var(--bg) 55%);
     color:var(--txt);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
-  header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);
-    background:rgba(10,15,30,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:10;flex-wrap:wrap}
+  .topbar{position:sticky;top:0;z-index:10;background:rgba(10,15,30,.82);backdrop-filter:blur(8px);
+    padding-top:env(safe-area-inset-top)}
+  header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--info));
     display:grid;place-items:center;font-weight:800;color:#06122b}
   h1{font-size:17px;margin:0;letter-spacing:.2px}
@@ -35,8 +47,7 @@
   .alarmpill.has{border-color:var(--bad);color:var(--bad);box-shadow:0 0 0 3px rgba(251,113,133,.12)}
   .alarmpill.has .dot{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18);animation:blink 1s infinite}
   @keyframes blink{50%{opacity:.35}}
-  nav.tabs{display:flex;gap:6px;padding:0 22px;border-bottom:1px solid var(--line);background:rgba(10,15,30,.4);
-    position:sticky;top:67px;z-index:9;flex-wrap:wrap}
+  nav.tabs{display:flex;gap:6px;padding:0 22px;border-bottom:1px solid var(--line);overflow-x:auto}
   nav.tabs button{background:none;border:none;color:var(--muted);padding:13px 14px;cursor:pointer;font-size:14px;
     border-bottom:2px solid transparent;font-weight:500}
   nav.tabs button.active{color:var(--txt);border-bottom-color:var(--accent)}
@@ -170,35 +181,55 @@
   .coordrow input{width:100%}
   .expbtns{display:flex;gap:8px;margin-top:12px}
   .expbtns .btn{flex:1;justify-content:center}
+  /* responsive / móvil */
+  .tablewrap table{min-width:480px}
+  .toast{bottom:calc(20px + env(safe-area-inset-bottom))}
+  @media(max-width:600px){
+    .hide-sm{display:none}
+    header{padding:10px 14px;gap:10px}
+    .sub{display:none}
+    nav.tabs{padding:0 10px}
+    nav.tabs button{padding:12px 11px;font-size:13px;white-space:nowrap}
+    main{padding:16px 12px}
+    .btn.sm{padding:9px 12px}
+    .seg button{padding:10px 13px}
+    .card{padding:13px}
+    .cfgwrap{grid-template-columns:1fr}
+    .mapbox{height:46vh;min-height:300px}
+    pre.out{white-space:pre-wrap;word-break:break-word}
+    #geoBtn{min-width:44px;min-height:40px}
+  }
 </style>
 </head>
 <body>
+<div class="topbar">
 <header>
-  <div class="logo">AM</div>
+  <div class="logo" aria-hidden="true">AM</div>
   <div>
     <h1>4G LTE CAT1 Air Monitor</h1>
     <div class="sub">ESP32-S3 · A76XX/SIM7670 · estación de calidad del aire</div>
   </div>
   <div class="spacer"></div>
-  <div class="status-pill alarmpill" id="alarmPill" title="Alarmas activas"><span class="dot" id="alarmDot" style="background:var(--good)"></span><span id="alarmTxt">Sin alarmas</span></div>
-  <div class="status-pill"><span class="dot" id="connDot"></span><span id="connTxt">En línea</span></div>
-  <div class="status-pill" title="Señal 4G (AT+CSQ)">
-    <span class="signal" id="sig"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
+  <button class="status-pill alarmpill" id="alarmPill" title="Alarmas activas" aria-label="Ir a alarmas"><span class="dot" id="alarmDot" style="background:var(--good)"></span><span id="alarmTxt">Sin alarmas</span></button>
+  <div class="status-pill" id="connPill"><span class="dot" id="connDot"></span><span id="connTxt">En línea</span></div>
+  <div class="status-pill hide-sm" title="Señal 4G (AT+CSQ)">
+    <span class="signal" id="sig" aria-hidden="true"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
     <span id="csq">CSQ —</span>
   </div>
-  <div class="status-pill" title="Batería (AT+CBC)">
-    <span class="bat"><span id="batFill" style="width:80%"></span></span>
+  <div class="status-pill hide-sm" title="Batería (AT+CBC)">
+    <span class="bat" aria-hidden="true"><span id="batFill" style="width:80%"></span></span>
     <span id="batTxt">—</span>
   </div>
 </header>
 
-<nav class="tabs">
-  <button data-tab="realtime" class="active">📈 Tiempo real</button>
-  <button data-tab="history">🗂️ Históricos</button>
-  <button data-tab="alarms">🔔 Alarmas</button>
-  <button data-tab="map">🗺️ Mapa</button>
-  <button data-tab="config">⚙️ Configuración</button>
+<nav class="tabs" role="tablist" aria-label="Secciones">
+  <button data-tab="realtime" class="active" role="tab" aria-selected="true">📈 Tiempo real</button>
+  <button data-tab="history" role="tab" aria-selected="false">🗂️ Históricos</button>
+  <button data-tab="alarms" role="tab" aria-selected="false">🔔 Alarmas</button>
+  <button data-tab="map" role="tab" aria-selected="false">🗺️ Mapa</button>
+  <button data-tab="config" role="tab" aria-selected="false">⚙️ Configuración</button>
 </nav>
+</div>
 
 <main>
   <div class="toolbar">
@@ -208,6 +239,7 @@
       <button data-src="thingspeak">ThingSpeak</button>
     </div>
     <button class="btn" id="notifBtn">🔕 Activar notificaciones</button>
+    <button class="btn primary" id="installBtn" style="display:none">⬇️ Instalar app</button>
     <span class="src" id="srcLabel">Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s</span>
     <div class="spacer"></div>
     <span class="sub" id="clock"></span>
@@ -304,10 +336,12 @@
       <div class="card">
         <h3>Reglas de alarma</h3>
         <div class="hint">Umbral alto/bajo y cambio brusco por sensor. Vacío = desactivado.</div>
-        <table class="cfgtable">
-          <thead><tr><th>Sensor</th><th>Mín</th><th>Máx</th><th>Δ cambio</th><th>Ventana</th></tr></thead>
-          <tbody id="cfgBody"></tbody>
-        </table>
+        <div class="tablewrap">
+          <table class="cfgtable">
+            <thead><tr><th>Sensor</th><th>Mín</th><th>Máx</th><th>Δ cambio</th><th>Ventana</th></tr></thead>
+            <tbody id="cfgBody"></tbody>
+          </table>
+        </div>
         <div style="margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
           <label class="src">Sin datos / offline tras
             <input class="f num" id="offlineMin" type="number" min="1" step="1" style="width:60px"> min</label>
@@ -420,6 +454,30 @@
 "use strict";
 
 /* ============================================================
+   Helpers de seguridad / robustez
+   ============================================================ */
+// Escapa texto para interpolación segura en innerHTML (anti-XSS)
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+// Parseo numérico tolerante: devuelve fallback si no es finito
+function numv(x,fb){const n=parseFloat(x);return Number.isFinite(n)?n:fb;}
+// min/max sin spread (seguro para arrays enormes)
+function amin(a){let m=Infinity;for(let i=0;i<a.length;i++)if(a[i]<m)m=a[i];return m;}
+function amax(a){let m=-Infinity;for(let i=0;i<a.length;i++)if(a[i]>m)m=a[i];return m;}
+function asum(a){let s=0;for(let i=0;i<a.length;i++)s+=a[i];return s;}
+// Escapa una cadena para literal C ("...") en config.h
+function cstr(s){return String(s==null?"":s).replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/[\r\n]+/g," ");}
+// Sanea un valor que va a un comando AT (sin saltos de línea ni comillas)
+function atSan(s){return String(s==null?"":s).replace(/[\r\n"]+/g," ");}
+// Longitud en bytes (UTF-8) para campos AT
+function byteLen(s){return new TextEncoder().encode(String(s)).length;}
+// Celda CSV: comilla siempre el texto, duplica comillas y neutraliza fórmulas
+function csvCell(v){if(typeof v==="number")return v;let s=String(v==null?"":v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+// Escapa para XML SpreadsheetML, quitando caracteres de control no permitidos
+function xmlEsc(s){return String(s==null?"":s).replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+// localStorage con captura de cuota
+function setLS(k,v){try{localStorage.setItem(k,v);return true;}catch(e){toast("No se pudo guardar (almacenamiento lleno)");return false;}}
+
+/* ============================================================
    Metadatos de sensores
    ============================================================ */
 const METRICS = [
@@ -488,7 +546,7 @@ const DEFAULT_CFG={
   offlineMin:2
 };
 function loadCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.cfg"));return c&&c.temp?c:structuredClone(DEFAULT_CFG);}catch(e){return structuredClone(DEFAULT_CFG);}}
-function saveCfgLS(){localStorage.setItem("airmon.cfg",JSON.stringify(S.cfg));}
+function saveCfgLS(){setLS("airmon.cfg",JSON.stringify(S.cfg));}
 
 /* ============================================================
    Estado
@@ -618,9 +676,9 @@ function offlineWatch(){
   if(S.lastT && Date.now()-S.lastT>tout){
     setActive(k,{metric:"csq",type:"offline",value:0,msg:`Sin lecturas desde hace ${Math.round((Date.now()-S.lastT)/60000)} min`});
   } else if(S.active[k]){ clearActive(k); }
-  // expirar alarmas de cambio brusco
+  // expirar alarmas de cambio brusco (registra reposición en el log)
   let exp=false;
-  Object.keys(S.active).forEach(k=>{const a=S.active[k]; if(a.expire&&Date.now()>a.expire){delete S.active[k];exp=true;}});
+  Object.keys(S.active).forEach(ak=>{const a=S.active[ak]; if(a.expire&&Date.now()>a.expire){clearActive(ak);exp=true;}});
   if(exp) renderAlarms();
   renderHeader();
 }
@@ -677,7 +735,7 @@ function renderHeader(){
   b.classList.toggle("show",arr.length>0);
   if(arr.length){
     document.getElementById("bannerTitle").textContent=`${arr.length} alarma${arr.length>1?"s":""} activa${arr.length>1?"s":""}`;
-    document.getElementById("bannerList").innerHTML=arr.map(a=>`<li>${a.msg}</li>`).join("");
+    document.getElementById("bannerList").innerHTML=arr.map(a=>`<li>${esc(a.msg)}</li>`).join("");
   }
 }
 
@@ -814,7 +872,7 @@ function renderAlarms(){
     const sev=a.type==="rate"?"warn":"bad";
     return `<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
       <span class="badge b-${sev}">${TYPE_TXT[a.type]}</span>
-      <span>${a.msg}</span><span class="spacer" style="flex:1"></span>
+      <span>${esc(a.msg)}</span><span class="spacer" style="flex:1"></span>
       <span class="src">${fmtTime(a.since)}</span></div>`;}).join("");}
   renderLog();
   renderHeader();
@@ -827,7 +885,7 @@ async function renderLog(){
     return `<tr><td>${fmtDate(r.t)}</td><td>${m.label}</td><td>${TYPE_TXT[r.type]||r.type}</td>
       <td><span class="lvl ${r.level}">${r.level==="alarm"?"DISPARO":"REPUESTO"}</span></td>
       <td>${r.value!=null?(m.fmt?m.fmt(r.value):r.value)+" "+(m.unit||""):"—"}</td>
-      <td class="src" style="text-align:left">${r.msg||""}</td></tr>`;}).join("");
+      <td class="src" style="text-align:left">${esc(r.msg||"")}</td></tr>`;}).join("");
 }
 
 /* ============================================================
@@ -908,7 +966,7 @@ function startTimer(){clearInterval(timer);timer=setInterval(tickDemo,3000);}
 
 function switchTab(tab){
   S.view=tab;
-  document.querySelectorAll("nav.tabs button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  document.querySelectorAll("nav.tabs button").forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle("active",on);b.setAttribute("aria-selected",on?"true":"false");});
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+tab));
   if(tab==="realtime")renderRealtime();
   if(tab==="history")loadHistory();
@@ -920,28 +978,40 @@ function switchTab(tab){
 /* ============================================================
    Arranque
    ============================================================ */
+const RETENTION_MS=30*24*3600*1000;  // conserva 30 días de históricos
+function pruneOld(){try{const cut=Date.now()-RETENTION_MS;const s=tx("readings","readwrite");const q=s.openCursor(IDBKeyRange.upperBound(cut));q.onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue();}};}catch(e){}}
 (async function init(){
   buildKpis();buildCfgForm();buildMetricSeg();
-  await openDB();
-  // sembrar 24h de históricos si está vacío
-  if(await countReadings()===0){
-    const now=Date.now(),start=now-24*3600*1000,rows=[];
-    for(let t=start;t<=now;t+=60000)rows.push(genSeed(t));
-    await bulkPut("readings",rows);
-    // algunos eventos de alarma de ejemplo en el log
-    await bulkPut("alarms",[
-      {t:now-3600000*6,metric:"eco2",type:"high",level:"alarm",value:1612,msg:"eCO₂ alto: 1612 ppm (> 1500)"},
-      {t:now-3600000*6+300000,metric:"eco2",type:"high",level:"clear",value:980,msg:"eCO₂ normalizado"},
-      {t:now-3600000*2,metric:"temp",type:"rate",level:"alarm",value:29.4,msg:"Temperatura cambio brusco: Δ6.1 °C en 5 min"},
-    ]);
+  try{
+    await openDB();
+  }catch(e){
+    console.warn("IndexedDB no disponible:",e);
+    toast("Sin almacenamiento local: históricos deshabilitados en esta sesión");
   }
-  // precargar buffers en vivo con las últimas muestras del histórico
-  const recent=(await getRange(Date.now()-RECENT_MAX*60000,Date.now()+1)).slice(-RECENT_MAX);
-  recent.slice(-MAXLIVE).forEach(r=>{S.liveT.push(r.t);ALL.forEach(m=>S.live[m.key].push(r[m.key]));});
-  recent.forEach(r=>{S.recentT.push(r.t);ALL.forEach(m=>S.recent[m.key].push(r[m.key]));});
-  if(recent.length){const r=recent.at(-1);S.lastT=r.t;S.csq=r.csq;S.batPct=Math.round(Math.min(100,Math.max(0,(r.bat-3.3)/(4.2-3.3)*100)));}
+  // sembrar 24h de históricos si está vacío
+  try{
+    if(db && await countReadings()===0){
+      const now=Date.now(),start=now-24*3600*1000,rows=[];
+      for(let t=start;t<=now;t+=60000)rows.push(genSeed(t));
+      await bulkPut("readings",rows);
+      // algunos eventos de alarma de ejemplo en el log
+      await bulkPut("alarms",[
+        {t:now-3600000*6,metric:"eco2",type:"high",level:"alarm",value:1612,msg:"eCO₂ alto: 1612 ppm (> 1500)"},
+        {t:now-3600000*6+300000,metric:"eco2",type:"high",level:"clear",value:980,msg:"eCO₂ normalizado"},
+        {t:now-3600000*2,metric:"temp",type:"rate",level:"alarm",value:29.4,msg:"Temperatura cambio brusco: Δ6.1 °C en 5 min"},
+      ]);
+    }
+    if(db) pruneOld();
+    // precargar buffers en vivo con las últimas muestras del histórico
+    if(db){
+      const recent=(await getRange(Date.now()-RECENT_MAX*60000,Date.now()+1)).slice(-RECENT_MAX);
+      recent.slice(-MAXLIVE).forEach(r=>{S.liveT.push(r.t);ALL.forEach(m=>S.live[m.key].push(r[m.key]));});
+      recent.forEach(r=>{S.recentT.push(r.t);ALL.forEach(m=>S.recent[m.key].push(r[m.key]));});
+      if(recent.length){const r=recent.at(-1);S.lastT=r.t;S.csq=r.csq;S.batPct=Math.round(Math.min(100,Math.max(0,(r.bat-3.3)/(4.2-3.3)*100)));}
+    }
+  }catch(e){console.warn(e);}
   renderRealtime();renderHeader();renderAlarms();
-  startTimer();setInterval(offlineWatch,5000);updateClock();
+  startTimer();setInterval(offlineWatch,5000);setInterval(pruneOld,3600000);updateClock();
 })();
 
 function updateClock(){document.getElementById("clock").textContent="Actualizado: "+new Date().toLocaleTimeString("es-ES");setTimeout(updateClock,1000);}
@@ -956,10 +1026,11 @@ document.getElementById("playBtn").onclick=function(){
 document.getElementById("srcSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;
   if(b.dataset.src==="thingspeak"){document.getElementById("modal").classList.add("open");}
   else{S.source="demo";[...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="demo"));
-    document.getElementById("srcLabel").innerHTML='Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s';}
+    document.getElementById("srcLabel").innerHTML='Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s';
+    startTimer();}  // reanuda el bucle demo y descarta el sondeo de ThingSpeak
 };
 document.getElementById("notifBtn").onclick=async function(){
-  if(!("Notification" in window)){alert("Este navegador no soporta notificaciones");return;}
+  if(!("Notification" in window)){toast("Este navegador no soporta notificaciones");return;}
   const p=await Notification.requestPermission();S.notify=p==="granted";
   this.textContent=S.notify?"🔔 Notificaciones activas":"🔕 Notificaciones bloqueadas";
 };
@@ -975,8 +1046,8 @@ document.getElementById("csvBtn").onclick=async()=>{
 };
 document.getElementById("clearHistBtn").onclick=async()=>{if(confirm("¿Borrar todos los históricos almacenados?")){await clearStore("readings");loadHistory();}};
 // alarmas
-document.getElementById("saveCfg").onclick=()=>{readCfgForm();alert("Reglas guardadas");};
-document.getElementById("resetCfg").onclick=()=>{S.cfg=structuredClone(DEFAULT_CFG);saveCfgLS();buildCfgForm();};
+document.getElementById("saveCfg").onclick=()=>{readCfgForm();toast("Reglas guardadas");};
+document.getElementById("resetCfg").onclick=()=>{if(confirm("¿Restaurar las reglas de alarma a los valores por defecto?")){S.cfg=structuredClone(DEFAULT_CFG);saveCfgLS();buildCfgForm();toast("Reglas restauradas");}};
 document.getElementById("soundChk").onchange=e=>S.sound=e.target.checked;
 document.getElementById("testAlarm").onclick=()=>{
   setActive("test:high",{metric:"temp",type:"high",value:35,msg:"Prueba de alarma: Temperatura 35 °C",expire:Date.now()+8000});
@@ -989,21 +1060,23 @@ const modal=document.getElementById("modal");
 document.getElementById("tsCancel").onclick=()=>modal.classList.remove("open");
 document.getElementById("tsConnect").onclick=async()=>{
   const ch=document.getElementById("tsChannel").value.trim(),key=document.getElementById("tsKey").value.trim();
-  if(!ch){alert("Indica el Channel ID");return;}
+  if(!ch){toast("Indica el Channel ID");return;}
   modal.classList.remove("open");S.source="thingspeak";S.ts={channel:ch,key};
   [...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="thingspeak"));
-  document.getElementById("srcLabel").innerHTML=`Fuente: <b>ThingSpeak canal ${ch}</b> · sondeo cada 15 s`;
-  const poll=async()=>{ if(!S.running)return;
+  document.getElementById("srcLabel").innerHTML=`Fuente: <b>ThingSpeak canal ${esc(ch)}</b> · sondeo cada 15 s`;
+  const poll=async()=>{ if(!S.running||S.source!=="thingspeak")return;
     try{
-      const url=`https://api.thingspeak.com/channels/${ch}/feeds.json?results=20`+(key?`&api_key=${key}`:"");
+      const url=`https://api.thingspeak.com/channels/${encodeURIComponent(ch)}/feeds.json?results=20`+(key?`&api_key=${encodeURIComponent(key)}`:"");
       const r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);
       const j=await r.json();const feeds=j.feeds||[];
       for(const f of feeds){
-        const rec={t:new Date(f.created_at).getTime(),temp:+f.field1||0,hum:+f.field2||0,eco2:+f.field3||0,
-          tvoc:+f.field4||0,lux:+f.field5||0,bat:+f.field6||3.9,csq:+f.field7||20};
+        const t=new Date(f.created_at).getTime();
+        if(!Number.isFinite(t))continue;
+        const rec={t,temp:numv(f.field1,0),hum:numv(f.field2,0),eco2:numv(f.field3,0),
+          tvoc:numv(f.field4,0),lux:numv(f.field5,0),bat:numv(f.field6,0),csq:numv(f.field7,0)};
         if(rec.t>S.lastT) await ingest(rec);
       }
-    }catch(e){document.getElementById("srcLabel").innerHTML=`Fuente: <b>error ThingSpeak</b> (${e.message})`;}
+    }catch(e){document.getElementById("srcLabel").textContent=`Fuente: error ThingSpeak (${e.message})`;}
   };
   await poll();clearInterval(timer);timer=setInterval(poll,15000);
 };
@@ -1026,7 +1099,7 @@ const DEFAULT_DEVCFG={
          modemRx:1, modemTx:2, gsmPwrkey:42, gsmRst:41, gsmDtr:39 },
   modem:{ module:"A7670 (A76XX)", baud:115200, apn:"internet", apnUser:"", apnPass:"", simPin:"", netMode:"auto" },
   cloud:{ target:"thingspeak",
-    thingspeak:{ writeKey:"BPO52QKI6G319JOY", channel:"" },
+    thingspeak:{ writeKey:"", channel:"" },
     datacake:{ endpoint:"https://api.datacake.co/integrations/api/XXXXXXXX/", serial:"" },
     mqtt:{ host:"mqtt.recreacloud.com", port:8885, tls:true, user:"", pass:"", clientId:"AirM01", topic:"airmonitor/AirM01" },
     http:{ url:"" },
@@ -1036,7 +1109,7 @@ const DEFAULT_DEVCFG={
   map:{ gmapsKey:"", centerLat:-33.4489, centerLng:-70.6693, zoom:13 },
 };
 function loadDevCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.devcfg"));return deepMerge(structuredClone(DEFAULT_DEVCFG),c||{});}catch(e){return structuredClone(DEFAULT_DEVCFG);}}
-function saveDevCfg(){localStorage.setItem("airmon.devcfg",JSON.stringify(DEVCFG));}
+function saveDevCfg(){setLS("airmon.devcfg",JSON.stringify(DEVCFG));}
 function deepMerge(base,ext){for(const k in ext){if(ext[k]&&typeof ext[k]==="object"&&!Array.isArray(ext[k])){base[k]=deepMerge(base[k]||{},ext[k]);}else base[k]=ext[k];}return base;}
 let DEVCFG=loadDevCfg();
 const gp=p=>p.split(".").reduce((o,k)=>o?.[k],DEVCFG);
@@ -1178,40 +1251,42 @@ function genConfigH(){
   const d=DEVCFG,s=d.sensors,g=d.gpio,c=d.cloud;
   const yn=b=>b?1:0;
   let o=`/* config.h — generado por el dashboard Air Monitor */\n#ifndef CONFIG_H\n#define CONFIG_H\n\n`;
-  o+=`// --- Identidad ---\n#define DEVICE_ID        "${d.device.id}"\n#define DEVICE_NAME      "${d.device.name}"\n#define DEVICE_LOCATION  "${d.device.location}"\n\n`;
+  o+=`// --- Identidad ---\n#define DEVICE_ID        "${cstr(d.device.id)}"\n#define DEVICE_NAME      "${cstr(d.device.name)}"\n#define DEVICE_LOCATION  "${cstr(d.device.location)}"\n\n`;
   o+=`// --- Bus I2C ---\n#define I2C_SDA   ${d.i2c.sda}\n#define I2C_SCL   ${d.i2c.scl}\n#define I2C_FREQ  ${d.i2c.freqkHz*1000}\n\n`;
   o+=`// --- Pines / periféricos ---\n#define POWER_3V3 ${g.power3v3}\n#define POWER_1V8 ${g.power1v8}\n#define BUTTON_PIN ${g.button}\n#define LED_PIN ${g.led}\n#define BAT_PIN ${g.batPin}\n#define RTC_IRQ ${g.rtcIrq}\n#define IO_RXD2 ${g.modemRx}\n#define IO_TXD2 ${g.modemTx}\n#define IO_GSM_PWRKEY ${g.gsmPwrkey}\n#define IO_GSM_RST ${g.gsmRst}\n#define IO_GSM_DTR ${g.gsmDtr}\n\n`;
   o+=`// --- Sensores (1=activo) ---\n#define EN_AHT10  ${yn(s.aht10.enabled)}   // addr ${s.aht10.addr}\n#define EN_SGP30  ${yn(s.sgp30.enabled)}   // addr ${s.sgp30.addr}\n#define EN_BH1750 ${yn(s.bh1750.enabled)}   // addr ${s.bh1750.addr}\n#define EN_PCF8563 ${yn(s.pcf8563.enabled)}  // addr ${s.pcf8563.addr}\n#define EN_BATTERY ${yn(s.battery.enabled)}\n`;
   o+=`#define TEMP_OFFSET ${s.aht10.tempOffset}\n#define HUM_OFFSET  ${s.aht10.humOffset}\n#define BAT_CAL_FACTOR ${s.battery.calFactor}\n`;
   if(s.sgp30.baseECO2||s.sgp30.baseTVOC)o+=`#define SGP30_BASE_ECO2 ${s.sgp30.baseECO2||0}\n#define SGP30_BASE_TVOC ${s.sgp30.baseTVOC||0}\n`;
-  o+=`\n// --- Módem 4G / APN ---\n#define MODEM_MODULE "${d.modem.module}"\n#define MODEM_BAUD ${d.modem.baud}\n#define APN "${d.modem.apn}"\n#define APN_USER "${d.modem.apnUser}"\n#define APN_PASS "${d.modem.apnPass}"\n#define SIM_PIN "${d.modem.simPin}"\n\n`;
+  o+=`\n// --- Módem 4G / APN ---\n#define MODEM_MODULE "${cstr(d.modem.module)}"\n#define MODEM_BAUD ${d.modem.baud}\n#define APN "${cstr(d.modem.apn)}"\n#define APN_USER "${cstr(d.modem.apnUser)}"\n#define APN_PASS "${cstr(d.modem.apnPass)}"\n#define SIM_PIN "${cstr(d.modem.simPin)}"\n\n`;
   o+=`// --- Reporte / energía ---\n#define REPORT_INTERVAL_S ${d.power.reportSec}\n#define READ_INTERVAL_S ${d.power.readSec}\n#define DEEP_SLEEP ${yn(d.power.deepSleep)}\n#define uS_TO_S_FACTOR 1000000ULL\n\n`;
-  o+=`// --- WiFi / portal AP ---\n#define AP_SSID "${d.wifi.apSsid}"\n#define AP_PWD  "${d.wifi.apPwd}"\n#define WIFI_SSID "${d.wifi.staSsid}"\n#define WIFI_PASS "${d.wifi.staPwd}"\n\n`;
-  o+=`// --- Destino de datos: ${c.target} ---\n`;
-  if(c.target==="thingspeak")o+=`#define TS_WRITE_KEY "${c.thingspeak.writeKey}"\n#define TS_CHANNEL "${c.thingspeak.channel}"\n`;
-  else if(c.target==="datacake")o+=`#define DATACAKE_URL "${c.datacake.endpoint}"\n#define DATACAKE_SERIAL "${c.datacake.serial}"\n`;
-  else if(c.target==="mqtt")o+=`#define MQTT_SERVER "${c.mqtt.host}"\n#define MQTT_PORT ${c.mqtt.port}\n#define MQTT_TLS ${yn(c.mqtt.tls)}\n#define MQTT_USER "${c.mqtt.user}"\n#define MQTT_PASS "${c.mqtt.pass}"\n#define MQTT_CLIENTID "${c.mqtt.clientId}"\n#define MQTT_TOPIC "${c.mqtt.topic}"\n`;
-  else o+=`#define HTTP_URL "${c.http.url}"\n`;
-  o+=`\n#endif\n`;
+  o+=`// --- WiFi / portal AP ---\n#define AP_SSID "${cstr(d.wifi.apSsid)}"\n#define AP_PWD  "${cstr(d.wifi.apPwd)}"\n#define WIFI_SSID "${cstr(d.wifi.staSsid)}"\n#define WIFI_PASS "${cstr(d.wifi.staPwd)}"\n\n`;
+  o+=`// --- Destino de datos: ${cstr(c.target)} ---\n`;
+  if(c.target==="thingspeak")o+=`#define TS_WRITE_KEY "${cstr(c.thingspeak.writeKey)}"\n#define TS_CHANNEL "${cstr(c.thingspeak.channel)}"\n`;
+  else if(c.target==="datacake")o+=`#define DATACAKE_URL "${cstr(c.datacake.endpoint)}"\n#define DATACAKE_SERIAL "${cstr(c.datacake.serial)}"\n`;
+  else if(c.target==="mqtt")o+=`#define MQTT_SERVER "${cstr(c.mqtt.host)}"\n#define MQTT_PORT ${c.mqtt.port}\n#define MQTT_TLS ${yn(c.mqtt.tls)}\n#define MQTT_USER "${cstr(c.mqtt.user)}"\n#define MQTT_PASS "${cstr(c.mqtt.pass)}"\n#define MQTT_CLIENTID "${cstr(c.mqtt.clientId)}"\n#define MQTT_TOPIC "${cstr(c.mqtt.topic)}"\n`;
+  else o+=`#define HTTP_URL "${cstr(c.http.url)}"\n`;
+  o+=`\n// AVISO: este archivo contiene credenciales en texto plano. No lo subas a un repositorio público.\n#endif\n`;
   return o;
 }
 function genAT(){
   const d=DEVCFG,c=d.cloud;
   let o=`# Secuencia de comandos AT — ${d.modem.module}\n# Inicialización celular y conexión de datos\n\n`;
   o+=`AT                       # comprobar módem\nATE0                     # eco off\n`;
-  if(d.modem.simPin)o+=`AT+CPIN=${d.modem.simPin}        # desbloquear SIM\n`;else o+=`AT+CPIN?                 # estado SIM (READY)\n`;
-  o+=`AT+CSQ                   # calidad de señal\nAT+CREG?                 # registro en red\nAT+CGDCONT=1,"IP","${d.modem.apn}"   # APN del operador\nAT+CGACT=1,1             # activar contexto PDP\nAT+CGPADDR=1             # IP asignada\n\n`;
+  if(d.modem.simPin)o+=`AT+CPIN=${atSan(d.modem.simPin)}        # desbloquear SIM\n`;else o+=`AT+CPIN?                 # estado SIM (READY)\n`;
+  o+=`AT+CSQ                   # calidad de señal\nAT+CREG?                 # registro en red\nAT+CGDCONT=1,"IP","${atSan(d.modem.apn)}"   # APN del operador\nAT+CGACT=1,1             # activar contexto PDP\nAT+CGPADDR=1             # IP asignada\n\n`;
   if(c.target==="thingspeak"){
-    o+=`# --- Envío a ThingSpeak (HTTP GET) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","http://api.thingspeak.com/update?api_key=${c.thingspeak.writeKey}&field1=<T>&field2=<H>&field3=<TVOC>&field4=<eCO2>&field5=<H2>&field6=<Eth>&field7=<lux>&field8=<bat>"\nAT+HTTPACTION=0\nAT+HTTPTERM\n`;
+    o+=`# --- Envío a ThingSpeak (HTTPS GET) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","https://api.thingspeak.com/update?api_key=${atSan(c.thingspeak.writeKey)}&field1=<T>&field2=<H>&field3=<TVOC>&field4=<eCO2>&field5=<H2>&field6=<Eth>&field7=<lux>&field8=<bat>"\nAT+HTTPACTION=0\nAT+HTTPTERM\n`;
   }else if(c.target==="datacake"){
-    o+=`# --- Envío a Datacake (HTTP POST JSON) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${c.datacake.endpoint}"\nAT+HTTPPARA="CONTENT","application/json"\nAT+HTTPDATA=<len>,10000\n{"device":"${c.datacake.serial}","temperature":<T>,"humidity":<H>}\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
+    o+=`# --- Envío a Datacake (HTTP POST JSON) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${atSan(c.datacake.endpoint)}"\nAT+HTTPPARA="CONTENT","application/json"\nAT+HTTPDATA=<len>,10000\n{"device":"${atSan(c.datacake.serial)}","temperature":<T>,"humidity":<H>}\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
   }else if(c.target==="mqtt"){
-    o+=`# --- Conexión MQTT${c.mqtt.tls?"S (TLS)":""} ---\nAT+CMQTTSTART\nAT+CMQTTACCQ=0,"${c.mqtt.clientId}",${c.mqtt.tls?1:0}\n`;
+    const topic=atSan(c.mqtt.topic);
+    o+=`# --- Conexión MQTT${c.mqtt.tls?"S (TLS)":""} ---\nAT+CMQTTSTART\nAT+CMQTTACCQ=0,"${atSan(c.mqtt.clientId)}",${c.mqtt.tls?1:0}\n`;
     if(c.mqtt.tls)o+=`AT+CSSLCFG="sslversion",0,4\nAT+CSSLCFG="authmode",0,1\nAT+CMQTTSSLCFG=0,0\n`;
-    o+=`AT+CMQTTCONNECT=0,"tcp://${c.mqtt.host}:${c.mqtt.port}",60,1,"${c.mqtt.user}","${c.mqtt.pass}"\nAT+CMQTTTOPIC=0,${c.mqtt.topic.length}\n${c.mqtt.topic}\nAT+CMQTTPAYLOAD=0,<len>\n{"t":<T>,"h":<H>}\nAT+CMQTTPUB=0,1,60\n`;
+    o+=`AT+CMQTTCONNECT=0,"tcp://${atSan(c.mqtt.host)}:${c.mqtt.port}",60,1,"${atSan(c.mqtt.user)}","${atSan(c.mqtt.pass)}"\nAT+CMQTTTOPIC=0,${byteLen(topic)}\n${topic}\nAT+CMQTTPAYLOAD=0,<len>\n{"t":<T>,"h":<H>}\nAT+CMQTTPUB=0,1,60\n`;
   }else{
-    o+=`# --- Envío HTTP propio ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${c.http.url}"\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
+    o+=`# --- Envío HTTP propio ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${atSan(c.http.url)}"\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
   }
+  o+=`\n# AVISO: estos comandos incluyen credenciales en texto plano.\n`;
   return o;
 }
 function genJSON(){return JSON.stringify(DEVCFG,null,2);}
@@ -1249,7 +1324,7 @@ const DEFAULT_STATIONS=[
   {id:"AirM05",name:"Laboratorio",   lat:-33.4290,lng:-70.6120},
 ];
 function loadStations(){try{const s=JSON.parse(localStorage.getItem("airmon.stations"));return Array.isArray(s)&&s.length?s:structuredClone(DEFAULT_STATIONS);}catch(e){return structuredClone(DEFAULT_STATIONS);}}
-function saveStations(){localStorage.setItem("airmon.stations",JSON.stringify(STATIONS));}
+function saveStations(){setLS("airmon.stations",JSON.stringify(STATIONS));}
 let STATIONS=loadStations();
 let mapSelId=null, gMap=null, gMarkers={};
 const hashId=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h;};
@@ -1275,17 +1350,23 @@ function stationHistory(st){const out=[],now=Date.now();for(let t=now-24*3600*10
 function stationStatus(st){const r=stationLatest(st);if(r.eco2>1500||r.temp>32||r.tvoc>660)return"bad";if(r.eco2>1000||r.temp>30)return"warn";return"good";}
 const STCOL={good:"#34d399",warn:"#fbbf24",bad:"#fb7185"};
 
+let mapMode=null;
 function renderMap(){
   const box=document.getElementById("mapbox");
   const key=DEVCFG.map.gmapsKey;
-  if(key){ tryGoogle(key,box); document.getElementById("mapModeHint").textContent="Google Maps · "+STATIONS.length+" estaciones"; }
-  else { renderFallbackMap(box); document.getElementById("mapModeHint").textContent="Mapa de respaldo (sin API key) · "+STATIONS.length+" estaciones"; }
+  if(key){
+    document.getElementById("mapModeHint").textContent="Google Maps · "+STATIONS.length+" estaciones · datos simulados";
+    if(mapMode!=="google:"+key){mapMode="google:"+key;gMap=null;box.innerHTML='<div class="empty">Cargando mapa…</div>';}
+    loadGoogleMaps(key)
+      .then(()=>{ if(!gMap)buildGoogleMap(box); else syncGoogleMarkers(); updateMapSelection(); })
+      .catch(()=>{ mapMode="fallback"; renderFallbackMap(box);
+        document.getElementById("mapModeHint").textContent="No se pudo cargar Google Maps · usando respaldo"; });
+  } else {
+    mapMode="fallback"; renderFallbackMap(box);
+    document.getElementById("mapModeHint").textContent="Mapa de respaldo (sin API key) · "+STATIONS.length+" estaciones · datos simulados";
+  }
   renderStationList();
   if(mapSelId)renderStationDetail(mapSelId);
-}
-function tryGoogle(key,box){
-  loadGoogleMaps(key).then(()=>buildGoogleMap(box)).catch(()=>{ renderFallbackMap(box);
-    document.getElementById("mapModeHint").textContent="No se pudo cargar Google Maps · usando respaldo"; });
 }
 let gmapsPromise=null;
 function loadGoogleMaps(key){
@@ -1293,22 +1374,27 @@ function loadGoogleMaps(key){
   if(gmapsPromise)return gmapsPromise;
   gmapsPromise=new Promise((res,rej)=>{const s=document.createElement("script");
     s.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(key);
-    s.async=true;s.onload=res;s.onerror=rej;document.head.appendChild(s);
-    setTimeout(()=>rej(new Error("timeout")),8000);});
+    s.async=true;s.onload=res;s.onerror=()=>{s.remove();gmapsPromise=null;rej(new Error("load"));};document.head.appendChild(s);
+    setTimeout(()=>{if(!(window.google&&window.google.maps)){s.remove();gmapsPromise=null;rej(new Error("timeout"));}},8000);});
   return gmapsPromise;
 }
 function buildGoogleMap(box){
   box.innerHTML='<div id="gmap"></div>';
-  const center={lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
-  gMap=new google.maps.Map(document.getElementById("gmap"),{center,zoom:+DEVCFG.map.zoom||13,
-    mapTypeControl:false,streetViewControl:false,styles:DARK_MAP_STYLE});
-  gMarkers={};
+  gMap=new google.maps.Map(document.getElementById("gmap"),{center:{lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng},
+    zoom:+DEVCFG.map.zoom||13,mapTypeControl:false,streetViewControl:false,styles:DARK_MAP_STYLE});
+  syncGoogleMarkers();
+}
+function syncGoogleMarkers(){
+  Object.values(gMarkers).forEach(m=>m.setMap(null)); gMarkers={};
   STATIONS.forEach(st=>{
     const m=new google.maps.Marker({position:{lat:+st.lat,lng:+st.lng},map:gMap,title:st.name,
-      icon:{path:google.maps.SymbolPath.CIRCLE,scale:9,fillColor:STCOL[stationStatus(st)],fillOpacity:1,strokeColor:"#fff",strokeWeight:2}});
+      icon:{path:google.maps.SymbolPath.CIRCLE,scale:st.id===mapSelId?12:9,fillColor:STCOL[stationStatus(st)],fillOpacity:1,strokeColor:"#fff",strokeWeight:2}});
     m.addListener("click",()=>selectStation(st.id));
     gMarkers[st.id]=m;
   });
+}
+function updateMapSelection(){
+  if(gMap){syncGoogleMarkers(); if(mapSelId&&gMarkers[mapSelId])gMap.panTo(gMarkers[mapSelId].getPosition());}
 }
 function renderFallbackMap(box){
   const b=bbox();
@@ -1320,14 +1406,14 @@ function renderFallbackMap(box){
     const col=STCOL[stationStatus(st)];
     const pin=document.createElement("div");pin.className="pin"+(st.id===mapSelId?" sel":"");
     pin.style.left=x+"%";pin.style.top=y+"%";
-    pin.innerHTML=`<div class="head" style="background:${col}"></div><div class="dotc"></div><div class="lbl">${st.name}</div>`;
+    pin.innerHTML=`<div class="head" style="background:${col}"></div><div class="dotc"></div><div class="lbl">${esc(st.name)}</div>`;
     pin.onclick=()=>selectStation(st.id);
     fm.appendChild(pin);
   });
 }
 function bbox(){
   const lats=STATIONS.map(s=>+s.lat),lngs=STATIONS.map(s=>+s.lng);
-  let minLat=Math.min(...lats),maxLat=Math.max(...lats),minLng=Math.min(...lngs),maxLng=Math.max(...lngs);
+  let minLat=amin(lats),maxLat=amax(lats),minLng=amin(lngs),maxLng=amax(lngs);
   const pl=(maxLat-minLat)*0.25||0.01,pg=(maxLng-minLng)*0.25||0.01;
   return {minLat:minLat-pl,maxLat:maxLat+pl,minLng:minLng-pg,maxLng:maxLng+pg};
 }
@@ -1336,26 +1422,27 @@ function renderStationList(){
   STATIONS.forEach(st=>{
     const el=document.createElement("div");el.className="stitem"+(st.id===mapSelId?" sel":"");
     el.innerHTML=`<span class="dot" style="background:${STCOL[stationStatus(st)]}"></span>
-      <div style="flex:1"><div class="nm">${st.name}</div><div class="co">${st.id} · ${(+st.lat).toFixed(4)}, ${(+st.lng).toFixed(4)}</div></div>`;
+      <div style="flex:1"><div class="nm">${esc(st.name)}</div><div class="co">${esc(st.id)} · ${(+st.lat).toFixed(4)}, ${(+st.lng).toFixed(4)}</div></div>`;
     el.onclick=()=>selectStation(st.id);box.appendChild(el);
   });
 }
 function selectStation(id){
   mapSelId=id;
-  document.querySelectorAll(".pin").forEach(p=>p.classList.remove("sel"));
-  renderMap(); // refresca selección y detalle
-  if(gMap&&gMarkers[id])gMap.panTo(gMarkers[id].getPosition());
+  if(mapMode&&mapMode.indexOf("google")===0){updateMapSelection();}
+  else{renderFallbackMap(document.getElementById("mapbox"));}
+  renderStationList();
+  renderStationDetail(id);
 }
 function renderStationDetail(id){
   const st=STATIONS.find(s=>s.id===id);if(!st)return;
   const r=stationLatest(st),hist=stationHistory(st);
-  const vals=hist.map(h=>h.temp),mn=Math.min(...vals),mx=Math.max(...vals);
+  const vals=hist.map(h=>h.temp),mn=amin(vals),mx=amax(vals);
   const pts=downsample(hist,40).map((h,i,a)=>{const x=i/(a.length-1)*250;const y=60-((h.temp-mn)/((mx-mn)||1))*52-4;return x+","+y;}).join(" ");
   const stt=stationStatus(st);
   document.getElementById("stDetail").innerHTML=`
     <div style="display:flex;align-items:center;gap:8px">
       <span class="dot" style="background:${STCOL[stt]}"></span>
-      <div style="flex:1"><h3 style="margin:0">${st.name}</h3><div class="hint" style="margin:0">${st.id} · ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}</div></div>
+      <div style="flex:1"><h3 style="margin:0">${esc(st.name)}</h3><div class="hint" style="margin:0">${esc(st.id)} · ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}</div></div>
       <span class="badge b-${stt}">${stt==="bad"?"Alerta":stt==="warn"?"Atención":"Normal"}</span>
     </div>
     <div class="mreadings">
@@ -1372,7 +1459,7 @@ function renderStationDetail(id){
     <div class="coordrow">
       <input class="f" id="stLat" type="number" step="any" value="${st.lat}" placeholder="lat">
       <input class="f" id="stLng" type="number" step="any" value="${st.lng}" placeholder="lng">
-      <button class="btn sm" id="geoBtn" title="Usar mi ubicación">📍</button>
+      <button class="btn sm" id="geoBtn" title="Usar mi ubicación" aria-label="Usar mi ubicación actual">📍</button>
     </div>
     <div class="expbtns">
       <button class="btn sm" id="expPDF">📄 PDF</button>
@@ -1395,8 +1482,10 @@ function renderStationDetail(id){
   document.getElementById("expPDF").onclick=()=>exportPDF(st,hist);
 }
 document.getElementById("addStation").onclick=()=>{
-  const n=STATIONS.length+1;const st={id:"AirM"+String(n).padStart(2,"0"),name:"Estación "+n,lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
-  STATIONS.push(st);saveStations();selectStation(st.id);toast("Estación añadida");
+  let n=1;const ids=new Set(STATIONS.map(s=>s.id));
+  while(ids.has("AirM"+String(n).padStart(2,"0")))n++;
+  const st={id:"AirM"+String(n).padStart(2,"0"),name:"Estación "+n,lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
+  STATIONS.push(st);saveStations();renderMap();selectStation(st.id);toast("Estación añadida");
 };
 
 /* -------- Exportadores -------- */
@@ -1405,10 +1494,9 @@ const expRows=hist=>hist.map(r=>[new Date(r.t).toLocaleString("es-ES",{hour12:fa
 function dl(name,content,mime){const blob=new Blob([content],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);toast("Descargado "+name);}
 function exportCSV(st,hist){
   const rows=expRows(hist);
-  const csv=[EXP_HEAD.join(","),...rows.map(r=>r.map(c=>typeof c==="string"&&c.includes(",")?`"${c}"`:c).join(","))].join("\n");
+  const csv=[EXP_HEAD.map(csvCell).join(","),...rows.map(r=>r.map(csvCell).join(","))].join("\n");
   dl(`${st.id}_historico.csv`,"﻿"+csv,"text/csv;charset=utf-8");
 }
-function xmlEsc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function exportExcel(st,hist){
   const rows=expRows(hist);
   let x='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n';
@@ -1469,6 +1557,31 @@ function exportPDF(st,hist){
 const DARK_MAP_STYLE=[{elementType:"geometry",stylers:[{color:"#1b2440"}]},{elementType:"labels.text.fill",stylers:[{color:"#8a96b3"}]},
   {elementType:"labels.text.stroke",stylers:[{color:"#0b1020"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#0d2137"}]},
   {featureType:"road",elementType:"geometry",stylers:[{color:"#27314f"}]},{featureType:"poi",elementType:"geometry",stylers:[{color:"#1f2a47"}]}];
+
+/* ============================================================
+   PWA · service worker, instalación y navegación por teclado
+   ============================================================ */
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(e=>console.warn("SW:",e)));
+}
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").style.display="";});
+document.getElementById("installBtn").onclick=async()=>{
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  const {outcome}=await deferredPrompt.userChoice;
+  if(outcome==="accepted")toast("Instalando app…");
+  deferredPrompt=null;document.getElementById("installBtn").style.display="none";
+};
+window.addEventListener("appinstalled",()=>{document.getElementById("installBtn").style.display="none";toast("App instalada");});
+// Flechas izquierda/derecha entre pestañas
+document.querySelector("nav.tabs").addEventListener("keydown",e=>{
+  if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
+  const btns=[...document.querySelectorAll("nav.tabs button")];
+  const i=btns.indexOf(document.activeElement);if(i<0)return;
+  const n=e.key==="ArrowRight"?(i+1)%btns.length:(i-1+btns.length)%btns.length;
+  btns[n].focus();switchTab(btns[n].dataset.tab);e.preventDefault();
+});
 </script>
 </body>
 </html>
