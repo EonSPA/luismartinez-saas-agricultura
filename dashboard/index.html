@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4G LTE CAT1 Air Monitor — Dashboard</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#141b2e; --panel2:#1b2440; --line:#27314f;
+    --txt:#e7ecf6; --muted:#8a96b3; --accent:#3fa7ff;
+    --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --info:#a78bfa;
+    --shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#16224a 0,var(--bg) 55%);
+    color:var(--txt);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
+  header{display:flex;align-items:center;gap:16px;padding:18px 24px;border-bottom:1px solid var(--line);
+    background:rgba(10,15,30,.6);backdrop-filter:blur(6px);position:sticky;top:0;z-index:5;flex-wrap:wrap}
+  .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--info));
+    display:grid;place-items:center;font-weight:800;color:#06122b}
+  h1{font-size:18px;margin:0;letter-spacing:.2px}
+  .sub{color:var(--muted);font-size:12px}
+  .spacer{flex:1}
+  .status-pill{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
+    padding:8px 12px;border-radius:999px;font-size:13px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px rgba(52,211,153,.18)}
+  .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18)}
+  .signal{display:flex;align-items:flex-end;gap:2px;height:16px}
+  .signal i{width:4px;background:var(--muted);border-radius:1px;display:block}
+  .signal i.on{background:var(--good)}
+  .bat{position:relative;width:34px;height:16px;border:2px solid var(--muted);border-radius:3px}
+  .bat:after{content:"";position:absolute;right:-4px;top:4px;width:3px;height:6px;background:var(--muted);border-radius:0 2px 2px 0}
+  .bat span{position:absolute;left:1px;top:1px;bottom:1px;background:var(--good);border-radius:1px}
+  main{padding:24px;max-width:1280px;margin:0 auto}
+  .grid{display:grid;gap:16px}
+  .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .kpi .top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+  .kpi .val{font-size:30px;font-weight:700;margin-top:6px;display:flex;align-items:baseline;gap:6px}
+  .kpi .unit{font-size:13px;color:var(--muted);font-weight:500}
+  .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px}
+  .b-good{background:rgba(52,211,153,.14);color:var(--good)}
+  .b-warn{background:rgba(251,191,36,.14);color:var(--warn)}
+  .b-bad{background:rgba(251,113,133,.14);color:var(--bad)}
+  .spark{margin-top:10px;width:100%;height:36px;display:block}
+  .row2{grid-template-columns:1.4fr 1fr;align-items:stretch}
+  @media(max-width:880px){.row2{grid-template-columns:1fr}}
+  .card h3{margin:0 0 4px;font-size:14px}
+  .card .hint{color:var(--muted);font-size:12px;margin-bottom:10px}
+  canvas.chart{width:100%;height:240px;display:block}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+  .legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
+  .aqi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%}
+  .aqi .ring{position:relative;width:160px;height:160px}
+  .aqi .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+  .aqi .num b{font-size:42px;display:block;line-height:1}
+  .aqi .num small{color:var(--muted);font-size:12px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--panel)}
+  tbody tr:hover{background:rgba(63,167,255,.06)}
+  .tablewrap{max-height:300px;overflow:auto;border-radius:10px}
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .btn{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 14px;border-radius:10px;
+    cursor:pointer;font-size:13px;display:inline-flex;gap:7px;align-items:center}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--info));border:none;color:#06122b;font-weight:600}
+  input.f{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 10px;border-radius:10px;font-size:13px}
+  .src{font-size:12px;color:var(--muted)}
+  .src b{color:var(--warn)}
+  footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
+  a{color:var(--accent)}
+  .modal{position:fixed;inset:0;background:rgba(4,8,18,.7);display:none;place-items:center;z-index:20}
+  .modal.open{display:grid}
+  .modal .card{max-width:420px;width:92%}
+  .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+  .modal input{width:100%}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">AM</div>
+  <div>
+    <h1>4G LTE CAT1 Air Monitor</h1>
+    <div class="sub">ESP32-S3 · A76XX/SIM7670 · estación de calidad del aire</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="status-pill"><span class="dot" id="connDot"></span><span id="connTxt">En línea</span></div>
+  <div class="status-pill" title="Señal 4G (AT+CSQ)">
+    <span class="signal" id="sig"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
+    <span id="csq">CSQ —</span>
+  </div>
+  <div class="status-pill" title="Batería (AT+CBC)">
+    <span class="bat"><span id="batFill" style="width:80%"></span></span>
+    <span id="batTxt">—</span>
+  </div>
+</header>
+
+<main>
+  <div class="toolbar">
+    <button class="btn primary" id="playBtn">⏸ Pausar</button>
+    <button class="btn" id="thingBtn">🔗 Conectar ThingSpeak</button>
+    <span class="src" id="srcLabel">Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s</span>
+    <div class="spacer"></div>
+    <span class="sub" id="clock"></span>
+  </div>
+
+  <!-- KPIs -->
+  <div class="grid kpis" id="kpis"></div>
+
+  <!-- Charts -->
+  <div class="grid row2" style="margin-top:16px">
+    <div class="card">
+      <h3>Tendencia ambiental</h3>
+      <div class="hint">Temperatura (°C) y humedad (% rH) — AHT10</div>
+      <canvas class="chart" id="chartTH"></canvas>
+      <div class="legend">
+        <span><b style="background:#3fa7ff"></b>Temperatura °C</span>
+        <span><b style="background:#34d399"></b>Humedad %rH</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Índice de calidad del aire</h3>
+      <div class="hint">Estimado a partir de eCO2 y TVOC (SGP30)</div>
+      <div class="aqi">
+        <div class="ring"><canvas id="aqiRing" width="320" height="320" style="width:160px;height:160px"></canvas>
+          <div class="num"><b id="aqiVal">—</b><small id="aqiLbl">calculando…</small></div>
+        </div>
+        <div class="badge" id="aqiBadge">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid row2" style="margin-top:16px">
+    <div class="card">
+      <h3>Gases</h3>
+      <div class="hint">eCO2 (ppm) y TVOC (ppb) — SGP30</div>
+      <canvas class="chart" id="chartGas"></canvas>
+      <div class="legend">
+        <span><b style="background:#a78bfa"></b>eCO2 ppm</span>
+        <span><b style="background:#fbbf24"></b>TVOC ppb</span>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Lecturas recientes</h3>
+      <div class="hint">Últimas muestras del dispositivo</div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Hora</th><th>T°C</th><th>%rH</th><th>eCO2</th><th>TVOC</th><th>Lux</th></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Dashboard de ejemplo · Proyecto
+    <a href="https://github.com/Makerfabs/4G-LTE-CAT1-Air-Monitor" target="_blank" rel="noopener">Makerfabs 4G-LTE-CAT1-Air-Monitor</a>.
+    Los datos son simulados salvo que conectes un canal de ThingSpeak.
+  </footer>
+</main>
+
+<!-- ThingSpeak modal -->
+<div class="modal" id="modal">
+  <div class="card">
+    <h3>Conectar a ThingSpeak</h3>
+    <div class="hint">Lee los campos del canal usado por el ejemplo <code>Transmit_the_detection_data_to_Thingspeak</code>.</div>
+    <label>Channel ID</label>
+    <input class="f" id="tsChannel" placeholder="p.ej. 1234567">
+    <label>Read API Key (opcional para canales públicos)</label>
+    <input class="f" id="tsKey" placeholder="XXXXXXXXXXXXXXXX">
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
+      <button class="btn" id="tsCancel">Cancelar</button>
+      <button class="btn primary" id="tsConnect">Conectar</button>
+    </div>
+    <p class="src" style="margin-top:12px">Mapeo de campos esperado: 1=Temp, 2=Humedad, 3=eCO2, 4=TVOC, 5=Lux, 6=Batería.</p>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ---------- Definición de métricas ----------
+const METRICS = [
+  {key:"temp",  label:"Temperatura", unit:"°C",  color:"#3fa7ff", base:24,  fmt:v=>v.toFixed(1),
+   status:v=> v<18||v>30 ? "warn" : "good"},
+  {key:"hum",   label:"Humedad",     unit:"%rH", color:"#34d399", base:48,  fmt:v=>v.toFixed(0),
+   status:v=> v<30||v>70 ? "warn" : "good"},
+  {key:"eco2",  label:"eCO₂",        unit:"ppm", color:"#a78bfa", base:600, fmt:v=>v.toFixed(0),
+   status:v=> v>1500 ? "bad" : v>1000 ? "warn" : "good"},
+  {key:"tvoc",  label:"TVOC",        unit:"ppb", color:"#fbbf24", base:120, fmt:v=>v.toFixed(0),
+   status:v=> v>660 ? "bad" : v>250 ? "warn" : "good"},
+  {key:"lux",   label:"Luz",         unit:"lux", color:"#22d3ee", base:340, fmt:v=>v.toFixed(0),
+   status:v=> "good"},
+  {key:"bat",   label:"Batería",     unit:"V",   color:"#f472b6", base:4.0, fmt:v=>v.toFixed(2),
+   status:v=> v<3.5 ? "bad" : v<3.7 ? "warn" : "good"},
+];
+const MAXPTS = 40;
+const STATUS_TXT = {good:"Normal", warn:"Atención", bad:"Alto"};
+
+// ---------- Estado ----------
+let state = { running:true, mode:"demo", series:{}, times:[], csq:0, batPct:0 };
+METRICS.forEach(m=> state.series[m.key]=[]);
+
+// ---------- Generador de datos simulados ----------
+function nextSimSample(){
+  const t = Date.now()/1000;
+  const wave = (amp,period,ph=0)=> amp*Math.sin(t/period+ph);
+  const noise = a=> (Math.random()-0.5)*a;
+  const s = {
+    temp: 24 + wave(2.5,90) + noise(0.4),
+    hum:  48 + wave(8,120,1) + noise(2),
+    lux:  Math.max(0, 340 + wave(260,140,2) + noise(40)),
+    bat:  3.95 - (state.series.bat.length*0.0008) + noise(0.01),
+  };
+  // gases correlacionados: picos ocasionales
+  const spike = Math.random()<0.07 ? Math.random()*800 : 0;
+  s.eco2 = 520 + wave(120,70,3) + spike + noise(40);
+  s.tvoc = 90  + wave(60,60,4)  + spike*0.6 + noise(20);
+  return s;
+}
+
+// ---------- AQI estimado (0-100, mayor = peor) ----------
+function computeAQI(eco2, tvoc){
+  const c = Math.min(100, Math.max(0, (eco2-400)/16));   // 400→0, 2000→100
+  const v = Math.min(100, Math.max(0, tvoc/6.6));          // 0→0, 660→100
+  const score = Math.round(c*0.55 + v*0.45);
+  let lbl="Excelente", cls="good";
+  if(score>75){lbl="Insalubre";cls="bad";}
+  else if(score>50){lbl="Pobre";cls="bad";}
+  else if(score>30){lbl="Moderado";cls="warn";}
+  else if(score>15){lbl="Bueno";cls="good";}
+  return {score,lbl,cls};
+}
+
+// ---------- Push de una muestra al estado ----------
+function pushSample(s, time){
+  state.times.push(time); if(state.times.length>MAXPTS) state.times.shift();
+  METRICS.forEach(m=>{
+    const arr=state.series[m.key];
+    arr.push(s[m.key]); if(arr.length>MAXPTS) arr.shift();
+  });
+  // CSQ 0-31 derivado (en demo)
+  state.csq = state.mode==="demo" ? Math.round(18+Math.sin(Date.now()/9000)*6+Math.random()*3) : state.csq;
+  const last=s.bat ?? 3.9;
+  state.batPct = Math.round(Math.min(100,Math.max(0,(last-3.3)/(4.2-3.3)*100)));
+  render();
+}
+
+// ---------- Render ----------
+const kpiBox = document.getElementById("kpis");
+function buildKpis(){
+  kpiBox.innerHTML="";
+  METRICS.forEach(m=>{
+    const el=document.createElement("div");
+    el.className="card kpi"; el.id="kpi-"+m.key;
+    el.innerHTML=`<div class="top"><span>${m.label}</span><span class="badge" id="bd-${m.key}">—</span></div>
+      <div class="val"><span id="vl-${m.key}">—</span><span class="unit">${m.unit}</span></div>
+      <canvas class="spark" id="sp-${m.key}"></canvas>`;
+    kpiBox.appendChild(el);
+  });
+}
+function render(){
+  METRICS.forEach(m=>{
+    const arr=state.series[m.key]; if(!arr.length) return;
+    const v=arr[arr.length-1];
+    document.getElementById("vl-"+m.key).textContent=m.fmt(v);
+    const st=m.status(v);
+    const bd=document.getElementById("bd-"+m.key);
+    bd.textContent=STATUS_TXT[st]; bd.className="badge b-"+st;
+    drawSpark(document.getElementById("sp-"+m.key), arr, m.color);
+  });
+  drawLine(document.getElementById("chartTH"),
+    [{data:state.series.temp,color:"#3fa7ff"},{data:state.series.hum,color:"#34d399"}]);
+  drawLine(document.getElementById("chartGas"),
+    [{data:state.series.eco2,color:"#a78bfa"},{data:state.series.tvoc,color:"#fbbf24"}]);
+  // AQI
+  const eco2=state.series.eco2.at(-1), tvoc=state.series.tvoc.at(-1);
+  if(eco2!=null){
+    const a=computeAQI(eco2,tvoc);
+    document.getElementById("aqiVal").textContent=a.score;
+    document.getElementById("aqiLbl").textContent="AQI estimado";
+    const badge=document.getElementById("aqiBadge");
+    badge.textContent=a.lbl; badge.className="badge b-"+a.cls;
+    drawRing(document.getElementById("aqiRing"), a.score, a.cls);
+  }
+  // Header
+  const sig=document.getElementById("sig").children;
+  const bars=Math.round(state.csq/31*5);
+  for(let i=0;i<5;i++) sig[i].className = i<bars ? "on":"";
+  document.getElementById("csq").textContent="CSQ "+state.csq;
+  document.getElementById("batFill").style.width=state.batPct+"%";
+  document.getElementById("batFill").style.background = state.batPct<20?"var(--bad)":state.batPct<40?"var(--warn)":"var(--good)";
+  document.getElementById("batTxt").textContent=state.batPct+"%";
+  // Tabla
+  renderTable();
+}
+function renderTable(){
+  const tb=document.getElementById("tbody"); tb.innerHTML="";
+  const n=state.times.length;
+  for(let i=n-1;i>=Math.max(0,n-12);i--){
+    const tr=document.createElement("tr");
+    const g=k=>state.series[k][i];
+    tr.innerHTML=`<td>${state.times[i]}</td><td>${g("temp").toFixed(1)}</td><td>${g("hum").toFixed(0)}</td>
+      <td>${g("eco2").toFixed(0)}</td><td>${g("tvoc").toFixed(0)}</td><td>${g("lux").toFixed(0)}</td>`;
+    tb.appendChild(tr);
+  }
+}
+
+// ---------- Dibujo en canvas ----------
+function fitCanvas(cv){
+  const dpr=window.devicePixelRatio||1, r=cv.getBoundingClientRect();
+  if(cv.width!==Math.round(r.width*dpr)||cv.height!==Math.round(r.height*dpr)){
+    cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr);
+  }
+  const ctx=cv.getContext("2d"); ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {ctx,w:r.width,h:r.height};
+}
+function drawSpark(cv,data,color){
+  const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
+  if(data.length<2) return;
+  const mn=Math.min(...data), mx=Math.max(...data), rng=(mx-mn)||1;
+  const x=i=>i/(data.length-1)*w, y=v=>h-4-((v-mn)/rng)*(h-8);
+  ctx.beginPath(); data.forEach((v,i)=> i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
+  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin="round"; ctx.stroke();
+  ctx.lineTo(w,h); ctx.lineTo(0,h); ctx.closePath();
+  const grd=ctx.createLinearGradient(0,0,0,h); grd.addColorStop(0,color+"44"); grd.addColorStop(1,color+"00");
+  ctx.fillStyle=grd; ctx.fill();
+}
+function drawLine(cv,series){
+  const {ctx,w,h}=fitCanvas(cv); ctx.clearRect(0,0,w,h);
+  const pad={l:6,r:6,t:10,b:18};
+  // grid
+  ctx.strokeStyle="#27314f"; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const yy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();}
+  series.forEach(s=>{
+    const d=s.data; if(d.length<2) return;
+    const mn=Math.min(...d), mx=Math.max(...d), rng=(mx-mn)||1;
+    const x=i=>pad.l+i/(d.length-1)*(w-pad.l-pad.r);
+    const y=v=>pad.t+(1-(v-mn)/rng)*(h-pad.t-pad.b);
+    ctx.beginPath(); d.forEach((v,i)=> i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
+    ctx.strokeStyle=s.color; ctx.lineWidth=2.2; ctx.lineJoin="round"; ctx.stroke();
+    const last=d.length-1;
+    ctx.beginPath(); ctx.arc(x(last),y(d[last]),3.2,0,7); ctx.fillStyle=s.color; ctx.fill();
+  });
+}
+function drawRing(cv,score,cls){
+  const ctx=cv.getContext("2d"), w=cv.width, h=cv.height, cx=w/2, cy=h/2, r=w/2-26;
+  ctx.clearRect(0,0,w,h);
+  const col=cls==="bad"?"#fb7185":cls==="warn"?"#fbbf24":"#34d399";
+  ctx.lineWidth=24; ctx.lineCap="round";
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.strokeStyle="#27314f"; ctx.stroke();
+  const a0=-Math.PI/2, a1=a0+Math.PI*2*(score/100);
+  ctx.beginPath(); ctx.arc(cx,cy,r,a0,a1); ctx.strokeStyle=col; ctx.stroke();
+}
+
+// ---------- Loop ----------
+let timer=null;
+function tick(){
+  if(!state.running || state.mode!=="demo") return;
+  const now=new Date();
+  pushSample(nextSimSample(), now.toLocaleTimeString("es-ES",{hour12:false}));
+}
+function startTimer(){ clearInterval(timer); timer=setInterval(tick,3000); }
+
+// seed
+(function seed(){
+  buildKpis();
+  for(let i=0;i<MAXPTS;i++){
+    pushSampleSilent(nextSimSample(), new Date(Date.now()-(MAXPTS-i)*3000).toLocaleTimeString("es-ES",{hour12:false}));
+  }
+  render(); startTimer(); updateClock();
+})();
+function pushSampleSilent(s,time){
+  state.times.push(time);
+  METRICS.forEach(m=> state.series[m.key].push(s[m.key]));
+}
+
+// ---------- Controles ----------
+document.getElementById("playBtn").onclick=function(){
+  state.running=!state.running;
+  this.textContent=state.running?"⏸ Pausar":"▶ Reanudar";
+  document.getElementById("connDot").className="dot"+(state.running?"":" off");
+  document.getElementById("connTxt").textContent=state.running?"En línea":"Pausado";
+};
+function updateClock(){
+  document.getElementById("clock").textContent="Última actualización: "+new Date().toLocaleTimeString("es-ES");
+  requestAnimationFrame(()=>setTimeout(updateClock,1000));
+}
+window.addEventListener("resize",render);
+
+// ---------- ThingSpeak (datos reales opcionales) ----------
+const modal=document.getElementById("modal");
+document.getElementById("thingBtn").onclick=()=>modal.classList.add("open");
+document.getElementById("tsCancel").onclick=()=>modal.classList.remove("open");
+document.getElementById("tsConnect").onclick=async ()=>{
+  const ch=document.getElementById("tsChannel").value.trim();
+  const key=document.getElementById("tsKey").value.trim();
+  if(!ch){alert("Indica el Channel ID");return;}
+  modal.classList.remove("open");
+  state.mode="thingspeak";
+  document.getElementById("srcLabel").innerHTML=`Fuente: <b>ThingSpeak canal ${ch}</b> · sondeo cada 15 s`;
+  const poll=async ()=>{
+    try{
+      const url=`https://api.thingspeak.com/channels/${ch}/feeds.json?results=${MAXPTS}`+(key?`&api_key=${key}`:"");
+      const r=await fetch(url); if(!r.ok) throw new Error("HTTP "+r.status);
+      const j=await r.json();
+      // reset series
+      state.times=[]; METRICS.forEach(m=>state.series[m.key]=[]);
+      j.feeds.forEach(f=>{
+        const time=new Date(f.created_at).toLocaleTimeString("es-ES",{hour12:false});
+        pushSampleSilent({
+          temp:+f.field1||0, hum:+f.field2||0, eco2:+f.field3||0,
+          tvoc:+f.field4||0, lux:+f.field5||0, bat:+f.field6||3.9
+        }, time);
+      });
+      render();
+    }catch(e){
+      document.getElementById("srcLabel").innerHTML=`Fuente: <b>error ThingSpeak</b> (${e.message}) — volviendo a demo`;
+      state.mode="demo";
+    }
+  };
+  await poll();
+  clearInterval(timer); timer=setInterval(()=>{ if(state.running) poll(); },15000);
+};
+</script>
+</body>
+</html>
