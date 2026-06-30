@@ -1,0 +1,18 @@
+{
+  "name": "Air Monitor — 4G LTE CAT1",
+  "short_name": "Air Monitor",
+  "description": "Monitor de calidad del aire: tiempo real, históricos, alarmas, mapa de sensores y configuración del dispositivo.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "categories": ["utilities", "productivity"],
+  "lang": "es",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
