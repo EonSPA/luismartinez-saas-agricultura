@@ -14,7 +14,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-    line-height:1.5;min-height:100vh}
+    line-height:1.5;min-height:100vh;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
   .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);
@@ -31,9 +31,10 @@
   /* ---------- top nav (marketing) ---------- */
   .nav{position:sticky;top:0;z-index:30;background:rgba(10,15,29,.82);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
-  .nav .inner{display:flex;align-items:center;gap:22px;height:64px}
+  .nav .inner{display:flex;align-items:center;gap:22px;height:64px;position:relative}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:.2px}
   .brand .mark{width:32px;height:32px}
+  .navmenu{display:flex;align-items:center;gap:22px;flex:1}
   .nav .links{display:flex;gap:22px;margin-left:14px}
   .nav .links a{color:var(--muted);font-size:14px;font-weight:500}
   .nav .links a:hover{color:var(--txt)}
@@ -49,8 +50,8 @@
   .hero .stats{display:flex;gap:34px;margin-top:40px;flex-wrap:wrap}
   .hero .stats b{font-size:26px;display:block}
   .hero .stats span{font-size:13px;color:var(--muted)}
-  .heroart{position:absolute;right:-40px;top:60px;width:480px;max-width:42vw;opacity:.95;display:none}
-  @media(min-width:980px){.heroart{display:block}.hero{padding-bottom:90px}}
+  .heroart{position:absolute;top:64px;right:max(22px,calc((100% - 1136px)/2));width:min(420px,38vw);opacity:.97;display:none}
+  @media(min-width:1100px){.heroart{display:block}.hero{padding-bottom:90px}}
   /* ---------- sections ---------- */
   section.block{padding:62px 0;border-top:1px solid var(--line)}
   .h2{font-size:32px;letter-spacing:-.5px;margin-bottom:8px}
@@ -158,7 +159,16 @@
     background:var(--brand);color:#04121e;padding:11px 18px;border-radius:12px;font-weight:700;font-size:13px;
     opacity:0;transition:.3s;z-index:60;pointer-events:none}
   .toast.show{opacity:1}
-  @media(max-width:760px){.nav .links{display:none}.navtoggle{display:block}.hero h1{font-size:36px}.h2{font-size:26px}}
+  @media(max-width:900px){
+    .navtoggle{display:inline-flex}
+    .navmenu{display:none;position:absolute;top:64px;left:0;right:0;flex-direction:column;align-items:stretch;
+      gap:0;background:var(--bg2);border-bottom:1px solid var(--line);padding:10px 14px;flex:none;box-shadow:var(--shadow)}
+    .navmenu.open{display:flex}
+    .navmenu .links{flex-direction:column;gap:0;margin:0}
+    .navmenu .links a{padding:12px 4px;border-bottom:1px solid var(--line)}
+    .navmenu .right{margin:12px 0 0;flex-wrap:wrap}
+  }
+  @media(max-width:760px){.hero h1{font-size:36px}.h2{font-size:26px}}
   .compare{overflow:auto}
   .compare table{min-width:640px}
   .center{text-align:center}
@@ -332,18 +342,21 @@ window.addEventListener("DOMContentLoaded",()=>{router();updateCartCount();});
 function chromeTop(){
   return `<div class="nav"><div class="wrap inner">
     <a class="brand" href="#/home">${mark(32)} ${esc(BRAND)}</a>
-    <div class="links">
-      <a href="#/home">${t("nav_product")}</a>
-      <a href="#/productos">${t("nav_hw")}</a>
-      <a href="#/planes">${t("nav_plans")}</a>
-      <a href="#/ayuda">${t("nav_help")}</a>
-      <a href="#/recursos">${t("nav_resources")}</a>
-    </div>
-    <div class="right">
-      <button class="btn ghost sm" data-lang title="Idioma / Language">${lang==="es"?"EN":"ES"}</button>
-      <a class="btn ghost sm cartdot" href="#/checkout" title="Carrito">🛒<span data-cartcount></span></a>
-      <a class="btn ghost sm" href="#/login">${t("enter")}</a>
-      <a class="btn primary sm" href="#/planes">${t("start")}</a>
+    <button class="navtoggle" id="navToggle" aria-label="Menú" aria-expanded="false">☰</button>
+    <div class="navmenu" id="navMenu">
+      <div class="links">
+        <a href="#/home">${t("nav_product")}</a>
+        <a href="#/productos">${t("nav_hw")}</a>
+        <a href="#/planes">${t("nav_plans")}</a>
+        <a href="#/ayuda">${t("nav_help")}</a>
+        <a href="#/recursos">${t("nav_resources")}</a>
+      </div>
+      <div class="right">
+        <button class="btn ghost sm" data-lang title="Idioma / Language">${lang==="es"?"EN":"ES"}</button>
+        <a class="btn ghost sm cartdot" href="#/checkout" title="Carrito">🛒<span data-cartcount></span></a>
+        <a class="btn ghost sm" href="#/login">${t("enter")}</a>
+        <a class="btn primary sm" href="#/planes">${t("start")}</a>
+      </div>
     </div>
   </div></div>`;
 }
@@ -823,8 +836,12 @@ function bindCommon(){
   // recuperar
   const rb=document.getElementById("resetBtn");
   if(rb)rb.onclick=()=>{const em=(document.getElementById("rc_email").value||"").trim();if(!em){toast("Ingresa tu email");return;}toast(t("send_link")+" ✓");go("#/login");};
-  // nav móvil
-  const tg=document.querySelector(".navtoggle");if(tg)tg.onclick=()=>document.querySelector(".nav .links").style.display="flex";
+  // nav móvil (menú hamburguesa)
+  const tg=document.getElementById("navToggle"),menu=document.getElementById("navMenu");
+  if(tg&&menu){
+    tg.onclick=()=>{const open=menu.classList.toggle("open");tg.setAttribute("aria-expanded",open?"true":"false");};
+    menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{menu.classList.remove("open");tg.setAttribute("aria-expanded","false");}));
+  }
 }
 function confirmView(total){return `<section class="block"><div class="wrap center" style="padding:60px 0">
   <div style="font-size:54px">✅</div><h2 class="h2">¡Compra confirmada!</h2>
