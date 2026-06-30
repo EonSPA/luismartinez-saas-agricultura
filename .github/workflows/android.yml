@@ -10,6 +10,9 @@ on:
       - ".github/workflows/android.yml"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -54,3 +57,23 @@ jobs:
           name: air-monitor-debug-apk
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+      - name: Prepare APK with friendly name
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk air-monitor.apk
+
+      - name: Publish APK to Release (descarga pública sin login)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: Air Monitor — APK (último build)
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: app/air-monitor.apk
+          body: |
+            APK de depuración del **Air Monitor** generado automáticamente.
+
+            - Commit: `${{ github.sha }}`
+            - Build: run #${{ github.run_number }}
+
+            Descarga directa: **air-monitor.apk** (abajo en *Assets*).
+            Instálalo en el teléfono (permite "orígenes desconocidos") o con `adb install air-monitor.apk`.
