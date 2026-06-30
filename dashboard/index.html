@@ -59,6 +59,17 @@
   .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
     border-radius:16px;padding:16px;box-shadow:var(--shadow)}
   .card.alarm{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad),var(--shadow)}
+  /* panel de recomendaciones */
+  #recoList{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:6px}
+  .reco-item{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:12px;
+    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--muted)}
+  .reco-item.sev-good{border-left-color:var(--good)}
+  .reco-item.sev-warn{border-left-color:var(--warn)}
+  .reco-item.sev-bad{border-left-color:var(--bad)}
+  .reco-item.sev-info{border-left-color:var(--accent)}
+  .reco-item .ri{font-size:20px;line-height:1.1;flex:0 0 auto}
+  .reco-item b{font-size:13.5px;display:block;margin-bottom:2px}
+  .reco-item p{font-size:12.5px;color:var(--muted);margin:0}
   .kpi .top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
   .kpi .val{font-size:30px;font-weight:700;margin-top:6px;display:flex;align-items:baseline;gap:6px}
   .kpi .unit{font-size:13px;color:var(--muted);font-weight:500}
@@ -253,6 +264,11 @@
   <!-- ===================== TIEMPO REAL ===================== -->
   <section class="view active" id="view-realtime">
     <div class="grid kpis" id="kpis"></div>
+    <div class="card reco" id="recoCard" style="margin-top:16px">
+      <h3>💡 Recomendaciones</h3>
+      <div class="hint">Sugerencias automáticas según las lecturas actuales del dispositivo</div>
+      <div id="recoList"></div>
+    </div>
     <div class="grid row2" style="margin-top:16px">
       <div class="card">
         <h3>Tendencia ambiental</h3>
@@ -777,6 +793,66 @@ function renderRealtime(){
     drawRing(document.getElementById("aqiRing"),a.score,a.cls);
   }
   renderLiveTable();
+  renderReco();
+}
+
+/* ============================================================
+   Motor de recomendaciones (según lecturas actuales)
+   ============================================================ */
+function valueTrend(key,secs){ // variación reciente (>0 sube, <0 baja)
+  const past=valueAgo(key,secs); const now=S.live[key]?.at(-1);
+  return (past==null||now==null)?null:now-past;
+}
+function computeReco(){
+  const g=k=>S.live[k]?.at(-1);
+  const temp=g("temp"),hum=g("hum"),eco2=g("eco2"),tvoc=g("tvoc"),lux=g("lux"),bat=g("bat"),csq=S.csq;
+  const r=[];
+  const add=(sev,icon,title,text)=>r.push({sev,icon,title,text});
+  // --- Temperatura / heladas / calor ---
+  if(temp!=null){
+    const dT=valueTrend("temp",600); // °C en 10 min
+    if(temp<=2) add("bad","❄️","Riesgo de helada","Temperatura crítica: activa riego por aspersión o calefactores para proteger el cultivo.");
+    else if(temp<=5) add("warn","🌡️","Vigilar helada","Temperatura baja"+(dT!=null&&dT<-1?" y descendiendo":"")+". Prepara protección antiheladas para la madrugada.");
+    else if(temp>=34) add("bad","🔥","Calor extremo","Riesgo de estrés térmico: considera sombreo o riego de refresco.");
+    else if(temp>=30) add("warn","☀️","Temperatura alta","Vigila el estrés por calor; evalúa adelantar el riego.");
+  }
+  // --- Humedad / riego / hongos ---
+  if(hum!=null){
+    if(hum<30) add("warn","💧","Aire seco","Humedad baja: posible estrés hídrico. Revisa el programa de riego.");
+    else if(hum>88) add("warn","🍄","Humedad muy alta","Riesgo de hongos/condensación. Mejora la ventilación del recinto.");
+  }
+  // --- Calidad del aire ---
+  if(eco2!=null){
+    if(eco2>1500) add("bad","💨","Ventila ahora","eCO₂ elevado: renueva el aire del ambiente para mejorar la calidad.");
+    else if(eco2>1000) add("warn","💨","Conviene ventilar","eCO₂ en aumento; abre o fuerza ventilación cuando puedas.");
+  }
+  if(tvoc!=null&&tvoc>660) add("bad","🧪","Compuestos volátiles altos","TVOC elevado: ventila y revisa posibles fuentes de emisión.");
+  // --- Luz ---
+  if(lux!=null&&temp!=null){
+    if(lux<40 && temp>10) add("info","💡","Poca luz","Iluminancia baja en horario activo; revisa sombreado o iluminación de apoyo.");
+  }
+  // --- Dispositivo: batería / señal ---
+  if(bat!=null){
+    if(bat<3.5) add("bad","🔋","Carga el dispositivo","Batería crítica: conéctalo para evitar pérdida de datos.");
+    else if(bat<3.7) add("warn","🔋","Batería baja","Programa la recarga o revisa el panel solar.");
+  }
+  if(csq!=null&&csq<8) add("warn","📶","Señal 4G débil","Cobertura baja (CSQ "+csq+"): reubica la antena para asegurar el envío de datos.");
+  if(S.lastT && Date.now()-S.lastT>(S.cfg.offlineMin||2)*60000) add("bad","📡","Sin datos","El dispositivo no reporta hace varios minutos: revisa energía y conexión.");
+  // --- Todo bien ---
+  if(!r.length) add("good","✅","Condiciones óptimas","Todas las variables están dentro de rango. No se requiere acción.");
+  // ordenar por severidad
+  const order={bad:0,warn:1,info:2,good:3};
+  r.sort((a,b)=>order[a.sev]-order[b.sev]);
+  return r;
+}
+function renderReco(){
+  const box=document.getElementById("recoList"); if(!box)return;
+  const list=computeReco();
+  box.innerHTML=list.map(x=>`<div class="reco-item sev-${x.sev}"><span class="ri" aria-hidden="true">${x.icon}</span>
+    <div><b>${x.title}</b><p>${x.text}</p></div></div>`).join("");
+  // resalta la tarjeta si hay algo crítico
+  const card=document.getElementById("recoCard");
+  if(card)card.classList.toggle("alarm",list.some(x=>x.sev==="bad"));
 }
 function renderLiveTable(){
   const tb=document.getElementById("tbody");tb.innerHTML="";
