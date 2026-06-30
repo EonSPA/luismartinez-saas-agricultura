@@ -7,15 +7,21 @@
 <title>[Marca] — Monitoreo agrícola inteligente</title>
 <style>
   :root{
-    --bg:#0a0f1d;--bg2:#0e1426;--panel:#141d33;--panel2:#1a2440;--line:#283450;
-    --txt:#eaf0fb;--muted:#9aa6c4;--brand:#52e3a4;--brand2:#3fa7ff;--accent:#a78bfa;
-    --good:#34d399;--warn:#fbbf24;--bad:#fb7185;--shadow:0 10px 40px rgba(0,0,0,.4);
+    --bg:#0a140d;--bg2:#0f1c13;--panel:#13241a;--panel2:#193021;--line:#284a31;
+    --txt:#eaf5ec;--muted:#a3bcab;--brand:#3ddc84;--brand2:#a3e635;--accent:#f59e0b;
+    --sky:#38bdf8;--good:#22c55e;--warn:#fbbf24;--bad:#fb7185;--shadow:0 10px 40px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
+  html{scroll-behavior:smooth;overflow-x:hidden}
   body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     line-height:1.5;min-height:100vh;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
+  :focus-visible{outline:2px solid var(--brand2);outline-offset:2px;border-radius:6px}
+  .skip{position:absolute;left:-999px;top:8px;z-index:100;background:var(--brand);color:#04121e;
+    padding:8px 14px;border-radius:10px;font-weight:700;font-size:13px}
+  .skip:focus{left:8px}
+  .sr{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto} *{transition:none!important;animation:none!important}}
   .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
   .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);
     color:var(--txt);padding:11px 18px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
@@ -27,7 +33,7 @@
   .btn.block{width:100%;justify-content:center}
   .muted{color:var(--muted)}
   .tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
-    color:var(--brand);background:rgba(82,227,164,.1);padding:5px 11px;border-radius:999px}
+    color:var(--brand);background:rgba(61,220,132,.13);padding:5px 11px;border-radius:999px}
   /* ---------- top nav (marketing) ---------- */
   .nav{position:sticky;top:0;z-index:30;background:rgba(10,15,29,.82);backdrop-filter:blur(10px);
     border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
@@ -61,12 +67,29 @@
   .g4{grid-template-columns:repeat(4,1fr)}
   .g2{grid-template-columns:repeat(2,1fr)}
   @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){.g3,.g4,.g2{grid-template-columns:1fr}}
+  @media(max-width:600px){.g3,.g4,.g2{grid-template-columns:1fr}
+    .iconbtn{min-width:40px;min-height:40px}.btn.sm{padding:10px 14px}.toggle button{padding:11px 16px}}
   .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
     border-radius:18px;padding:22px;box-shadow:var(--shadow)}
   .card .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;
-    background:rgba(82,227,164,.12);margin-bottom:14px}
+    background:rgba(61,220,132,.14);margin-bottom:14px}
+  /* iconos con colores rotados (más vivos) */
+  .grid .card:nth-child(4n+2) .ico{background:rgba(163,230,53,.16)}
+  .grid .card:nth-child(4n+3) .ico{background:rgba(245,158,11,.18)}
+  .grid .card:nth-child(4n+4) .ico{background:rgba(56,189,248,.16)}
   .card h3{font-size:17px;margin-bottom:6px}
+  /* pruebas sociales */
+  .logostrip{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;margin:18px 0 26px;opacity:.92}
+  .logoitem{font-weight:700;color:var(--muted);font-size:15px;letter-spacing:.2px}
+  .quote{display:flex;flex-direction:column;gap:10px}
+  .quote .qmark{font-size:26px}
+  .quote blockquote{font-size:15px;line-height:1.5}
+  .quote figcaption{color:var(--muted);font-size:13px;font-weight:600}
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px;
+    background:linear-gradient(120deg,rgba(61,220,132,.12),rgba(245,158,11,.10));border:1px solid var(--line);border-radius:18px;padding:22px}
+  .statband b{font-size:30px;display:block;letter-spacing:-.5px}
+  .statband span{font-size:13px;color:var(--muted)}
+  @media(max-width:600px){.statband{grid-template-columns:repeat(2,1fr)}}
   .card p{font-size:14px;color:var(--muted)}
   .steps{counter-reset:s}
   .step{display:flex;gap:16px;align-items:flex-start;padding:16px 0}
@@ -129,7 +152,10 @@
   .rolebadge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(167,139,250,.16);color:var(--accent)}
   .appbody{padding:24px 22px;max-width:1100px}
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.appshell{grid-template-columns:1fr}.side{position:fixed;z-index:40;left:-260px;transition:.2s;width:248px}.side.open{left:0}}
+  .scrim{display:none}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.appshell{grid-template-columns:1fr}
+    .side{position:fixed;z-index:40;left:-260px;transition:.2s;width:248px;top:0}.side.open{left:0}
+    .scrim.show{display:block;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}}
   .kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:16px}
   .kpi .l{font-size:12px;color:var(--muted)}
   .kpi .v{font-size:26px;font-weight:800;margin-top:4px}
@@ -176,7 +202,7 @@
 </head>
 <body>
 <div id="root"></div>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 "use strict";
@@ -194,7 +220,11 @@ const toast = m => {const el=document.getElementById("toast");el.textContent=m;e
 let lang = "es"; try{ lang = localStorage.getItem("mk.lang")||"es"; }catch(e){}
 const I18N = {
   es:{
-    nav_product:"Producto",nav_hw:"Hardware",nav_plans:"Planes",nav_how:"Cómo funciona",nav_help:"Ayuda",nav_resources:"Recursos",
+    nav_product:"Plataforma",nav_hw:"Hardware",nav_plans:"Planes",nav_how:"Cómo funciona",nav_help:"Ayuda",nav_resources:"Recursos",
+    skip:"Saltar al contenido",nav_main:"Principal",menu:"Menú",cart:"Carrito",
+    sp_tag:"Confianza",sp_title:"Productores que ya deciden con datos",
+    pf_tag:"Preguntas",pf_title:"Preguntas frecuentes de planes",
+    free_start:"Empezar gratis",contact_sales:"Contactar ventas",
     enter:"Entrar",start:"Empezar",
     hero_tag:"SaaS · AgTech",hero_h1:"El campo, bajo control en tiempo real.",
     hero_lead:"Estaciones 4G y sensores que miden clima, humedad y calidad del aire en cada parcela. Alarmas, históricos y mapas en una sola plataforma.",
@@ -219,7 +249,11 @@ const I18N = {
     resources:"Recursos",resources_title:"Aprende del campo inteligente",resources_sub:"Guías, casos y mejores prácticas de monitoreo agrícola.",read_more:"Leer más",
   },
   en:{
-    nav_product:"Product",nav_hw:"Hardware",nav_plans:"Pricing",nav_how:"How it works",nav_help:"Help",nav_resources:"Resources",
+    nav_product:"Platform",nav_hw:"Hardware",nav_plans:"Pricing",nav_how:"How it works",nav_help:"Help",nav_resources:"Resources",
+    skip:"Skip to content",nav_main:"Main",menu:"Menu",cart:"Cart",
+    sp_tag:"Trusted",sp_title:"Growers already deciding with data",
+    pf_tag:"Questions",pf_title:"Pricing FAQ",
+    free_start:"Start free",contact_sales:"Contact sales",
     enter:"Sign in",start:"Get started",
     hero_tag:"SaaS · AgTech",hero_h1:"Your fields, under control in real time.",
     hero_lead:"4G stations and sensors that measure climate, humidity and air quality in every plot. Alarms, history and maps in a single platform.",
@@ -251,7 +285,7 @@ function mark(size=32){return `<svg class="mark" width="${size}" height="${size}
   <rect width="48" height="48" rx="12" fill="url(#bg)"/>
   <path d="M14 30c4-1 6-5 6-10 0 6 3 9 7 9 3 0 5-2 6-5" stroke="#04121e" stroke-width="3" stroke-linecap="round" fill="none"/>
   <circle cx="34" cy="15" r="3.4" fill="#04121e"/>
-  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#52e3a4"/><stop offset="1" stop-color="#3fa7ff"/></linearGradient></defs>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs>
 </svg>`;}
 
 /* ---------- catálogo, planes, datos demo ---------- */
@@ -294,12 +328,12 @@ const DEMO_USERS = {
   "visor@demo.cl":{role:"visor", name:"Invitado", org:"AgroDemo SpA"},
 };
 const ROLES = {
-  superadmin:{label:"Super Admin", ico:"🛡️", level:0, color:"var(--accent)"},
-  account_admin:{label:"Admin de Cuenta", ico:"🏢", level:1, color:"var(--brand2)"},
-  field_supervisor:{label:"Supervisor de Campo", ico:"🌾", level:2, color:"var(--brand)"},
+  superadmin:{label:"Super Admin", ico:"🛡️", level:0, color:"#c084fc"},
+  account_admin:{label:"Admin de Cuenta", ico:"🏢", level:1, color:"#38bdf8"},
+  field_supervisor:{label:"Supervisor de Campo", ico:"🌾", level:2, color:"#3ddc84"},
   agronomo:{label:"Agrónomo / Analista", ico:"🔬", level:3, color:"#22d3ee"},
-  tecnico:{label:"Técnico / Operador", ico:"🛠️", level:4, color:"var(--warn)"},
-  visor:{label:"Visor", ico:"👁️", level:5, color:"var(--muted)"},
+  tecnico:{label:"Técnico / Operador", ico:"🛠️", level:4, color:"#f59e0b"},
+  visor:{label:"Visor", ico:"👁️", level:5, color:"#94a3b8"},
 };
 
 /* ---------- estado (carrito, sesión, ciclo de pago) ----------
@@ -315,6 +349,7 @@ const store = {
   get session(){try{return JSON.parse(lsGet("mk.session"))}catch(e){return null}},
   set session(v){v?lsSet("mk.session",JSON.stringify(v)):lsDel("mk.session");},
   billing:"y",
+  _last:{},
 };
 function addToCart(item){const c=store.cart;const ex=c.find(x=>x.id===item.id);if(ex)ex.qty++;else c.push({...item,qty:1});store.cart=c;toast("Añadido al carrito");}
 function cartCount(){return store.cart.reduce((s,i)=>s+i.qty,0);}
@@ -326,23 +361,28 @@ function updateCartCount(){document.querySelectorAll("[data-cartcount]").forEach
    ==================================================================== */
 const routes={};
 function go(hash){location.hash=hash;}
+let lastPath=null;
 function router(){
+  try{document.documentElement.lang=lang;}catch(e){}
   const raw=(location.hash.replace(/^#\/?/,"")||"").split("/");
   const path=raw[0]||"home";
   if(path==="app"){ return renderApp(raw.slice(1)); }
   const view=routes[path]||routes.home;
-  document.getElementById("root").innerHTML = chromeTop() + view(raw.slice(1)) + chromeFoot();
+  document.getElementById("root").innerHTML = chromeTop() + `<main id="main" tabindex="-1">` + view(raw.slice(1)) + `</main>` + chromeFoot();
   bindCommon();
-  window.scrollTo(0,0);
+  if(path!==lastPath){ window.scrollTo(0,0); const m=document.getElementById("main"); if(m)m.focus({preventScroll:true}); }
+  lastPath=path;
 }
 window.addEventListener("hashchange",router);
 window.addEventListener("DOMContentLoaded",()=>{router();updateCartCount();});
 
 /* ---------- chrome marketing ---------- */
 function chromeTop(){
-  return `<div class="nav"><div class="wrap inner">
-    <a class="brand" href="#/home">${mark(32)} ${esc(BRAND)}</a>
-    <button class="navtoggle" id="navToggle" aria-label="Menú" aria-expanded="false">☰</button>
+  const cn=cartCount();
+  return `<a href="#main" class="skip">${t("skip")}</a>
+  <nav class="nav" aria-label="${t("nav_main")}"><div class="wrap inner">
+    <a class="brand" href="#/home" aria-label="${esc(BRAND)} inicio">${mark(32)}<span aria-hidden="false">${esc(BRAND)}</span></a>
+    <button class="navtoggle" id="navToggle" aria-label="${t("menu")}" aria-controls="navMenu" aria-expanded="false">☰</button>
     <div class="navmenu" id="navMenu">
       <div class="links">
         <a href="#/home">${t("nav_product")}</a>
@@ -352,22 +392,23 @@ function chromeTop(){
         <a href="#/recursos">${t("nav_resources")}</a>
       </div>
       <div class="right">
-        <button class="btn ghost sm" data-lang title="Idioma / Language">${lang==="es"?"EN":"ES"}</button>
-        <a class="btn ghost sm cartdot" href="#/checkout" title="Carrito">🛒<span data-cartcount></span></a>
+        <button class="btn ghost sm" data-lang aria-label="${lang==="es"?"Switch to English":"Cambiar a español"}">${lang==="es"?"EN":"ES"}</button>
+        <a class="btn ghost sm cartdot" href="#/checkout" aria-label="${t("cart")}, ${cn} ${cn===1?"artículo":"artículos"}"><span aria-hidden="true">🛒</span><span data-cartcount></span></a>
         <a class="btn ghost sm" href="#/login">${t("enter")}</a>
-        <a class="btn primary sm" href="#/planes">${t("start")}</a>
+        <a class="btn primary sm" href="#/registro">${t("start")}</a>
       </div>
     </div>
-  </div></div>`;
+  </nav>`;
 }
 function chromeFoot(){
   return `<footer><div class="wrap">
     <div class="cols">
-      <div style="flex:1;min-width:200px"><div class="brand" style="font-size:16px">${mark(26)} ${esc(BRAND)}</div>
-        <p class="muted" style="margin-top:10px;max-width:30ch">${t("f_tagline")}</p></div>
-      <div><h4>${t("f_product")}</h4><a href="#/home">${t("f_features")}</a><a href="#/productos">${t("nav_hw")}</a><a href="#/planes">${t("nav_plans")}</a><a href="${DASHBOARD_URL}" target="_blank">${t("f_demo")}</a></div>
-      <div><h4>${t("f_platform")}</h4><a href="#/login">${t("f_signin")}</a><a href="#/registro">${t("f_create")}</a><a href="#/home#roles">${t("f_roles")}</a></div>
-      <div><h4>${t("f_resources")}</h4><a href="#/ayuda">${t("f_support")}</a><a href="#/recursos">${t("nav_resources")}</a><a href="#/ayuda">${t("f_status")}</a></div>
+      <div style="flex:1;min-width:220px"><div class="brand" style="font-size:16px">${mark(26)} ${esc(BRAND)}</div>
+        <p class="muted" style="margin:10px 0 14px;max-width:32ch">${t("f_tagline")}</p>
+        <a class="btn primary sm" href="#/registro">${t("free_start")}</a></div>
+      <div><h4>${t("f_product")}</h4><a href="#/home">${t("f_features")}</a><a href="#/productos">${t("nav_hw")}</a><a href="#/planes">${t("nav_plans")}</a><a href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("f_demo")}</a></div>
+      <div><h4>${t("f_platform")}</h4><a href="#/login">${t("f_signin")}</a><a href="#/registro">${t("f_create")}</a><a href="#/contacto">${t("contact_sales")}</a><a href="#/home#roles">${t("f_roles")}</a></div>
+      <div><h4>${t("f_resources")}</h4><a href="#/ayuda">${t("f_support")}</a><a href="#/recursos">${t("nav_resources")}</a><a href="#/contacto">Contacto</a><a href="#/ayuda">Términos</a><a href="#/ayuda">Privacidad</a></div>
     </div>
     <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid var(--line);padding-top:18px">
       <span>© 2026 ${esc(BRAND)}. ${t("f_rights")}</span>
@@ -385,8 +426,8 @@ routes.home=()=>`
     <h1>${t("hero_h1")}</h1>
     <p class="lead">${t("hero_lead")}</p>
     <div class="cta">
-      <a class="btn primary lg" href="#/planes">${t("hero_cta1")}</a>
-      <a class="btn ghost lg" href="${DASHBOARD_URL}" target="_blank">${t("hero_cta2")}</a>
+      <a class="btn primary lg" href="#/registro">${t("free_start")}</a>
+      <a class="btn ghost lg" href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("hero_cta2")}</a>
     </div>
     <div class="stats">
       <div><b>4G LTE</b><span>${t("st_conn")}</span></div>
@@ -425,6 +466,23 @@ routes.home=()=>`
     <div class="grid g4">${USECASES.map(u=>`<div class="card"><div class="ico">${u.emoji}</div><h3>${TT(u)}</h3><p>${TD(u)}</p></div>`).join("")}</div>
   </div></section>
 
+  <section class="block"><div class="wrap">
+    <div class="tag">${t("sp_tag")}</div><h2 class="h2">${t("sp_title")}</h2>
+    <div class="logostrip">${["AgroDemo","Viñas del Maule","Frutícola Norte","Hortalizas Sur","Vega Sur"].map(n=>`<span class="logoitem">🌿 ${esc(n)}</span>`).join("")}</div>
+    <div class="grid g3" style="margin-top:8px">
+      ${[["Anticipamos 3 heladas en una temporada; salvamos la fruta a tiempo.","María, Frutícola Norte","🍒"],
+         ["Bajamos 18% el consumo de agua regando con datos por parcela.","Pedro, Fundo Sur","💧"],
+         ["Ver todas las estaciones en un mapa nos cambió la operación.","Carla, Viñas del Maule","🍇"]
+        ].map(q=>`<figure class="card quote"><div class="qmark" aria-hidden="true">${q[2]}</div><blockquote>“${esc(q[0])}”</blockquote><figcaption>${esc(q[1])}</figcaption></figure>`).join("")}
+    </div>
+    <div class="statband">
+      <div><b>−18%</b><span>agua por temporada</span></div>
+      <div><b>+1.200</b><span>hectáreas monitoreadas</span></div>
+      <div><b>99.9%</b><span>disponibilidad</span></div>
+      <div><b>24/7</b><span>alarmas activas</span></div>
+    </div>
+  </div></section>
+
   <section class="block" id="roles"><div class="wrap">
     <div class="tag">${t("roles_tag")}</div><h2 class="h2">${t("roles_title")}</h2>
     <p class="sub">${t("roles_sub")}</p>
@@ -453,12 +511,12 @@ function roleDesc(r){
 function roleCard(r,desc){const R=ROLES[r];return `<div class="card"><div class="ico" style="background:${R.color}22">${R.ico}</div>
   <h3>${R.label}</h3><p>${desc}</p></div>`;}
 function miniKpi(l,v,d){return `<div style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:10px;color:var(--muted)">${l}</div><div style="font-size:16px;font-weight:800">${v}</div></div>`;}
-function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><polyline fill="none" stroke="#52e3a4" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#3fa7ff" stroke-width="2" opacity=".7" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
+function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><polyline fill="none" stroke="#3ddc84" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
 
 /* ---------- productos ---------- */
 routes.productos=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">Hardware</div><h2 class="h2">Equipos para el campo</h2>
+    <div class="tag">${t("nav_hw")}</div><h1 class="h2">Equipos para el campo</h1>
     <p class="sub">Estaciones y accesorios listos para desplegar. Combínalos con cualquier plan del software.</p>
     <div class="grid g4">
       ${PRODUCTS.map(p=>`<div class="card prod"><div class="prodimg">${p.emoji}</div>
@@ -468,7 +526,7 @@ routes.productos=()=>`
     </div>
     <div class="card" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
       <div><h3>¿No sabes qué necesitas?</h3><p class="muted">Cuéntanos tu cultivo y superficie y armamos el kit.</p></div>
-      <a class="btn" href="#/login">Hablar con ventas</a>
+      <a class="btn" href="#/contacto">${t("contact_sales")}</a>
     </div>
   </div></section>`;
 
@@ -476,27 +534,42 @@ routes.productos=()=>`
 routes.planes=()=>{
   const y=store.billing==="y";
   return `<section class="block"><div class="wrap">
-    <div class="center"><div class="tag">Planes</div><h2 class="h2">Precios simples, escala cuando quieras</h2>
-    <p class="sub" style="margin:0 auto 18px">Cambia de plan en cualquier momento. Sin permanencia.</p>
-    <div class="toggle"><button data-bill="m" class="${y?"":"on"}">Mensual</button><button data-bill="y" class="${y?"on":""}">Anual <span style="color:var(--brand)">−17%</span></button></div></div>
-    <div class="grid g3" style="margin-top:26px">
+    <div class="center"><div class="tag">${t("nav_plans")}</div><h1 class="h2">Precios simples, escala cuando quieras</h1>
+    <p class="sub" style="margin:0 auto 14px">Cambia de plan en cualquier momento. Sin permanencia.</p>
+    <div class="toggle" role="group" aria-label="Periodo de facturación"><button data-bill="m" class="${y?"":"on"}" aria-pressed="${y?"false":"true"}">Mensual</button><button data-bill="y" class="${y?"on":""}" aria-pressed="${y?"true":"false"}">Anual <span style="color:var(--brand)">−17%</span></button></div>
+    <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin tarjeta · ✓ 14 días de prueba · ✓ Cancela cuando quieras · ✓ Soporte en español</p></div>
+    <div class="grid g3" style="margin-top:24px">
       ${PLANS.map(p=>{
         const price = p.custom?null:(y?p.y:p.m);
         const label = p.custom?`<div class="price">A medida</div>`:(price===0?`<div class="price">Gratis</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`);
         return `<div class="card plan ${p.pop?"pop":""}">${p.pop?'<span class="pill">Más popular</span>':""}
-          <h3 style="font-size:20px">${p.name}</h3><p class="muted" style="font-size:13px">${p.tagline}</p>
+          <h3 style="font-size:20px">${esc(p.name)}</h3><p class="muted" style="font-size:13px">${esc(p.tagline)}</p>
           <div style="margin:14px 0">${label}</div>
-          <ul class="feat">${p.feats.map(f=>`<li class="${f[1]?"":"no"}">${f[0]}</li>`).join("")}</ul>
-          <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/login">Contactar ventas</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">${price===0?"Empezar gratis":"Elegir "+p.name}</button>`}</div>
+          <ul class="feat">${p.feats.map(f=>`<li class="${f[1]?"":"no"}">${esc(f[0])}</li>`).join("")}</ul>
+          <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/contacto">${t("contact_sales")}</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">${price===0?t("free_start"):"Elegir "+esc(p.name)}</button>`}</div>
         </div>`;}).join("")}
     </div>
-    <div class="compare card" style="margin-top:26px">
+    <div class="card" style="margin-top:26px">
       <h3 style="margin-bottom:10px">Comparativa</h3>
-      <table><thead><tr><th>Característica</th>${PLANS.map(p=>`<th>${p.name}</th>`).join("")}</tr></thead>
-      <tbody>${PLANS[0].feats.map((_,i)=>`<tr><td>${PLANS[1].feats[i][0]}</td>${PLANS.map(p=>`<td>${p.feats[i][1]?'<span style="color:var(--brand)">✓</span>':'<span class="muted">—</span>'}</td>`).join("")}</tr>`).join("")}</tbody></table>
+      <div class="compare">
+      <table><thead><tr><th scope="col">Característica</th>${PLANS.map(p=>`<th scope="col">${esc(p.name)}</th>`).join("")}</tr></thead>
+      <tbody>${PLAN_FEATURES.map((feat,i)=>`<tr><td>${esc(feat)}</td>${PLANS.map(p=>`<td>${p.feats[i][1]?'<span style="color:var(--brand)" title="Incluido">✓<span class="sr">Incluido</span></span>':'<span class="muted" title="No incluido">—<span class="sr">No incluido</span></span>'}</td>`).join("")}</tr>`).join("")}</tbody></table>
+      </div>
+    </div>
+    <div class="panelcard" style="margin-top:26px;background:linear-gradient(180deg,var(--panel),var(--panel2))">
+      <h3 style="padding:14px 16px;border-bottom:1px solid var(--line)">${t("pf_title")}</h3>
+      ${PLAN_FAQ.map(f=>`<details style="border-bottom:1px solid var(--line)"><summary style="padding:14px 16px;cursor:pointer;font-weight:600">${esc(f[0])}</summary><p class="muted" style="padding:0 16px 14px">${esc(f[1])}</p></details>`).join("")}
     </div>
   </div></section>`;
 };
+const PLAN_FEATURES=["Estaciones incluidas","Tiempo real y alarmas","Retención de históricos","Usuarios","Mapa de sensores","Reportes PDF/Excel","Roles y equipo","Soporte"];
+const PLAN_FAQ=[
+  ["¿Qué cuenta como una estación?","Cada nodo 4G con sus sensores en una parcela. Puedes mover una estación entre campos sin costo."],
+  ["¿Necesito tarjeta para la prueba?","No. El plan Starter es gratis y la prueba de Pro dura 14 días sin tarjeta."],
+  ["¿Puedo cambiar o cancelar el plan?","Sí, en cualquier momento desde Facturación. Sin permanencia ni multas."],
+  ["¿Cómo se factura el plan anual?","Un solo cobro al año con ~17% de descuento frente al mensual. El precio mostrado es el equivalente por mes."],
+  ["¿Qué incluye el plan Empresa?","Estaciones y usuarios ilimitados, API, jerarquía de roles completa y soporte 24/7 con SLA. Se cotiza según tu operación."],
+];
 
 /* ---------- checkout (simulado) ---------- */
 routes.checkout=()=>{
@@ -505,21 +578,21 @@ routes.checkout=()=>{
     <h2 class="h2">Tu carrito está vacío</h2><p class="sub" style="margin:0 auto 20px">Añade un plan o equipos para continuar.</p>
     <a class="btn primary" href="#/planes">Ver planes</a> <a class="btn" href="#/productos">Ver hardware</a></div></section>`;
   return `<section class="block"><div class="wrap">
-    <h2 class="h2">Finalizar compra</h2><p class="sub">Pago simulado para demostración — no se realiza ningún cobro.</p>
+    <h1 class="h2">Finalizar compra</h1><p class="sub">Pago simulado para demostración — no se realiza ningún cobro.</p>
     <div class="checkout">
-      <div class="card">
+      <form class="card" id="checkoutForm">
         <h3 style="margin-bottom:12px">Datos de facturación</h3>
-        <div class="field"><label>Empresa / Nombre</label><input id="ck_name" placeholder="AgroDemo SpA"></div>
-        <div class="grid g2"><div class="field"><label>RUT</label><input id="ck_rut" placeholder="76.123.456-7"></div>
-        <div class="field"><label>Email</label><input id="ck_email" placeholder="tu@correo.cl"></div></div>
-        <div class="field"><label>Dirección</label><input placeholder="Camino al fundo km 4, Región"></div>
+        <div class="field"><label for="ck_name">Empresa / Nombre</label><input id="ck_name" required placeholder="AgroDemo SpA"></div>
+        <div class="grid g2"><div class="field"><label for="ck_rut">RUT</label><input id="ck_rut" required placeholder="76.123.456-7"></div>
+        <div class="field"><label for="ck_email">Email</label><input id="ck_email" type="email" required placeholder="tu@correo.cl"></div></div>
+        <div class="field"><label for="ck_addr">Dirección</label><input id="ck_addr" required placeholder="Camino al fundo km 4, Región"></div>
         <h3 style="margin:18px 0 12px">Pago</h3>
-        <div class="field"><label>Número de tarjeta</label><input placeholder="4242 4242 4242 4242" inputmode="numeric"></div>
-        <div class="grid g2"><div class="field"><label>Vencimiento</label><input placeholder="12/29"></div>
-        <div class="field"><label>CVC</label><input placeholder="123" inputmode="numeric"></div></div>
-        <button class="btn primary block lg" id="payBtn">Pagar ${fmtCLP(cartTotal())}</button>
+        <div class="field"><label for="ck_card">Número de tarjeta</label><input id="ck_card" required inputmode="numeric" pattern="[0-9 ]{12,23}" placeholder="4242 4242 4242 4242"></div>
+        <div class="grid g2"><div class="field"><label for="ck_exp">Vencimiento</label><input id="ck_exp" required pattern="[0-9]{2}/[0-9]{2}" placeholder="12/29"></div>
+        <div class="field"><label for="ck_cvc">CVC</label><input id="ck_cvc" required inputmode="numeric" pattern="[0-9]{3,4}" placeholder="123"></div></div>
+        <button class="btn primary block lg" id="payBtn" type="button">Pagar ${fmtCLP(cartTotal()*1.19)}</button>
         <p class="muted center" style="font-size:12px;margin-top:10px">🔒 Demo · listo para integrar Stripe</p>
-      </div>
+      </form>
       <div class="card">
         <h3 style="margin-bottom:8px">Resumen</h3>
         ${c.map(i=>`<div class="litem"><div><div>${esc(i.name)}</div><div class="muted" style="font-size:12px">${fmtCLP(i.price)} c/u</div></div>
@@ -532,6 +605,11 @@ routes.checkout=()=>{
     </div>
   </div></section>`;
 };
+routes.gracias=()=>`
+  <section class="block"><div class="wrap center" style="padding:60px 0">
+    <div style="font-size:54px" aria-hidden="true">✅</div><h1 class="h2">¡Compra confirmada!</h1>
+    <p class="sub" style="margin:6px auto 20px">Pago simulado por <b>${esc(store._last.total||"")}</b>. Te enviamos el acceso a la plataforma por correo (demo).</p>
+    <a class="btn primary lg" href="#/login">Entrar a la plataforma</a> <a class="btn" href="#/home">Volver al inicio</a></div></section>`;
 
 /* ---------- login + selector de rol ---------- */
 routes.login=()=>`
@@ -606,7 +684,7 @@ const HELP=[
 ];
 routes.ayuda=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">${t("help")}</div><h2 class="h2">${t("help_title")}</h2>
+    <div class="tag">${t("help")}</div><h1 class="h2">${t("help_title")}</h1>
     <p class="sub">${t("help_sub")}</p>
     <div class="grid g3" style="margin-bottom:26px">
       ${[["🚀",t("h_start"),t("h_start_d")],["📡",t("h_dev"),t("h_dev_d")],["🔔",t("h_alarms"),t("h_alarms_d")]].map(c=>`<div class="card"><div class="ico">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join("")}
@@ -614,7 +692,7 @@ routes.ayuda=()=>`
     <div class="panelcard"><h3>${t("faq")}</h3>
       ${HELP.map((h,i)=>`<details style="border-bottom:1px solid var(--line)"><summary style="padding:14px 16px;cursor:pointer;font-weight:600">${esc(h.q)}</summary><p class="muted" style="padding:0 16px 14px">${esc(h.a)}</p></details>`).join("")}
     </div>
-    <div class="card center" style="margin-top:22px"><h3>${t("more_help")}</h3><p class="muted">${t("more_help_d")}</p><a class="btn primary sm" href="#/login" style="margin-top:10px">${t("contact_support")}</a></div>
+    <div class="card center" style="margin-top:22px"><h3>${t("more_help")}</h3><p class="muted">${t("more_help_d")}</p><a class="btn primary sm" href="#/contacto" style="margin-top:10px">${t("contact_support")}</a></div>
   </div></section>`;
 
 /* ---------- recursos / blog ---------- */
@@ -628,7 +706,7 @@ const POSTS=[
 ];
 routes.recursos=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">${t("resources")}</div><h2 class="h2">${t("resources_title")}</h2>
+    <div class="tag">${t("resources")}</div><h1 class="h2">${t("resources_title")}</h1>
     <p class="sub">${t("resources_sub")}</p>
     <div class="grid g3">
       ${POSTS.map(p=>`<div class="card prod"><div class="prodimg">${p.emoji}</div>
@@ -636,6 +714,24 @@ routes.recursos=()=>`
         <h3>${esc(p.t)}</h3><p>${esc(p.d)}</p>
         <a class="btn ghost sm" href="#/recursos" style="margin-top:12px">${t("read_more")} →</a></div>`).join("")}
     </div>
+  </div></section>`;
+
+/* ---------- contacto / ventas (lead) ---------- */
+routes.contacto=()=>`
+  <section class="block"><div class="wrap" style="max-width:720px">
+    <div class="tag">${t("contact_sales")}</div><h1 class="h2">Hablemos de tu operación</h1>
+    <p class="sub">Cuéntanos tu cultivo y superficie y te armamos una propuesta (estaciones + plan). Respondemos en horario hábil.</p>
+    <form id="contactForm" class="card">
+      <div class="grid g2"><div class="field"><label for="co_name">Nombre</label><input id="co_name" required placeholder="María Pérez"></div>
+      <div class="field"><label for="co_company">Empresa</label><input id="co_company" placeholder="AgroDemo SpA"></div></div>
+      <div class="grid g2"><div class="field"><label for="co_email">Email</label><input id="co_email" type="email" required placeholder="tu@empresa.cl"></div>
+      <div class="field"><label for="co_phone">Teléfono</label><input id="co_phone" placeholder="+56 9 ..."></div></div>
+      <div class="grid g2"><div class="field"><label for="co_crop">Cultivo</label><select id="co_crop"><option>Frutales</option><option>Vid</option><option>Hortalizas</option><option>Cereales</option><option>Otro</option></select></div>
+      <div class="field"><label for="co_ha">Hectáreas (aprox.)</label><input id="co_ha" inputmode="numeric" placeholder="50"></div></div>
+      <div class="field"><label for="co_msg">Mensaje</label><input id="co_msg" placeholder="¿Qué necesitas monitorear?"></div>
+      <button class="btn primary block" type="submit">Enviar solicitud</button>
+      <p class="muted center" style="font-size:12px;margin-top:10px">También puedes escribirnos a <a href="mailto:ventas@ejemplo.cl" style="color:var(--brand)">ventas@ejemplo.cl</a></p>
+    </form>
   </div></section>`;
 
 /* ====================================================================
@@ -669,31 +765,36 @@ const NAV = {
 function renderApp(parts){
   const sess=store.session;
   if(!sess){ location.hash="#/login"; return; }
+  const nav=NAV[sess.role];
+  if(!nav||!ROLES[sess.role]){ store.session=null; location.hash="#/login"; return; }  // sesión inválida
   const page=parts[0]||"resumen";
-  const allowed=NAV[sess.role].map(n=>n[0]);
+  const allowed=nav.map(n=>n[0]);
+  const initial=esc(((sess.name||"?")[0]||"?"));
   const root=document.getElementById("root");
   root.innerHTML=`<div class="appshell">
+    <div class="scrim" id="scrim"></div>
     <aside class="side" id="side">
       <a class="brand" href="#/home">${mark(28)} ${esc(BRAND)}</a>
       <div class="sep">${esc(sess.org)}</div>
-      <nav>${NAV[sess.role].map(n=>`<a data-nav="${n[0]}" class="${n[0]===page?"on":""}">${n[2]} ${n[1]}</a>`).join("")}</nav>
+      <nav aria-label="Secciones">${nav.map(n=>`<a href="#/app/${n[0]}" class="${n[0]===page?"on":""}" ${n[0]===page?'aria-current="page"':""}><span aria-hidden="true">${n[2]}</span> ${esc(n[1])}</a>`).join("")}</nav>
       <div class="sep">Monitoreo</div>
-      <nav><a href="${DASHBOARD_URL}" target="_blank">🛰️ Abrir dashboard en vivo</a></nav>
+      <nav aria-label="Monitoreo"><a href="${DASHBOARD_URL}" target="_blank" rel="noopener"><span aria-hidden="true">🛰️</span> Abrir dashboard en vivo</a></nav>
     </aside>
     <div class="appmain">
       <div class="apptop">
-        <button class="iconbtn" id="burger" style="width:34px;height:34px">☰</button>
-        <strong>${(NAV[sess.role].find(n=>n[0]===page)||[,"—"])[1]}</strong>
+        <button class="iconbtn" id="burger" aria-label="Abrir menú" aria-controls="side" aria-expanded="false" style="width:38px;height:38px">☰</button>
+        <h1 style="font-size:18px;margin:0">${esc((nav.find(n=>n[0]===page)||[,"—"])[1])}</h1>
         <div class="who">
-          <span class="rolebadge" style="color:${ROLES[sess.role].color}">${ROLES[sess.role].ico} ${ROLES[sess.role].label}</span>
-          <span class="avatar">${esc(sess.name[0])}</span>
+          <span class="rolebadge" style="color:${ROLES[sess.role].color}"><span aria-hidden="true">${ROLES[sess.role].ico}</span> ${esc(ROLES[sess.role].label)}</span>
+          <span class="avatar" aria-hidden="true">${initial}</span>
           <button class="btn ghost sm" id="logout">Salir</button>
         </div>
       </div>
-      <div class="appbody" id="appbody">${allowed.includes(page)?appPage(sess,page):deniedView()}</div>
+      <main class="appbody" id="appbody" tabindex="-1">${allowed.includes(page)?appPage(sess,page):deniedView()}</main>
     </div>
   </div>`;
   bindApp(sess);
+  const ab=document.getElementById("appbody");if(ab)ab.focus({preventScroll:true});
 }
 function deniedView(){return `<div class="denied"><h2>Sin acceso</h2><p>Tu rol no tiene permiso para esta sección.</p></div>`;}
 
@@ -808,14 +909,17 @@ function bindCommon(){
   document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{const p=PRODUCTS.find(x=>x.id===b.dataset.add);addToCart({id:p.id,name:p.name,price:p.price});});
   document.querySelectorAll("[data-bill]").forEach(b=>b.onclick=()=>{store.billing=b.dataset.bill;router();});
   document.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{const p=PLANS.find(x=>x.id===b.dataset.plan);
-    if(p.m===0&&p.y===0){store.session={...DEMO_USERS["admin@demo.cl"],email:"admin@demo.cl"};toast("Cuenta Starter creada (demo)");go("#/app");return;}
+    if(p.m===0&&p.y===0){go("#/registro");return;}  // Starter: crear cuenta de verdad
     addToCart({id:"plan_"+p.id,name:"Plan "+p.name+(store.billing==="y"?" (anual)":" (mensual)"),price:store.billing==="y"?p.y:p.m});go("#/checkout");});
   // checkout
-  document.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.inc);i.qty++;store.cart=c;router();});
-  document.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.dec);i.qty=Math.max(1,i.qty-1);store.cart=c;router();});
+  document.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.inc);if(i){i.qty++;store.cart=c;router();}});
+  document.querySelectorAll("[data-dec]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.dec);if(i){i.qty=Math.max(1,i.qty-1);store.cart=c;router();}});
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{store.cart=store.cart.filter(x=>x.id!==b.dataset.del);router();});
-  const pay=document.getElementById("payBtn");
-  if(pay)pay.onclick=()=>{const total=fmtCLP(cartTotal()*1.19);store.cart=[];document.getElementById("root").innerHTML=chromeTop()+confirmView(total)+chromeFoot();bindCommon();window.scrollTo(0,0);};
+  const pay=document.getElementById("payBtn"),payForm=document.getElementById("checkoutForm");
+  if(pay&&payForm)pay.onclick=()=>{
+    if(!payForm.checkValidity()){payForm.reportValidity();return;}
+    const total=fmtCLP(cartTotal()*1.19);store._last={total};store.cart=[];go("#/gracias");
+  };
   // login
   const lb=document.getElementById("loginBtn");
   if(lb)lb.onclick=()=>{const email=(document.getElementById("lg_email").value||"").trim().toLowerCase();
@@ -826,13 +930,22 @@ function bindCommon(){
   document.querySelectorAll("[data-lang]").forEach(b=>b.onclick=()=>setLang(lang==="es"?"en":"es"));
   // registro (onboarding por pasos)
   const rf=document.getElementById("regForm");
-  if(rf){let step=1;const show=n=>{rf.querySelectorAll(".regstep").forEach(s=>s.style.display=(+s.dataset.step===n)?"":"none");const rn=document.getElementById("regN");if(rn)rn.textContent=n;};
-    rf.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>{step=Math.min(3,step+1);show(step);});
+  if(rf){let step=1;const show=n=>{rf.querySelectorAll(".regstep").forEach(s=>s.style.display=(+s.dataset.step===n)?"":"none");const rn=document.getElementById("regN");if(rn)rn.textContent=n;
+      const f=rf.querySelector(`.regstep[data-step="${n}"] input,.regstep[data-step="${n}"] select`);if(f)f.focus();};
+    rf.querySelectorAll("[data-next]").forEach(b=>b.onclick=()=>{
+      const cur=rf.querySelector(`.regstep[data-step="${step}"]`);
+      const inputs=[...cur.querySelectorAll("input,select")];
+      const bad=inputs.find(i=>!i.checkValidity());
+      if(bad){bad.reportValidity();return;}
+      step=Math.min(3,step+1);show(step);});
     rf.onsubmit=e=>{e.preventDefault();const pid=(document.getElementById("regPlan")||{}).value||"starter";
       const u=DEMO_USERS["admin@demo.cl"];store.session={...u,email:"admin@demo.cl"};
       if(pid==="starter"){toast(t("create_account")+" ✓");go("#/app");}
       else{addToCart({id:"plan_"+pid,name:"Plan "+pid,price:PLANS.find(p=>p.id===pid).y});go("#/checkout");}};
   }
+  // contacto (lead)
+  const cf=document.getElementById("contactForm");
+  if(cf)cf.onsubmit=e=>{e.preventDefault();if(!cf.checkValidity()){cf.reportValidity();return;}toast("Solicitud enviada ✓ Te contactaremos pronto");go("#/home");};
   // recuperar
   const rb=document.getElementById("resetBtn");
   if(rb)rb.onclick=()=>{const em=(document.getElementById("rc_email").value||"").trim();if(!em){toast("Ingresa tu email");return;}toast(t("send_link")+" ✓");go("#/login");};
@@ -843,14 +956,16 @@ function bindCommon(){
     menu.querySelectorAll("a").forEach(a=>a.addEventListener("click",()=>{menu.classList.remove("open");tg.setAttribute("aria-expanded","false");}));
   }
 }
-function confirmView(total){return `<section class="block"><div class="wrap center" style="padding:60px 0">
-  <div style="font-size:54px">✅</div><h2 class="h2">¡Compra confirmada!</h2>
-  <p class="sub" style="margin:6px auto 20px">Pago simulado por <b>${total}</b>. Te enviamos el acceso a la plataforma por correo (demo).</p>
-  <a class="btn primary lg" href="#/login">Entrar a la plataforma</a> <a class="btn" href="#/home">Volver al inicio</a></div></section>`;}
 function bindApp(sess){
-  document.querySelectorAll("[data-nav]").forEach(a=>a.onclick=()=>go("#/app/"+a.dataset.nav));
   const lo=document.getElementById("logout");if(lo)lo.onclick=()=>{store.session=null;go("#/home");};
-  const bg=document.getElementById("burger");if(bg)bg.onclick=()=>document.getElementById("side").classList.toggle("open");
+  const bg=document.getElementById("burger"),side=document.getElementById("side"),scrim=document.getElementById("scrim");
+  const setSide=open=>{side.classList.toggle("open",open);if(scrim)scrim.classList.toggle("show",open);bg.setAttribute("aria-expanded",open?"true":"false");};
+  if(bg&&side){
+    bg.onclick=()=>setSide(!side.classList.contains("open"));
+    if(scrim)scrim.onclick=()=>setSide(false);
+    side.querySelectorAll("a[href^='#/app']").forEach(a=>a.addEventListener("click",()=>setSide(false)));
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")setSide(false);},{once:true});
+  }
   document.querySelectorAll("[data-invite]").forEach(b=>b.onclick=()=>toast("Invitación enviada (demo)"));
   document.querySelectorAll("[data-rep]").forEach(b=>b.onclick=()=>toast("Generando reporte (demo)…"));
   document.querySelectorAll("[data-save]").forEach(b=>b.onclick=()=>toast("Ajustes guardados (demo)"));
