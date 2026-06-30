@@ -1,0 +1,20 @@
+# Dependencias
+node_modules/
+
+# Web copiada (se regenera con npm run sync-web)
+www/
+
+# Salidas de build de Android
+android/build/
+android/app/build/
+android/.gradle/
+android/capacitor-cordova-android-plugins/
+android/local.properties
+*.apk
+*.aab
+*.keystore
+
+# Payload web y config generados por Capacitor (se regeneran con `npm run sync`)
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json

@@ -1,0 +1,25 @@
+{
+  "name": "air-monitor-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "App móvil (Android/iOS) del 4G LTE CAT1 Air Monitor — Capacitor envuelve el dashboard web.",
+  "scripts": {
+    "sync-web": "node ./scripts/sync-web.mjs",
+    "add:android": "cap add android",
+    "sync": "npm run sync-web && cap sync",
+    "build:android": "npm run sync && cap sync android && cd android && ./gradlew assembleDebug",
+    "open:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/app": "^6.0.2",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/geolocation": "^6.1.0",
+    "@capacitor/local-notifications": "^6.1.0",
+    "@capacitor/splash-screen": "^6.0.3",
+    "@capacitor/status-bar": "^6.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0"
+  }
+}
