@@ -1,0 +1,59 @@
+name: Deploy GitHub Pages
+
+# Publica el sitio SaaS (web/) y el dashboard (dashboard/) en GitHub Pages.
+on:
+  push:
+    branches: ["claude/4g-lte-air-monitor-integration-2f7fey"]
+    paths:
+      - "web/**"
+      - "dashboard/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build site directory
+        run: |
+          mkdir -p _site
+          cp -r web _site/web
+          cp -r dashboard _site/dashboard
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="es"><head><meta charset="utf-8">
+          <title>[Marca] — Monitoreo agrícola inteligente</title>
+          <meta http-equiv="refresh" content="0; url=./web/">
+          <style>body{font-family:system-ui;background:#0a0f1d;color:#eaf0fb;display:grid;place-items:center;height:100vh;margin:0}a{color:#52e3a4}</style>
+          </head><body><p>Redirigiendo al sitio… <a href="./web/">entrar</a> · <a href="./dashboard/">dashboard</a></p></body></html>
+          HTML
+          touch _site/.nojekyll
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
