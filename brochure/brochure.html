@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>[Marca] — Brochure</title>
+<style>
+  @page{ size:A4; margin:0; }
+  :root{
+    --bg:#0a140d;--bg2:#0f1c13;--panel:#13241a;--panel2:#193021;--line:#284a31;
+    --txt:#eaf5ec;--muted:#a7c1af;--brand:#3ddc84;--brand2:#a3e635;--accent:#f59e0b;--sky:#38bdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{font-family:'Segoe UI',system-ui,Roboto,Helvetica,Arial,sans-serif;color:var(--txt);background:var(--bg)}
+  .page{width:210mm;min-height:297mm;padding:16mm 15mm;page-break-after:always;position:relative;overflow:hidden;
+    background:var(--bg)}
+  .page:last-child{page-break-after:auto}
+  h1,h2,h3{letter-spacing:-.3px;line-height:1.1}
+  .muted{color:var(--muted)}
+  .tag{display:inline-block;font-size:9.5pt;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    color:var(--brand);background:rgba(61,220,132,.14);padding:4px 11px;border-radius:999px}
+  .mark{width:34px;height:34px;vertical-align:middle}
+  .brandrow{display:flex;align-items:center;gap:10px;font-weight:800;font-size:15pt}
+  .pglabel{position:absolute;bottom:10mm;left:15mm;right:15mm;display:flex;justify-content:space-between;
+    font-size:8.5pt;color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
+  .sec-h{font-size:21pt;font-weight:800;margin:6px 0 4px}
+  .sec-sub{font-size:11pt;color:var(--muted);max-width:62ch;margin-bottom:14px}
+  .grid{display:grid;gap:9px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:14px;padding:13px 14px}
+  .card h3{font-size:12pt;margin-bottom:3px}
+  .card p{font-size:9.5pt;color:var(--muted);line-height:1.45}
+  .ico{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;
+    font-size:17pt;background:rgba(61,220,132,.16);margin-bottom:8px}
+  .ico.lime{background:rgba(163,230,53,.18)}.ico.amber{background:rgba(245,158,11,.2)}.ico.sky{background:rgba(56,189,248,.16)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:9pt;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;font-size:9.5pt}
+  th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-size:8.5pt;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+  .ok{color:var(--brand);font-weight:700}.no{color:#5b6b5f}
+  .li{display:flex;gap:9px;align-items:flex-start;font-size:10pt;padding:5px 0}
+  .li .b{color:var(--brand);font-weight:800}
+  .statband{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+  .statband .s{background:linear-gradient(120deg,rgba(61,220,132,.14),rgba(245,158,11,.12));
+    border:1px solid var(--line);border-radius:12px;padding:12px}
+  .statband b{font-size:18pt;display:block;letter-spacing:-.5px}
+  .statband span{font-size:8.5pt;color:var(--muted)}
+  /* cover */
+  .cover{background:
+     radial-gradient(700px 420px at 85% 12%,rgba(61,220,132,.18),transparent 60%),
+     radial-gradient(600px 380px at 8% 88%,rgba(245,158,11,.12),transparent 60%),var(--bg);
+     display:flex;flex-direction:column}
+  .cover .big{font-size:40pt;font-weight:800;line-height:1.04;margin:auto 0 0;letter-spacing:-1px}
+  .cover .lead{font-size:13pt;color:var(--muted);max-width:52ch;margin-top:14px}
+  .cover .cta{margin-top:22px;display:flex;gap:18px;flex-wrap:wrap;font-size:10pt}
+  .cover .cta b{color:var(--brand)}
+  .scaleflow{display:flex;align-items:stretch;gap:8px;margin-top:6px}
+  .scaleflow .step{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px}
+  .scaleflow .step b{font-size:10.5pt;display:block;margin-bottom:3px}
+  .scaleflow .step p{font-size:8.5pt;color:var(--muted)}
+  .scaleflow .arr{display:flex;align-items:center;color:var(--brand);font-weight:800;font-size:13pt}
+  .hl{background:linear-gradient(180deg,rgba(61,220,132,.10),transparent);border:1px solid var(--line);
+    border-left:3px solid var(--brand);border-radius:12px;padding:13px 15px}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .speclist{font-size:9.5pt}
+  .speclist div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+  .speclist span:first-child{color:var(--muted)}
+  .ctabox{background:linear-gradient(135deg,rgba(61,220,132,.18),rgba(163,230,53,.12));border:1px solid var(--brand);
+    border-radius:16px;padding:20px;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- ===== P1 COVER ===== -->
+<section class="page cover">
+  <div class="brandrow">
+    <svg class="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="url(#g1)"/>
+      <path d="M14 30c4-1 6-5 6-10 0 6 3 9 7 9 3 0 5-2 6-5" stroke="#04121e" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <circle cx="34" cy="15" r="3.4" fill="#04121e"/>
+      <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
+    [Marca]
+  </div>
+  <div class="big">Monitoreo agrícola<br>inteligente, en<br>tiempo real.</div>
+  <p class="lead">Estaciones 4G y sensores que miden clima, humedad y calidad del aire en cada parcela. Alarmas, históricos, mapas y recomendaciones automáticas — en una sola plataforma SaaS.</p>
+  <div class="chips" style="margin-top:18px">
+    <span class="chip">4G LTE · sin WiFi</span><span class="chip">−40 … 85 °C</span><span class="chip">6+ sensores</span>
+    <span class="chip">Alarmas 24/7</span><span class="chip">Web · Android · iOS</span>
+  </div>
+  <div class="cta"><span><b>▲</b> Tiempo real &amp; alarmas</span><span><b>▲</b> Históricos &amp; reportes</span><span><b>▲</b> Mapa de sensores</span></div>
+  <div class="pglabel"><span>[Marca] · Brochure de producto</span><span>Estación 4G LTE CAT1 · ESP32-S3</span></div>
+</section>
+
+<!-- ===== P2 VALOR ===== -->
+<section class="page">
+  <span class="tag">La solución</span>
+  <div class="sec-h">Del dato del campo a la decisión</div>
+  <p class="sec-sub">Una plataforma completa hardware + software para vigilar el ambiente de tus cultivos y reaccionar a tiempo: anticipa heladas, optimiza el riego y cuida la calidad del aire, desde el celular o el navegador.</p>
+  <div class="statband">
+    <div class="s"><b>−18%</b><span>consumo de agua por temporada</span></div>
+    <div class="s"><b>+1.200</b><span>hectáreas monitoreadas</span></div>
+    <div class="s"><b>99.9%</b><span>disponibilidad del servicio</span></div>
+    <div class="s"><b>24/7</b><span>alarmas y monitoreo</span></div>
+  </div>
+  <div class="grid g3" style="margin-top:6px">
+    <div class="card"><div class="ico">❄️</div><h3>Anticipa heladas</h3><p>Avisos tempranos por temperatura crítica para activar riego o calefactores antes del daño.</p></div>
+    <div class="card"><div class="ico lime">💧</div><h3>Riego de precisión</h3><p>Humedad y clima por parcela para regar en el momento justo y ahorrar agua.</p></div>
+    <div class="card"><div class="ico amber">🌬️</div><h3>Calidad del aire</h3><p>Temperatura, humedad, CO₂, COV y luz, en vivo e histórico, por estación.</p></div>
+  </div>
+  <div class="hl" style="margin-top:14px">
+    <h3 style="font-size:12pt;margin-bottom:4px">¿Por qué [Marca]?</h3>
+    <p class="muted" style="font-size:10pt">Conectividad <b style="color:var(--txt)">4G sin depender de WiFi</b>, despliegue rápido a la intemperie, y una plataforma multiempresa con <b style="color:var(--txt)">roles, alarmas y recomendaciones automáticas</b> que crece de una parcela a toda la agroindustria.</p>
+  </div>
+  <div class="pglabel"><span>[Marca]</span><span>02 · Propuesta de valor</span></div>
+</section>
+
+<!-- ===== P3 HARDWARE + COMO ===== -->
+<section class="page">
+  <span class="tag">Equipo &amp; despliegue</span>
+  <div class="sec-h">Hardware listo para el campo</div>
+  <p class="sec-sub">Estaciones robustas que se instalan en minutos y envían datos por red celular. Energía por batería o panel solar para operación permanente.</p>
+  <div class="grid g3">
+    <div class="card"><div class="ico">📡</div><h3>Estación 4G LTE</h3><p>Nodo ESP32-S3 con módem 4G (A76XX/SIM7670), batería LiPo y carcasa intemperie.</p></div>
+    <div class="card"><div class="ico lime">🌡️</div><h3>Kit de sensores</h3><p>Temp/Humedad (AHT10), gases eCO₂/TVOC (SGP30) y luz (BH1750). Ampliable.</p></div>
+    <div class="card"><div class="ico amber">🔆</div><h3>Energía solar</h3><p>Panel + soporte para autonomía total en despliegues remotos.</p></div>
+  </div>
+  <div class="sec-h" style="font-size:15pt;margin-top:20px">En marcha en 3 pasos</div>
+  <div class="scaleflow">
+    <div class="step"><b>1 · Instala</b><p>Coloca el nodo con sus sensores en la parcela. Batería o solar.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><b>2 · Conecta 4G</b><p>Sin WiFi: provisión guiada del módem y la SIM desde la app.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><b>3 · Monitorea</b><p>Tiempo real, históricos, mapa, alarmas e invitación al equipo.</p></div>
+  </div>
+  <div class="twocol" style="margin-top:18px">
+    <div>
+      <h3 style="font-size:12pt;margin-bottom:6px">Variables que mide</h3>
+      <div class="chips">
+        <span class="chip">🌡️ Temperatura</span><span class="chip">💧 Humedad</span><span class="chip">💨 eCO₂</span>
+        <span class="chip">🧪 TVOC</span><span class="chip">💡 Luz</span><span class="chip">🔋 Batería</span><span class="chip">📶 Señal 4G</span>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:12pt;margin-bottom:6px">Integraciones</h3>
+      <div class="chips">
+        <span class="chip">ThingSpeak</span><span class="chip">Datacake</span><span class="chip">MQTT(S)</span><span class="chip">HTTP / API propia</span>
+      </div>
+    </div>
+  </div>
+  <div class="pglabel"><span>[Marca]</span><span>03 · Hardware y despliegue</span></div>
+</section>
+
+<!-- ===== P4 PLATAFORMA ===== -->
+<section class="page">
+  <span class="tag">Plataforma SaaS</span>
+  <div class="sec-h">Todo lo que necesitas para monitorear</div>
+  <p class="sec-sub">Accede desde el navegador o la app móvil. Una sola plataforma para ver, analizar, alertar y reportar.</p>
+  <div class="grid g2">
+    <div class="card"><div class="ico">📈</div><h3>Tiempo real</h3><p>Lecturas de cada sensor al instante, con tarjetas, gráficas y estado por variable.</p></div>
+    <div class="card"><div class="ico lime">🗂️</div><h3>Históricos</h3><p>Series por rango (1 h a todo el periodo) con exportación a CSV, Excel y PDF.</p></div>
+    <div class="card"><div class="ico amber">🔔</div><h3>Alarmas inteligentes</h3><p>Umbral alto/bajo, cambio brusco y caída de señal, con aviso visual, sonoro y push.</p></div>
+    <div class="card"><div class="ico sky">🗺️</div><h3>Mapa de sensores</h3><p>Geolocaliza estaciones (Google Maps) y abre la ficha, histórico y exportación de cada una.</p></div>
+    <div class="card"><div class="ico">💡</div><h3>Recomendaciones</h3><p>Sugerencias automáticas según las lecturas: ventilar, regar, proteger de heladas, cargar batería…</p></div>
+    <div class="card"><div class="ico lime">📋</div><h3>Reportes</h3><p>Informes por estación y periodo en PDF/Excel, listos para compartir o auditar.</p></div>
+  </div>
+  <div class="hl" style="margin-top:14px">
+    <h3 style="font-size:12pt;margin-bottom:4px">Índice de calidad del aire (AQI)</h3>
+    <p class="muted" style="font-size:10pt">La plataforma calcula un AQI estimado a partir de eCO₂ y TVOC, con una escala clara (Excelente → Insalubre) para decisiones rápidas sin interpretar datos crudos.</p>
+  </div>
+  <div class="pglabel"><span>[Marca]</span><span>04 · Plataforma</span></div>
+</section>
+
+<!-- ===== P5 INTELIGENCIA + CASOS ===== -->
+<section class="page">
+  <span class="tag">Inteligencia operativa</span>
+  <div class="sec-h">Te dice qué hacer, no solo qué pasa</div>
+  <p class="sec-sub">El motor de recomendaciones analiza cada lectura y prioriza acciones por severidad. Las alarmas avisan aunque no estés mirando.</p>
+  <div class="twocol">
+    <div class="card">
+      <h3 style="font-size:12pt;margin-bottom:8px">Recomendaciones automáticas</h3>
+      <div class="li"><span class="b">❄️</span><span><b>Riesgo de helada</b> — activa riego/calefacción antes del daño.</span></div>
+      <div class="li"><span class="b">💨</span><span><b>Ventila</b> cuando eCO₂ o TVOC suben.</span></div>
+      <div class="li"><span class="b">💧</span><span><b>Ajuste de riego</b> ante aire seco o estrés hídrico.</span></div>
+      <div class="li"><span class="b">🍄</span><span><b>Riesgo de hongos</b> por humedad muy alta.</span></div>
+      <div class="li"><span class="b">🔋</span><span><b>Mantenimiento</b>: batería baja o señal 4G débil.</span></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:12pt;margin-bottom:8px">Tipos de alarma</h3>
+      <div class="li"><span class="b">▲</span><span><b>Umbral alto/bajo</b> configurable por sensor.</span></div>
+      <div class="li"><span class="b">▲</span><span><b>Cambio brusco</b> (ventana de tiempo) para detectar eventos.</span></div>
+      <div class="li"><span class="b">▲</span><span><b>Sin datos / offline</b> y batería/señal críticas.</span></div>
+      <div class="li"><span class="b">▲</span><span><b>Notificaciones push</b> + registro histórico de eventos.</span></div>
+    </div>
+  </div>
+  <div class="sec-h" style="font-size:15pt;margin-top:20px">Casos de uso</div>
+  <div class="grid g2">
+    <div class="card"><h3 style="font-size:11pt">🍒 Fruticultura</h3><p>Protección de heladas y calidad de aire en huertos.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🍇 Viñas</h3><p>Clima por cuartel y trazabilidad para decisiones de cosecha.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🍅 Invernaderos</h3><p>CO₂, humedad y temperatura para rendimiento y sanidad.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🌱 Hortalizas / campo abierto</h3><p>Riego eficiente y alertas tempranas por parcela.</p></div>
+  </div>
+  <div class="pglabel"><span>[Marca]</span><span>05 · Inteligencia y casos de uso</span></div>
+</section>
+
+<!-- ===== P6 ROLES ===== -->
+<section class="page">
+  <span class="tag">Multiempresa &amp; seguridad</span>
+  <div class="sec-h">Roles con jerarquía</div>
+  <p class="sec-sub">Cada perfil ve y administra solo lo que le corresponde. Control de acceso de extremo a extremo, ideal para equipos y operaciones multi-campo.</p>
+  <div class="grid g3">
+    <div class="card"><div class="ico" style="background:rgba(192,132,252,.18)">🛡️</div><h3>Super Admin</h3><p>Empresas, planes, facturación y toda la flota de dispositivos.</p></div>
+    <div class="card"><div class="ico sky">🏢</div><h3>Admin de Cuenta</h3><p>Usuarios, campos, dispositivos y plan de su empresa.</p></div>
+    <div class="card"><div class="ico">🌾</div><h3>Supervisor de Campo</h3><p>Sus campos y estaciones, alarmas y reportes.</p></div>
+    <div class="card"><div class="ico sky">🔬</div><h3>Agrónomo / Analista</h3><p>Analítica, reportes y recomendaciones a partir de los datos.</p></div>
+    <div class="card"><div class="ico amber">🛠️</div><h3>Técnico / Operador</h3><p>Opera dispositivos, configura sensores y resuelve alarmas.</p></div>
+    <div class="card"><div class="ico">👁️</div><h3>Visor</h3><p>Acceso de solo lectura a dashboards y reportes.</p></div>
+  </div>
+  <div class="hl" style="margin-top:16px">
+    <h3 style="font-size:12pt;margin-bottom:4px">Gestión de equipo</h3>
+    <p class="muted" style="font-size:10pt">Invita usuarios por correo, asigna roles y administra varios campos y estaciones desde una sola cuenta. Cada empresa (tenant) trabaja aislada y segura.</p>
+  </div>
+  <div class="pglabel"><span>[Marca]</span><span>06 · Roles y organización</span></div>
+</section>
+
+<!-- ===== P7 ESCALAMIENTO + PLANES ===== -->
+<section class="page">
+  <span class="tag">Escalamiento</span>
+  <div class="sec-h">De una parcela a la agroindustria</div>
+  <p class="sec-sub">La misma plataforma crece contigo: agrega estaciones, campos, usuarios e integraciones sin cambiar de herramienta.</p>
+  <div class="scaleflow">
+    <div class="step"><b>Piloto</b><p>1–2 estaciones en un campo. Plan Starter gratis.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><b>Productor</b><p>Varios campos y equipo con roles. Plan Pro.</p></div>
+    <div class="arr">→</div>
+    <div class="step"><b>Agroindustria</b><p>Multi-empresa, API y SLA. Plan Empresa.</p></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3 style="font-size:11pt">📱 App móvil Android / iOS</h3><p>La misma plataforma empaquetada como app nativa, con notificaciones push.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🔌 API e integraciones</h3><p>ThingSpeak, MQTT, Datacake o tu backend. Conecta con ERP/BI.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🗺️ Multi-campo en mapa</h3><p>Cientos de estaciones geolocalizadas, monitoreadas desde un panel.</p></div>
+    <div class="card"><h3 style="font-size:11pt">🏷️ White-label</h3><p>Personalizable con tu marca para revender o uso corporativo.</p></div>
+  </div>
+  <div class="sec-h" style="font-size:15pt;margin-top:18px">Planes</div>
+  <table>
+    <thead><tr><th>Plan</th><th>Para</th><th>Estaciones</th><th>Usuarios</th><th>Históricos</th><th>Precio*</th></tr></thead>
+    <tbody>
+      <tr><td><b>Starter</b></td><td>Piloto / 1 campo</td><td>Hasta 2</td><td>1</td><td>7 días</td><td>Gratis</td></tr>
+      <tr><td><b>Pro</b></td><td>Productores / fundos</td><td>Hasta 15</td><td>Hasta 10</td><td>1 año</td><td>$29.000/mes</td></tr>
+      <tr><td><b>Empresa</b></td><td>Multi-campo / agroindustria</td><td>Ilimitadas</td><td>Ilimitados</td><td>Ilimitado</td><td>A medida</td></tr>
+    </tbody>
+  </table>
+  <p class="muted" style="font-size:8pt;margin-top:6px">* Precios de referencia (CLP). Plan anual con ~17% de descuento. Hardware se cotiza por separado.</p>
+  <div class="pglabel"><span>[Marca]</span><span>07 · Escalamiento y planes</span></div>
+</section>
+
+<!-- ===== P8 SPECS + CTA ===== -->
+<section class="page">
+  <span class="tag">Ficha técnica</span>
+  <div class="sec-h">Especificaciones</div>
+  <div class="twocol" style="margin-top:8px">
+    <div>
+      <h3 style="font-size:11pt;margin-bottom:4px">Estación</h3>
+      <div class="speclist">
+        <div><span>Controlador</span><span>ESP32-S3 (WiFi + BT 5.0)</span></div>
+        <div><span>Módem celular</span><span>4G LTE CAT1 · A76XX / SIM7670</span></div>
+        <div><span>Energía</span><span>LiPo 3.7V · panel solar opc.</span></div>
+        <div><span>Temp. operación</span><span>−40 … 85 °C</span></div>
+        <div><span>Bus sensores</span><span>I²C · RTC PCF8563</span></div>
+        <div><span>Programación</span><span>Arduino / MicroPython</span></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:11pt;margin-bottom:4px">Sensores</h3>
+      <div class="speclist">
+        <div><span>AHT10</span><span>Temperatura · Humedad</span></div>
+        <div><span>SGP30</span><span>eCO₂ · TVOC · H₂ · Etanol</span></div>
+        <div><span>BH1750</span><span>Luz (lux)</span></div>
+        <div><span>ADC batería</span><span>Tensión / autonomía</span></div>
+        <div><span>Reporte</span><span>HTTP · MQTT(S) · API</span></div>
+        <div><span>Plataforma</span><span>Web · Android · iOS (PWA/Capacitor)</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="ctabox" style="margin-top:22px">
+    <div class="brandrow" style="justify-content:center;font-size:14pt">
+      <svg class="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="url(#g2)"/>
+        <path d="M14 30c4-1 6-5 6-10 0 6 3 9 7 9 3 0 5-2 6-5" stroke="#04121e" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="34" cy="15" r="3.4" fill="#04121e"/>
+        <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
+      [Marca]
+    </div>
+    <p style="font-size:13pt;font-weight:700;margin:12px 0 4px">Lleva tus campos al siguiente nivel</p>
+    <p class="muted" style="font-size:10pt;max-width:50ch;margin:0 auto 14px">Solicita una demo guiada o un piloto en tu campo. Empieza gratis con el plan Starter.</p>
+    <div class="chips" style="justify-content:center">
+      <span class="chip">🌐 www.ejemplo.cl</span><span class="chip">✉️ ventas@ejemplo.cl</span><span class="chip">📞 +56 9 0000 0000</span>
+    </div>
+  </div>
+  <p class="muted" style="font-size:8pt;text-align:center;margin-top:14px">Documento de demostración. Marca, precios y datos de contacto referenciales · [Marca] © 2026</p>
+  <div class="pglabel"><span>[Marca]</span><span>08 · Ficha técnica y contacto</span></div>
+</section>
+
+</body>
+</html>
