@@ -7,11 +7,16 @@ El repo se renombra de `comparador-planos` a **`luismartinez-saas-agricultura`**
 (hazlo en GitHub → Settings → Rename; git y Pages siguen funcionando por
 redirección automática). La carpeta local del autor es `C:\proyectos code\LM-SaaSAgricultura`
 (antes `LM-SaaSLecturaLTE`) — el nombre de la carpeta local es independiente del repo.
-El producto es una **plataforma de monitoreo agrícola IoT (SaaS)**: estaciones
-**4G LTE** + sensores que miden clima,
-humedad y calidad del aire por parcela, con una **plataforma SaaS** (web +
-dashboard + app Android) para tiempo real, históricos, alarmas, mapa,
-recomendaciones y reportes.
+El producto es una **plataforma agroclimática IoT (SaaS) para fruta de exportación**
+(cerezo, palto, kiwi, arándano, uva, nogal): estación **4G LTE** con sensores de
+**suelo y clima**, más una **plataforma SaaS** (web + dashboard + app Android) con
+**alerta de helada anticipada**, riego por humedad de suelo, horas-frío/grados-día,
+ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
+> **Reposicionado el 2026-07-01** desde "monitor de calidad de aire" a estación
+> agroclimática. El CO₂/COV quedó relegado a un módulo de **atmósfera controlada /
+> cámara de guarda** (postcosecha). Datos del dashboard = **DEMO simulada** coherente
+> (cerezos en Curicó, madrugada de helada). Regla dura vigente: **cero invención**
+> (sin clientes/casos/cifras falsas).
 
 - Repo GitHub: `eonspa/luismartinez-saas-agricultura` (antes `comparador-planos`)
 - Sitio/dashboard públicos (tras el rename): https://eonspa.github.io/luismartinez-saas-agricultura/
@@ -36,21 +41,29 @@ recomendaciones y reportes.
 - `.github/workflows/` — `pages.yml` (deploy web+dashboard desde **main**), `android.yml` (APK).
 
 ## Hardware
-- Nodo **ESP32-S3** + módem **4G LTE CAT1** (A76XX / SIM7670), batería LiPo, panel solar opcional.
-- Sensores: **AHT10** (temp/hum), **SGP30** (eCO₂/TVOC), **BH1750** (luz), **PCF8563** (RTC).
-- Reporte por HTTP / MQTT(S) / API. Integraciones: ThingSpeak, Datacake, MQTT.
+- Nodo **ESP32-S3** + módem **4G LTE CAT1** (A76XX / SIM7670), batería LiPo + panel
+  solar (autonomía declarada ≥ 7 días sin sol), buffer local si cae la señal.
+- Sensores (propuesta agroclimática): **suelo multiprofundidad 15/30/60 cm** (T + humedad),
+  temp/HR aire, **pluviómetro**, **anemómetro**, **piranómetro** (radiación), punto de rocío,
+  **mojado foliar**. Postcosecha: CO₂/COV (SGP30) para cámara (relegado).
+- Placa base real Makerfabs (repo original `4G-LTE-CAT1-Air-Monitor`). El HW con estos
+  sensores agro es **propuesta técnica, no equipo físico existente** todavía.
+- Reporte por HTTP / MQTT(S) / API.
 
 ## Funcionalidades de la plataforma
-Tiempo real · Históricos (export CSV/Excel/PDF) · Alarmas (umbral alto/bajo,
-cambio brusco, offline; push) · Mapa (Google Maps) · **Recomendaciones
-automáticas** según lecturas · Reportes · Índice AQI (de eCO₂/TVOC).
+**Alerta de helada** (proyección de mínima + hora + umbral por cultivo, anticipada) ·
+Riego por **humedad de suelo** (15/30/60 cm) · **Horas-Frío (<7,2°C) + Porciones de Frío** ·
+**Grados-día + plaga por cultivo** (Lobesia/uva, Drosophila/cereza-arándano, carpocapsa/nogal) ·
+**ET₀ (Penman-Monteith)** y balance hídrico · Rosa de vientos y lluvia · Mapa de cuarteles ·
+Recomendaciones por cultivo · Históricos/Reportes · Alarmas (push). Módulo secundario
+**Atmósfera Controlada** (postcosecha).
 **Roles multiempresa (6):** Super Admin, Admin de Cuenta, Supervisor de Campo,
 Agrónomo/Analista, Técnico/Operador, Visor.
 
-## Planes (referencia, CLP)
-- **Starter** — gratis, hasta 2 estaciones, 1 usuario, históricos 7 días.
-- **Pro** — $29.000/mes (anual ~17% dto.), hasta 15 estaciones, 10 usuarios, 1 año.
-- **Empresa** — a medida, ilimitado, API + SLA.
+## Planes (referencia, CLP) — sin plan gratis
+- **Piloto** — a medida, 1 campo · 1 estación · 1 temporada (prueba dirigida).
+- **Producción** — $37.500/mes ref. (anual ~17% dto.), por campo, alertas ilimitadas, roles.
+- **Multicampo / Empresa** — a medida, ilimitado, API + integración a certificación (GlobalGAP) + SLA.
 
 ## Flujo de trabajo (git) — IMPORTANTE
 - Rama de desarrollo: `claude/4g-lte-air-monitor-integration-2f7fey`.
@@ -68,26 +81,31 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - PDFs del brochure se generan con Chromium `page.pdf({format:'A4', printBackground:true, preferCSSPageSize:true})`.
 
 ## Contexto de sesión (actualizado 2026-07-01)
-- El usuario continuará el trabajo desde **Chat (claude.ai) o Cowork**. Antes de pedir
-  nuevas modificaciones va a **analizar la parte comercial**: marca, modelo de negocio
-  y posicionamiento. Las próximas solicitudes de cambios saldrán de ese análisis.
-- El sitio se sirve en GitHub Pages; **la URL raíz redirige a `/web/`** (hay `index.html`
-  + `.nojekyll` en la raíz del repo). El dashboard de monitoreo está **montado dentro**
-  del área privada (login con cuentas demo `@demo.cl`, primer ítem "Monitoreo en vivo").
+- **Reposicionamiento comercial EJECUTADO** (dashboard PR#7, web PR#8, brochure PR#9)
+  hacia fruta de exportación con foco en **helada/riego/frío**. Benchmark previo de
+  Wiseconn/Semios/Sencrop/CropX/Arable (vía WebSearch; el proxy bloquea el fetch directo).
+- El sitio se sirve en GitHub Pages; **la URL raíz redirige a `/web/`** (`index.html`
+  + `.nojekyll` en la raíz). El dashboard está **montado dentro** del área privada
+  (login demo `@demo.cl`, primer ítem "Monitoreo en vivo").
 - Flujo de publicación vigente: rama → **PR → merge a `main`** vía GitHub MCP
   (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
 
 ## Pendientes técnicos abiertos
-- **Mapeo de campos ThingSpeak** (dashboard): el lector usa `field3=eCO₂,4=TVOC,5=Lux,6=Bat`
-  pero el firmware/generador emite `field3=TVOC,4=eCO₂,7=Luz,8=Bat` (CSQ no se envía).
-  Alinear lector + texto del modal al orden real del firmware.
+- **ThingSpeak / generador de firmware**: el dashboard viejo (lector ThingSpeak + comandos
+  AT) se **retiró** en la reconstrucción agrícola (demo-only). Recuperable si se quiere
+  ingestión real; al restaurarlo alinear el mapeo (`field3=TVOC,4=eCO₂,7=Luz,8=Bat`).
 - **About del repo** (descripción + web + topics): pendiente; probablemente manual
-  (no hay tool MCP para editar metadatos del repo). Valores sugeridos ya redactados.
+  (no hay tool MCP para editarlo). Valores sugeridos ya redactados.
+- **Decimales**: unificar a coma chilena (hay mezcla `−1,4` vs `8.1`).
+- **Planes**: la franja "14 días de prueba · sin tarjeta" quedó a contrapelo del "sin plan gratis".
+- **Mapa de cuarteles**: hoy tarjetas (sin Google Maps, para no depender de API key).
 
-## Pendientes / ideas abiertas
-- Definir marca real y reemplazar `[Marca]` + contactos (regenerar brochure).
-- Recomendaciones por estación dentro del **Mapa**; umbrales **configurables**.
-- Versión del brochure **en inglés** y variante **clara para imprimir**.
-- Subir versión del caché del service worker (`v1`→`v2`) al publicar cambios.
-- Checkout con Stripe real / traducir plataforma interna al inglés.
+## Pendientes / ideas abiertas — BLOQUEANTES primero
+- **MARCA (bloqueante #1)**: definir nombre real y reemplazar `[Marca]` + contactos
+  (el logo ya es componente/variable, entra sin rehacer). Candidato *Sensagro* (no confirmado).
+- **Hardware físico real** con sensores agro (suelo multiprofundidad, piranómetro, mojado foliar) y su firmware.
+- **Datos de campo reales** (hoy todo DEMO): estación real → casos/ROI verificables.
 - Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).
+- Umbrales configurables por cultivo/fenología; motor real de pronóstico de helada.
+- Brochure **en inglés** / variante clara para imprimir; traducir plataforma interna al inglés.
+- Checkout con Stripe real.
