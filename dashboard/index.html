@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
 <meta name="description" content="Estación agroclimática 4G: alerta de helada, humedad de suelo, horas-frío, grados-día y ET₀ para fruta de exportación. Demostración con datos simulados.">
 <meta name="theme-color" content="#0a140d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-title" content="Estación agro">
 <title>[Marca] — Estación agroclimática (demo)</title>
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="vendor/leaflet.css">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
@@ -113,6 +114,23 @@
   .b-good{background:rgba(34,197,94,.14);color:#bbf7d0}.b-warn{background:rgba(245,158,11,.16);color:#ffe4b0}.b-bad{background:rgba(251,113,133,.16);color:#fecdd3}.b-muted{background:var(--panel);color:var(--muted)}
   .quarter{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel)}
   .quarter.risk{border-color:rgba(251,113,133,.5)}
+  /* ---- mapa de dispositivos (Leaflet + OSM/CARTO) ---- */
+  .cmap{height:380px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg2);z-index:0}
+  .cmap.nomap{display:grid;place-items:center;padding:24px}
+  .mapfallback{color:var(--muted);font-size:13px;text-align:center;max-width:46ch;line-height:1.5}
+  .maplegend2{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:10px;font-size:12px;color:var(--muted)}
+  .maplegend2 i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:-1px}
+  .leaflet-container{background:var(--bg2);font:inherit}
+  .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--txt);box-shadow:0 6px 24px rgba(0,0,0,.5)}
+  .leaflet-popup-content{font-size:12.5px;line-height:1.55;margin:11px 13px}
+  .leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
+  .leaflet-tooltip{background:var(--panel);color:var(--txt);border:1px solid var(--line);font-size:12px}
+  .leaflet-tooltip-top:before{border-top-color:var(--line)}
+  .leaflet-bar a{background:var(--panel);color:var(--txt);border-color:var(--line)}
+  .leaflet-bar a:hover{background:var(--panel2)}
+  .leaflet-control-attribution{background:rgba(10,20,13,.72)!important;color:var(--muted)!important;font-size:10px}
+  .leaflet-control-attribution a{color:var(--muted)!important}
+  @media(max-width:560px){.cmap{height:300px}}
   .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:10px;padding:9px 13px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
   .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#04121e}
   .note{font-size:11.5px;color:var(--muted);border-left:3px solid var(--line);padding:4px 0 4px 11px;margin-top:10px}
@@ -152,13 +170,14 @@
   <div class="wrap"><div class="tabs" id="tabs">
     <button class="tab on" data-tab="vivo">Tiempo real</button>
     <button class="tab" data-tab="hist">Históricos</button>
-    <button class="tab" data-tab="cuarteles">Cuarteles</button>
+    <button class="tab" data-tab="cuarteles">Mapa</button>
     <button class="tab" data-tab="alarmas">Alarmas</button>
     <button class="tab" data-tab="config">Configuración</button>
   </div></div>
 </header>
 <main><div class="wrap" id="view"></div></main>
 
+<script src="vendor/leaflet.js"></script>
 <script>
 "use strict";
 /* ================= Escenario base coherente (una sola historia de campo) =================
@@ -194,6 +213,35 @@ const CROPS = {
 let CROP = "cerezo";
 let tmin = SCN.startMin;            // reloj del escenario (min desde 18:00), avanza "en vivo"
 let timer = null;
+
+/* ================= Campos y dispositivos (coordenadas DEMO cerca de Curicó) =================
+   Cada campo tiene su centro y sus cuarteles con lat/lng y estado de helada.
+   Al instalar hardware real, se reemplazan estas coordenadas por el GPS de cada estación. */
+const CAMPOS = {
+  fundo_sur:{ name:"Fundo Sur · Curicó, Maule", center:[-34.9885,-71.2322], zoom:15, cuarteles:[
+    {n:"Cuartel 1 · Cerezo Santina", crop:"Cerezo Santina", ha:6, temp:-2.5, st:"risk", dev:"AME-01", lat:-34.9865, lng:-71.2345},
+    {n:"Cuartel 2 · Cerezo Lapins",  crop:"Cerezo Lapins",  ha:5, temp:-1.9, st:"risk", dev:"AME-02", lat:-34.9892, lng:-71.2358},
+    {n:"Cuartel 3 · Cerezo Regina",  crop:"Cerezo Regina",  ha:4, temp:-0.8, st:"warn", dev:"AME-03", lat:-34.9905, lng:-71.2318},
+    {n:"Cuartel 4 · Palto Hass",     crop:"Palto Hass",     ha:8, temp:-1.2, st:"risk", dev:"AME-04", lat:-34.9878, lng:-71.2295},
+    {n:"Cuartel 5 · Ciruelo",        crop:"Ciruelo D'Agen", ha:3, temp:0.6,  st:"good", dev:"AME-05", lat:-34.9858, lng:-71.2302},
+    {n:"Cuartel 6 · Uva de mesa",    crop:"Uva de mesa",    ha:7, temp:1.4,  st:"good", dev:"AME-06", lat:-34.9912, lng:-71.2340},
+  ]},
+  fundo_norte:{ name:"Fundo Norte · Molina, Maule", center:[-34.9588,-71.2048], zoom:15, cuarteles:[
+    {n:"Cuartel N1 · Arándano Duke", crop:"Arándano Duke",   ha:5, temp:2.1,  st:"good", dev:"AME-07", lat:-34.9575, lng:-71.2065},
+    {n:"Cuartel N2 · Kiwi Hayward",  crop:"Kiwi Hayward",    ha:6, temp:0.4,  st:"warn", dev:"AME-08", lat:-34.9598, lng:-71.2038},
+    {n:"Cuartel N3 · Nogal Chandler",crop:"Nogal Chandler",  ha:9, temp:1.8,  st:"good", dev:"AME-09", lat:-34.9572, lng:-71.2022},
+    {n:"Cuartel N4 · Cerezo Kordia", crop:"Cerezo Kordia",   ha:4, temp:-0.3, st:"warn", dev:"AME-10", lat:-34.9603, lng:-71.2071},
+  ]},
+  parcela_rio:{ name:"Parcela Río · Sagrada Familia", center:[-35.0122,-71.2600], zoom:15, cuarteles:[
+    {n:"Cuartel R1 · Uva Thompson",  crop:"Uva Thompson",   ha:7, temp:3.2, st:"good", dev:"AME-11", lat:-35.0110, lng:-71.2615},
+    {n:"Cuartel R2 · Ciruelo",       crop:"Ciruelo D'Agen", ha:3, temp:2.4, st:"good", dev:"AME-12", lat:-35.0132, lng:-71.2588},
+    {n:"Cuartel R3 · Cerezo Santina",crop:"Cerezo Santina", ha:5, temp:1.1, st:"good", dev:"AME-13", lat:-35.0125, lng:-71.2575},
+  ]},
+};
+let CAMPO = "fundo_sur";
+let CMAP = null;
+const QSTATUS = { risk:["Helada crítica","#fb7185","bad"], warn:["Alerta","#fbbf24","warn"], good:["Normal","#22c55e","good"] };
+function tempColor(t){ return t<=-1?'var(--bad)':t<=0?'var(--warn)':'var(--good)'; }
 
 /* ---- helpers ---- */
 const $=id=>document.getElementById(id);
@@ -414,20 +462,45 @@ function viewHist(){
     <div class="note">Exportación a CSV/Excel/PDF disponible en la versión desplegada (omitido en esta demo).</div>`;
 }
 function viewCuarteles(){
-  const q=[
-    ["Cuartel 1 · Cerezo Santina","6 ha",-2.5,"risk","Helada crítica"],
-    ["Cuartel 2 · Cerezo Lapins","5 ha",-1.9,"risk","Helada crítica"],
-    ["Cuartel 3 · Cerezo Regina","4 ha",-0.8,"warn","Alerta"],
-    ["Cuartel 4 · Palto Hass","8 ha",-1.2,"risk","Helada crítica"],
-    ["Cuartel 5 · Ciruelo","3 ha",0.6,"good","Normal"],
-    ["Cuartel 6 · Uva de mesa","7 ha",1.4,"good","Normal"],
-  ];
-  return `<h3 class="ct">Estado por cuartel</h3><div class="sub">Temperatura mínima estimada esta madrugada por sector. En terreno se ubican sobre Google Maps (versión desplegada).</div>
-  <div class="grid g3">${q.map(c=>`<div class="quarter ${c[3]==='risk'?'risk':''}">
-    <div class="row" style="justify-content:space-between"><b style="font-size:13.5px">${c[0]}</b><span class="badge b-${c[3]}">${c[4]}</span></div>
-    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12px">${c[1]}</span><span style="font-size:22px;font-weight:800;color:${c[2]<=-1?'var(--bad)':c[2]<=0?'var(--warn)':'var(--good)'}">${c[2].toFixed(1)} °C</span></div>
-  </div>`).join("")}</div>
-  <div class="note">🗺️ El mapa de cuarteles con geolocalización (Google Maps) está en la versión desplegada; en esta demo se resume por tarjetas para no requerir clave de API.</div>`;
+  const campo=CAMPOS[CAMPO];
+  const opts=Object.entries(CAMPOS).map(([id,c])=>`<option value="${id}"${id===CAMPO?" selected":""}>${esc(c.name)}</option>`).join("");
+  const n=campo.cuarteles.reduce((a,q)=>(a[q.st]++,a),{risk:0,warn:0,good:0});
+  const list=campo.cuarteles.map(q=>`<div class="quarter ${q.st==='risk'?'risk':''}">
+    <div class="row" style="justify-content:space-between"><b style="font-size:13px">${esc(q.n)}</b><span class="badge b-${QSTATUS[q.st][2]}">${QSTATUS[q.st][0]}</span></div>
+    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12px">${q.ha} ha · 📍 ${esc(q.dev)}</span><span style="font-size:19px;font-weight:800;color:${tempColor(q.temp)}">${q.temp.toFixed(1)} °C</span></div>
+  </div>`).join("");
+  return `<h3 class="ct">Mapa de dispositivos por campo</h3>
+  <div class="sub">Ubicación de cada estación sobre el mapa. Elige el campo para ver sus cuarteles y el estado de helada de esta madrugada.</div>
+  <div class="row" style="gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+    <span class="cropsel">Campo <select id="campoSel" aria-label="Campo">${opts}</select></span>
+    <span class="chip">📍 <b>${campo.cuarteles.length}</b> dispositivos</span>
+    <span class="chip">🟥 ${n.risk} · 🟧 ${n.warn} · 🟩 ${n.good}</span>
+  </div>
+  <div id="cmap" class="cmap" aria-label="Mapa de dispositivos del campo (demo)"></div>
+  <div class="maplegend2"><span><i style="background:#fb7185"></i>Helada crítica</span><span><i style="background:#fbbf24"></i>Alerta</span><span><i style="background:#22c55e"></i>Normal</span><span style="margin-left:auto">Toca un punto para ver el detalle</span></div>
+  <div class="grid g3" style="margin-top:14px">${list}</div>
+  <div class="note">🗺️ Mapa interactivo con <b>OpenStreetMap</b> (Leaflet, sin clave de API). Las coordenadas son <b>de demostración</b> cerca de Curicó; se reemplazan por el <b>GPS real</b> de cada estación al instalarla.</div>`;
+}
+function destroyCMap(){ if(CMAP){ try{CMAP.remove();}catch(e){} CMAP=null; } }
+function initCuartelesMap(){
+  const sel=$("campoSel");
+  if(sel) sel.addEventListener("change",e=>{ CAMPO=e.target.value; render(); });
+  const el=$("cmap"); if(!el) return;
+  if(!window.L){ el.classList.add("nomap"); el.innerHTML='<div class="mapfallback">🗺️ El mapa interactivo no pudo cargar la librería. La lista de cuarteles de abajo muestra el estado de cada dispositivo.</div>'; return; }
+  const campo=CAMPOS[CAMPO];
+  CMAP=L.map(el,{scrollWheelZoom:false}).setView(campo.center,campo.zoom);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · &copy; CARTO'}).addTo(CMAP);
+  const col={risk:'#fb7185',warn:'#fbbf24',good:'#22c55e'};
+  const pts=[];
+  campo.cuarteles.forEach(q=>{
+    pts.push([q.lat,q.lng]);
+    L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#0a140d',fillColor:col[q.st],fillOpacity:.95})
+      .addTo(CMAP)
+      .bindTooltip(esc(q.n),{direction:'top',offset:[0,-6]})
+      .bindPopup(`<b>${esc(q.n)}</b><br>${esc(q.crop)} · ${q.ha} ha<br>Mín. estimada: <b style="color:${col[q.st]}">${q.temp.toFixed(1)} °C</b><br>Dispositivo <b>${esc(q.dev)}</b> · ● en línea<br><span style="opacity:.65">Demo · coordenadas simuladas</span>`);
+  });
+  if(pts.length) CMAP.fitBounds(pts,{padding:[38,38],maxZoom:16});
+  setTimeout(()=>{ try{ CMAP&&CMAP.invalidateSize(); }catch(e){} },80);
 }
 function viewAlarmas(){
   const rows=[
@@ -467,7 +540,7 @@ function viewConfig(){
 }
 const VIEWS={vivo:viewVivo,hist:viewHist,cuarteles:viewCuarteles,alarmas:viewAlarmas,config:viewConfig};
 let TAB="vivo";
-function render(){ $("view").innerHTML=VIEWS[TAB](); }
+function render(){ destroyCMap(); $("view").innerHTML=VIEWS[TAB](); if(TAB==="cuarteles") initCuartelesMap(); }
 
 /* ---- eventos ---- */
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;
