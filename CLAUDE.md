@@ -28,9 +28,12 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 - Datos de contacto en material comercial son **placeholders** (`www/ventas@ejemplo.cl`, `+56 9 0000 0000`).
 
 ## Identidad visual (paleta agrícola)
-- Fondo verde-carbón `#0a140d` / paneles `#13241a`–`#193021`, líneas `#284a31`.
-- Marca verde `#3ddc84`, lima `#a3e635`, acento ámbar `#f59e0b`, celeste `#38bdf8`.
-- Texto `#eaf5ec`, muted `#a7c1af`. Logo = marca verde→lima con ondas.
+> **Aclarada el 2026-07-01** (a pedido: "los colores son muy oscuros" → se eligió la variante
+> "verde medio"). La paleta anterior casi-negra (`#0a140d`…) quedó obsoleta; toda está en variables
+> `:root` de `web/`, `dashboard/` y `brochure/`, más las nav (`rgba(16,27,22,…)`).
+- Fondo verde medio `#1a2c26` / bg2 `#213730` / paneles `#284139`–`#304d44`, líneas `#446056`.
+- Marca verde-menta `#4fe0a2`, lima `#a3e635`, acento ámbar `#f59e0b`, celeste `#38bdf8`.
+- Texto `#f0f7f2`, muted `#bcd0c7`. Logo = marca verde→lima con ondas.
 
 ## Estructura del repo
 - `web/` — sitio de marketing (index.html). Se publica en GitHub Pages.
