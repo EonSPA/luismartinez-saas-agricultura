@@ -141,7 +141,12 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - **Planes**: ✅ resuelto en web — la franja ahora dice "Sin permanencia · Precios en CLP ·
   Cancela cuando quieras · Soporte en español (Chile)" y la FAQ ya no ofrece "Starter/Pro gratis".
   Revisar que dashboard/brochure no arrastren la misma franja obsoleta.
-- **Mapa de cuarteles**: hoy tarjetas (sin Google Maps, para no depender de API key).
+- **Mapa de cuarteles**: ✅ **RESUELTO** — pestaña **"Mapa"** del dashboard con **Leaflet + OpenStreetMap/CARTO**
+  (auto-alojado en `dashboard/vendor/leaflet.*`, **sin clave de API**), **selector de campo**, marcadores por
+  dispositivo coloreados por estado de helada y popups con detalle. Coordenadas **DEMO** cerca de Curicó
+  (`CAMPOS` en `dashboard/index.html`) → reemplazar por GPS real al instalar. La **CSP** se abrió solo para
+  `img-src` de los tiles (`*.basemaps.cartocdn.com`, `*.tile.openstreetmap.org`); el resto sigue estricto.
+  Se descartó Google Maps por requerir clave con facturación expuesta en el sitio público (Pages).
 
 ## Pendientes / ideas abiertas — BLOQUEANTES primero
 - **MARCA (bloqueante #1)**: definir nombre real y reemplazar `[Marca]` + contactos
