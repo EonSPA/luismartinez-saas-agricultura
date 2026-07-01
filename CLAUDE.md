@@ -89,6 +89,13 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   (login demo `@demo.cl`, primer ítem "Monitoreo en vivo").
 - Flujo de publicación vigente: rama → **PR → merge a `main`** vía GitHub MCP
   (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
+- **Próximos pasos sugeridos** (dónde quedamos, sin prioridad forzada):
+  1. Aplicar el posicionamiento a la web: bloque **"por cuartel / por variedad"** + FAQ
+     **"¿por qué pagar si el Estado avisa gratis?"** (ver `docs/estudio-mercado.md`).
+  2. **Research dirigido** de los competidores que el proxy bloqueó (Wiseconn, Semios,
+     Pessl/Metos, Sencrop, CropX) y el **pricing de Instacrops**.
+  3. Bloqueante #1: **definir la marca** → reemplazar `[Marca]` + contactos en web,
+     dashboard y brochure de una pasada.
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
