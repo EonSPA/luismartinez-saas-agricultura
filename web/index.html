@@ -151,6 +151,9 @@
   .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));display:grid;place-items:center;font-weight:800;color:#04121e;font-size:13px}
   .rolebadge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(167,139,250,.16);color:var(--accent)}
   .appbody{padding:24px 22px;max-width:1100px}
+  .appbody.wide{max-width:none;padding:0}
+  .dashembed{height:calc(100vh - 62px)}
+  .dashembed iframe{width:100%;height:100%;border:0;display:block;background:var(--bg)}
   .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
   .scrim{display:none}
   @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}.appshell{grid-template-columns:1fr}
@@ -765,28 +768,29 @@ routes.contacto=()=>{
 /* ====================================================================
    Plataforma con RBAC
    ==================================================================== */
+const MON = ["monitoreo","Monitoreo en vivo","🛰️"];
 const NAV = {
-  superadmin:[
+  superadmin:[MON,
     ["resumen","Resumen","📊"],["empresas","Empresas","🏢"],["planes","Planes y MRR","💳"],
     ["usuarios","Usuarios","👥"],["dispositivos","Dispositivos","📡"],["ajustes","Ajustes","⚙️"],
   ],
-  account_admin:[
+  account_admin:[MON,
     ["resumen","Resumen","📊"],["campos","Campos","🌾"],["dispositivos","Dispositivos","📡"],
     ["usuarios","Equipo","👥"],["facturacion","Facturación","💳"],["ajustes","Ajustes","⚙️"],
   ],
-  field_supervisor:[
+  field_supervisor:[MON,
     ["resumen","Resumen","📊"],["campos","Mis campos","🌾"],["estaciones","Estaciones","📡"],
     ["alarmas","Alarmas","🔔"],["reportes","Reportes","📋"],
   ],
-  agronomo:[
+  agronomo:[MON,
     ["resumen","Resumen","📊"],["analitica","Analítica","📈"],["campos","Campos","🌾"],
     ["reportes","Reportes","📋"],["recomendaciones","Recomendaciones","🌱"],
   ],
-  tecnico:[
+  tecnico:[MON,
     ["resumen","Resumen","📊"],["estaciones","Estaciones","📡"],["dispositivos","Dispositivos","🔧"],
     ["alarmas","Alarmas","🔔"],["mantenimiento","Mantenimiento","🛠️"],
   ],
-  visor:[
+  visor:[MON,
     ["resumen","Resumen","📊"],["campos","Campos","🌾"],["estaciones","Estaciones","📡"],
   ],
 };
@@ -795,7 +799,7 @@ function renderApp(parts){
   if(!sess){ location.hash="#/login"; return; }
   const nav=NAV[sess.role];
   if(!nav||!ROLES[sess.role]){ store.session=null; location.hash="#/login"; return; }  // sesión inválida
-  const page=parts[0]||"resumen";
+  const page=parts[0]||"monitoreo";
   const allowed=nav.map(n=>n[0]);
   const initial=esc(((sess.name||"?")[0]||"?"));
   const root=document.getElementById("root");
@@ -806,7 +810,7 @@ function renderApp(parts){
       <div class="sep">${esc(sess.org)}</div>
       <nav aria-label="Secciones">${nav.map(n=>`<a href="#/app/${n[0]}" class="${n[0]===page?"on":""}" ${n[0]===page?'aria-current="page"':""}><span aria-hidden="true">${n[2]}</span> ${esc(n[1])}</a>`).join("")}</nav>
       <div class="sep">Monitoreo</div>
-      <nav aria-label="Monitoreo"><a href="${DASHBOARD_URL}" target="_blank" rel="noopener"><span aria-hidden="true">🛰️</span> Abrir dashboard en vivo</a></nav>
+      <nav aria-label="Monitoreo"><a href="${DASHBOARD_URL}" target="_blank" rel="noopener"><span aria-hidden="true">⛶</span> Abrir en pantalla completa ↗</a></nav>
     </aside>
     <div class="appmain">
       <div class="apptop">
@@ -818,7 +822,7 @@ function renderApp(parts){
           <button class="btn ghost sm" id="logout">Salir</button>
         </div>
       </div>
-      <main class="appbody" id="appbody" tabindex="-1">${allowed.includes(page)?appPage(sess,page):deniedView()}</main>
+      <main class="appbody${page==="monitoreo"?" wide":""}" id="appbody" tabindex="-1">${allowed.includes(page)?appPage(sess,page):deniedView()}</main>
     </div>
   </div>`;
   bindApp(sess);
@@ -832,9 +836,13 @@ function tableCard(title,head,rows){return `<div class="panelcard" style="margin
   <div style="overflow:auto"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead>
   <tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div></div>`;}
 const bdg=(t,c)=>`<span class="badge b-${c}">${t}</span>`;
+function dashEmbed(){return `<div class="dashembed">
+  <iframe src="${DASHBOARD_URL}" title="Dashboard de monitoreo en vivo" loading="eager"></iframe>
+</div>`;}
 
 function appPage(sess,page){
   const R=sess.role;
+  if(page==="monitoreo") return dashEmbed();
   if(page==="resumen"){
     if(R==="superadmin") return `<div class="kpis">
       ${kpi("Empresas","24","+3 este mes","up")}${kpi("MRR","$3.480.000","+12%","up")}
