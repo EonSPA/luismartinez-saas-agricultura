@@ -227,21 +227,21 @@ const I18N = {
     skip:"Saltar al contenido",nav_main:"Principal",menu:"Menú",cart:"Carrito",
     sp_tag:"Confianza",sp_title:"Productores que ya deciden con datos",
     pf_tag:"Preguntas",pf_title:"Preguntas frecuentes de planes",
-    free_start:"Empezar gratis",contact_sales:"Contactar ventas",
+    free_start:"Agendar demo",contact_sales:"Contactar ventas",
     enter:"Entrar",start:"Empezar",
-    hero_tag:"SaaS · AgTech",hero_h1:"El campo, bajo control en tiempo real.",
-    hero_lead:"Estaciones 4G y sensores que miden clima, humedad y calidad del aire en cada parcela. Alarmas, históricos y mapas en una sola plataforma.",
-    hero_cta1:"Ver planes",hero_cta2:"Probar la demo en vivo →",
-    st_conn:"conectividad sin WiFi",st_temp:"operación a la intemperie",st_sensors:"clima y calidad del aire",st_mon:"alarmas y monitoreo",
-    mod_tag:"Plataforma",mod_title:"Todo lo que necesitas para monitorear",mod_sub:"Una plataforma SaaS multiempresa con roles y jerarquía, lista para escalar de un campo a toda la agroindustria.",
+    hero_tag:"AgTech · Fruta de exportación",hero_h1:"No pierdas la temporada por una helada.",
+    hero_lead:"Estación agroclimática 4G con sensores de suelo y clima: alerta de helada anticipada, riego por humedad de suelo real y horas-frío por cultivo. Pensada para cerezo, palto, kiwi, arándano, uva y nogal.",
+    hero_cta1:"Agendar demo",hero_cta2:"Ver la demo en vivo →",
+    st_conn:"4G sin depender de WiFi",st_temp:"a la intemperie, todo el año",st_sensors:"suelo, clima y helada",st_mon:"alerta de helada anticipada",
+    mod_tag:"Plataforma",mod_title:"Del dato del campo a la decisión",mod_sub:"Alerta de helada, riego por humedad de suelo y modelos por cultivo (horas-frío, grados-día, ET₀) en una sola plataforma para fruta de exportación.",
     how_tag:"Cómo funciona",how_title:"En marcha en 3 pasos",
-    how1_t:"Instala la estación",how1_d:"Coloca el nodo 4G con sus sensores en la parcela. Energía por batería o panel solar.",
-    how2_t:"Conéctate por 4G",how2_d:"Sin WiFi: la estación envía datos por celular. Provisión guiada desde la app.",
-    how3_t:"Monitorea y recibe alarmas",how3_d:"Tiempo real, históricos, mapa y avisos. Invita a tu equipo con roles.",
-    uc_tag:"Casos de uso",uc_title:"Pensado para el agro",
+    how1_t:"Instala la estación",how1_d:"Coloca el nodo agroclimático 4G con sus sensores de suelo y clima en el cuartel. Batería + panel solar.",
+    how2_t:"Conéctate por 4G",how2_d:"Sin WiFi: la estación envía por celular, con buffer local si cae la señal.",
+    how3_t:"Recibe la alerta a tiempo",how3_d:"Alerta de helada anticipada, riego por humedad real y horas-frío por cultivo. Invita a tu equipo con roles.",
+    uc_tag:"Casos de uso",uc_title:"Pensado para fruta de exportación",
     roles_tag:"Multiempresa",roles_title:"Roles con jerarquía",roles_sub:"Cada perfil ve y administra solo lo que le corresponde. Control de acceso de extremo a extremo.",
-    cta_title:"¿Listo para llevar tus campos a otro nivel?",cta_sub:"Empieza gratis con el plan Starter o agenda una demo guiada.",cta_btn:"Ver planes",
-    f_tagline:"Monitoreo agrícola inteligente: estaciones 4G, sensores y analítica de campo.",
+    cta_title:"Protege la próxima temporada",cta_sub:"Agenda una demo guiada o parte con un piloto en tu campo.",cta_btn:"Agendar demo",
+    f_tagline:"Estación agroclimática 4G para fruta de exportación: alerta de helada, riego inteligente y horas-frío.",
     f_product:"Producto",f_features:"Características",f_demo:"Demo en vivo",f_platform:"Plataforma",f_signin:"Iniciar sesión",f_create:"Crear cuenta",f_roles:"Roles",f_resources:"Recursos",f_support:"Soporte",f_docs:"Documentación",f_status:"Estado del sistema",f_rights:"Marca y precios de demostración.",
     signin:"Iniciar sesión",forgot:"¿Olvidaste tu contraseña?",demo_as:"o entra como (demo):",no_account:"¿No tienes cuenta?",create_one:"Crea una",
     create_account:"Crear cuenta",full_name:"Nombre completo",password:"Contraseña",continue:"Continuar",company:"Empresa",country_region:"País / Región",crop:"Cultivo principal",choose_plan:"Elige un plan",trial_note:"14 días de prueba sin tarjeta. Cancela cuando quieras.",have_account:"¿Ya tienes cuenta?",
@@ -256,11 +256,11 @@ const I18N = {
     skip:"Skip to content",nav_main:"Main",menu:"Menu",cart:"Cart",
     sp_tag:"Trusted",sp_title:"Growers already deciding with data",
     pf_tag:"Questions",pf_title:"Pricing FAQ",
-    free_start:"Start free",contact_sales:"Contact sales",
+    free_start:"Book a demo",contact_sales:"Contact sales",
     enter:"Sign in",start:"Get started",
-    hero_tag:"SaaS · AgTech",hero_h1:"Your fields, under control in real time.",
-    hero_lead:"4G stations and sensors that measure climate, humidity and air quality in every plot. Alarms, history and maps in a single platform.",
-    hero_cta1:"See pricing",hero_cta2:"Try the live demo →",
+    hero_tag:"AgTech · Export fruit",hero_h1:"Don't lose the season to a frost.",
+    hero_lead:"4G agroclimatic station with soil and climate sensors: early frost alert, irrigation by real soil moisture and chill hours by crop. Built for cherry, avocado, kiwi, blueberry, grape and walnut.",
+    hero_cta1:"Book a demo",hero_cta2:"See the live demo →",
     st_conn:"connectivity without WiFi",st_temp:"outdoor operation",st_sensors:"climate & air quality",st_mon:"alarms & monitoring",
     mod_tag:"Platform",mod_title:"Everything you need to monitor",mod_sub:"A multi-tenant SaaS platform with roles and hierarchy, ready to scale from one field to the whole agribusiness.",
     how_tag:"How it works",how_title:"Up and running in 3 steps",
@@ -318,26 +318,26 @@ const PRODUCTS = [
    desc:"Entrada LoRaWAN de 4 canales ADC 12-bit para conectar sensores analógicos de terceros."},
 ];
 const PLANS = [
-  {id:"starter", name:"Starter", m:0, y:0, tagline:"Para probar en un campo",
-   feats:[["Hasta 2 estaciones",1],["Tiempo real y alarmas",1],["Históricos 7 días",1],["1 usuario",1],["Mapa de sensores",0],["Reportes PDF/Excel",0],["Roles y equipo",0],["Soporte prioritario",0]]},
-  {id:"pro", name:"Pro", m:29000, y:290000, pop:true, tagline:"Para productores y fundos",
-   feats:[["Hasta 15 estaciones",1],["Tiempo real y alarmas",1],["Históricos 1 año",1],["Hasta 10 usuarios",1],["Mapa de sensores",1],["Reportes PDF/Excel",1],["Roles y equipo",1],["Soporte prioritario",0]]},
-  {id:"empresa", name:"Empresa", m:0, y:0, tagline:"Multi-campo y agroindustria", custom:true,
-   feats:[["Estaciones ilimitadas",1],["Tiempo real y alarmas",1],["Históricos ilimitados",1],["Usuarios ilimitados",1],["Mapa de sensores",1],["Reportes + API",1],["Roles y jerarquía completa",1],["Soporte 24/7 + SLA",1]]},
+  {id:"piloto", name:"Piloto", m:0, y:0, custom:true, tagline:"1 campo · 1 estación · 1 temporada",
+   feats:[["1 campo · 1 estación",1],["Alerta de helada + suelo",1],["Históricos de la temporada",1],["1 usuario",1],["Reportes PDF/Excel",1],["App móvil",1],["Multicampo",0],["API / certificación",0]]},
+  {id:"produccion", name:"Producción", m:45000, y:450000, pop:true, tagline:"Por campo en producción",
+   feats:[["Campos y estaciones ampliables",1],["Alertas ilimitadas (helada, riego, plaga)",1],["Históricos completos",1],["Equipo con roles",1],["Mapa de cuarteles",1],["Reportes y trazabilidad",1],["App móvil",1],["API / certificación",0]]},
+  {id:"empresa", name:"Multicampo / Empresa", m:0, y:0, tagline:"Varios campos y agroindustria", custom:true,
+   feats:[["Campos y estaciones ilimitados",1],["Todas las alertas y modelos",1],["Históricos ilimitados",1],["Usuarios ilimitados",1],["Mapa de cuarteles",1],["API + integración a certificación (GlobalGAP)",1],["Trazabilidad de exportación",1],["Soporte 24/7 + SLA",1]]},
 ];
 const USECASES = [
-  {emoji:"❄️",t:"Alerta de heladas",d:"Avisos tempranos por temperatura crítica para activar riego o calefactores.",te:"Frost alerts",de:"Early warnings on critical temperature to trigger irrigation or heaters."},
-  {emoji:"💧",t:"Gestión de riego",d:"Humedad y clima para regar en el momento justo y ahorrar agua.",te:"Irrigation management",de:"Humidity and climate to irrigate at the right time and save water."},
-  {emoji:"🌬️",t:"Clima y calidad del aire",d:"Temperatura, humedad, CO₂ y luz por parcela, en vivo e histórico.",te:"Climate & air quality",de:"Temperature, humidity, CO₂ and light per plot, live and historical."},
-  {emoji:"📈",t:"Decisiones con datos",d:"Tendencias y reportes para optimizar rendimiento por temporada.",te:"Data-driven decisions",de:"Trends and reports to optimize yield each season."},
+  {emoji:"❄️",t:"Protección de heladas",d:"Proyección de la mínima y aviso anticipado para activar aspersión o calefacción a tiempo.",te:"Frost protection",de:"Minimum-temperature projection and early alert to trigger sprinklers or heaters in time."},
+  {emoji:"💧",t:"Riego de precisión",d:"Humedad de suelo a 15/30/60 cm y ET₀ para regar por dato real, no por calendario.",te:"Precision irrigation",de:"Soil moisture at 15/30/60 cm and ET₀ to irrigate by real data, not by calendar."},
+  {emoji:"🌡️",t:"Horas-frío por cultivo",d:"Acumulación de frío (Horas Frío y Porciones) para anticipar brotación y floración.",te:"Chill hours by crop",de:"Chill accumulation (Chill Hours & Portions) to anticipate budbreak and bloom."},
+  {emoji:"🐛",t:"Plaga y enfermedad",d:"Grados-día por especie (Lobesia, Drosophila, carpocapsa) y mojado foliar para botrytis.",te:"Pest & disease",de:"Degree-days by species and leaf wetness for botrytis risk."},
 ];
 const MODULES = [
-  {emoji:"📈",t:"Tiempo real",d:"Lecturas de cada sensor al instante, con tarjetas y gráficas.",te:"Real time",de:"Every sensor reading instantly, with cards and charts."},
-  {emoji:"🗂️",t:"Históricos",d:"Series por rango con exportación a CSV, Excel y PDF.",te:"History",de:"Time series by range with CSV, Excel and PDF export."},
-  {emoji:"🔔",t:"Alarmas",d:"Umbrales, cambios bruscos y caída de señal, con notificaciones.",te:"Alarms",de:"Thresholds, sharp changes and signal loss, with notifications."},
-  {emoji:"🗺️",t:"Mapa de sensores",d:"Geolocaliza estaciones y entra a la ficha de cada una.",te:"Sensor map",de:"Geolocate stations and open each one's detail."},
-  {emoji:"📋",t:"Reportes",d:"Informes por estación y periodo, listos para compartir.",te:"Reports",de:"Reports per station and period, ready to share."},
-  {emoji:"🔌",t:"API e integraciones",d:"Conecta con ThingSpeak, MQTT o tu propio backend.",te:"API & integrations",de:"Connect with ThingSpeak, MQTT or your own backend."},
+  {emoji:"❄️",t:"Alerta de helada",d:"Temperatura actual, proyección de la mínima y hora estimada, con semáforo y umbral de daño por cultivo.",te:"Frost alert",de:"Current temperature, projected minimum and estimated time, with per-crop damage threshold."},
+  {emoji:"💧",t:"Riego por humedad de suelo",d:"Sondas a 15/30/60 cm con recomendación de riego según agua aprovechable.",te:"Soil-moisture irrigation",de:"Probes at 15/30/60 cm with irrigation advice by available water."},
+  {emoji:"🌡️",t:"Horas-frío y grados-día",d:"Salida de dormancia por cultivo y riesgo de plaga por grados-día.",te:"Chill & degree-days",de:"Dormancy release by crop and degree-day pest risk."},
+  {emoji:"🌱",t:"ET₀ y balance hídrico",d:"Evapotranspiración (Penman-Monteith) para saber cuánto reponer.",te:"ET₀ & water balance",de:"Evapotranspiration (Penman-Monteith) to know how much to replenish."},
+  {emoji:"🗺️",t:"Mapa de cuarteles",d:"Estado por sector y ficha de cada estación en el campo.",te:"Blocks map",de:"Per-block status and each station's detail."},
+  {emoji:"📋",t:"Reportes y alarmas",d:"Informes en PDF/Excel, alarmas con push y trazabilidad para certificación.",te:"Reports & alarms",de:"PDF/Excel reports, push alarms and traceability for certification."},
 ];
 const TT = o => lang==="en" ? o.te : o.t;
 const TD = o => lang==="en" ? o.de : o.d;
@@ -427,7 +427,7 @@ function chromeFoot(){
     <div class="cols">
       <div style="flex:1;min-width:220px"><div class="brand" style="font-size:16px">${mark(26)} ${esc(BRAND)}</div>
         <p class="muted" style="margin:10px 0 14px;max-width:32ch">${t("f_tagline")}</p>
-        <a class="btn primary sm" href="#/registro">${t("free_start")}</a></div>
+        <a class="btn primary sm" href="#/contacto">${t("free_start")}</a></div>
       <div><h4>${t("f_product")}</h4><a href="#/home">${t("f_features")}</a><a href="#/productos">${t("nav_hw")}</a><a href="#/planes">${t("nav_plans")}</a><a href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("f_demo")}</a></div>
       <div><h4>${t("f_platform")}</h4><a href="#/login">${t("f_signin")}</a><a href="#/registro">${t("f_create")}</a><a href="#/contacto">${t("contact_sales")}</a><a href="#/home#roles">${t("f_roles")}</a></div>
       <div><h4>${t("f_resources")}</h4><a href="#/ayuda">${t("f_support")}</a><a href="#/recursos">${t("nav_resources")}</a><a href="#/contacto">Contacto</a><a href="#/ayuda">Términos</a><a href="#/ayuda">Privacidad</a></div>
@@ -448,7 +448,7 @@ routes.home=()=>`
     <h1>${t("hero_h1")}</h1>
     <p class="lead">${t("hero_lead")}</p>
     <div class="cta">
-      <a class="btn primary lg" href="#/registro">${t("free_start")}</a>
+      <a class="btn primary lg" href="#/contacto">${t("hero_cta1")}</a>
       <a class="btn ghost lg" href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("hero_cta2")}</a>
     </div>
     <div class="stats">
@@ -457,12 +457,17 @@ routes.home=()=>`
       <div><b>6+ ${lang==="en"?"sensors":"sensores"}</b><span>${t("st_sensors")}</span></div>
       <div><b>24/7</b><span>${t("st_mon")}</span></div>
     </div>
-    <div class="heroart card" style="padding:14px">
-      <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Estación · Fundo Sur</div>
+    <div class="heroart card" style="padding:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <span style="font-size:12px;color:var(--muted)">🍒 Cerezo · Fundo demo, Curicó</span>
+        <span style="font-size:11px;font-weight:800;color:#fecdd3;background:rgba(251,113,133,.16);border:1px solid rgba(251,113,133,.5);border-radius:999px;padding:3px 9px">● HELADA</span>
+      </div>
+      <div style="font-size:44px;font-weight:800;letter-spacing:-1.5px;color:#fecdd3;line-height:1">−1,4 <span style="font-size:18px;color:var(--muted);font-weight:700">°C</span></div>
       ${miniChart()}
       <div style="display:flex;gap:10px;margin-top:10px">
-        ${miniKpi("Temp","23.4°","up")}${miniKpi("Humedad","48%","")}${miniKpi("eCO₂","1180","down")}
+        ${miniKpi("Mínima","−2,5°","down")}${miniKpi("Suelo 15cm","22%","")}${miniKpi("Horas-frío","1.148","up")}
       </div>
+      <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Demo · datos simulados</div>
     </div>
   </div></header>
 
@@ -489,19 +494,39 @@ routes.home=()=>`
   </div></section>
 
   <section class="block"><div class="wrap">
-    <div class="tag">${t("sp_tag")}</div><h2 class="h2">${t("sp_title")}</h2>
-    <div class="logostrip">${["AgroDemo","Viñas del Maule","Frutícola Norte","Hortalizas Sur","Vega Sur"].map(n=>`<span class="logoitem">🌿 ${esc(n)}</span>`).join("")}</div>
-    <div class="grid g3" style="margin-top:8px">
-      ${[["Anticipamos 3 heladas en una temporada; salvamos la fruta a tiempo.","María, Frutícola Norte","🍒"],
-         ["Bajamos 18% el consumo de agua regando con datos por parcela.","Pedro, Fundo Sur","💧"],
-         ["Ver todas las estaciones en un mapa nos cambió la operación.","Carla, Viñas del Maule","🍇"]
-        ].map(q=>`<figure class="card quote"><div class="qmark" aria-hidden="true">${q[2]}</div><blockquote>“${esc(q[0])}”</blockquote><figcaption>${esc(q[1])}</figcaption></figure>`).join("")}
+    <div class="tag">Diferencia</div><h2 class="h2">Lo que sí medimos</h2>
+    <p class="sub">No es un termómetro ni un medidor de aire: es <b>clima + suelo + helada</b>, las variables que deciden tu temporada.</p>
+    <div class="grid g4">
+      ${[["🌡️","Clima real del cuartel","Temp/HR, viento, lluvia, radiación y punto de rocío en el sitio — no un pronóstico regional."],
+         ["🌱","Suelo por profundidad","Humedad y temperatura a 15/30/60 cm para regar por dato, no por calendario."],
+         ["❄️","Helada anticipada","Proyección de la mínima y hora estimada, con umbral de daño por cultivo."],
+         ["🐛","Frío, grados-día y plaga","Horas-frío, salida de dormancia y riesgo de plaga/enfermedad por especie."]
+        ].map(c=>`<div class="card"><div class="ico">${c[0]}</div><h3>${esc(c[1])}</h3><p>${esc(c[2])}</p></div>`).join("")}
     </div>
-    <div class="statband">
-      <div><b>−18%</b><span>agua por temporada</span></div>
-      <div><b>+1.200</b><span>hectáreas monitoreadas</span></div>
-      <div><b>99.9%</b><span>disponibilidad</span></div>
-      <div><b>24/7</b><span>alarmas activas</span></div>
+  </div></section>
+
+  <section class="block"><div class="wrap">
+    <div class="tag">ROI</div><h2 class="h2">¿Cuánto vale evitar una helada?</h2>
+    <p class="sub">Ejemplo ilustrativo para dimensionar el valor. <b>No es un caso real ni una cifra medida</b>: son supuestos que puedes reemplazar por los tuyos.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="ico">🧮</div>
+        <h3>Ejemplo ilustrativo</h3>
+        <p>Supongamos un cuartel de cerezo en plena producción. Una helada en floración sin protección puede comprometer buena parte de la fruta de ese sector. Si la <b>alerta anticipada</b> permite activar aspersión o calefacción a tiempo, se protege esa producción. El ejercicio es comparar el <b>valor en riesgo</b> con el <b>costo del sistema por temporada</b>.</p>
+        <ul style="margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.9">
+          <li>Supuesto: superficie y producción del cuartel (defínelas tú).</li>
+          <li>Supuesto: precio de exportación de la fruta comprometida.</li>
+          <li>Supuesto: ventana de anticipación suficiente para actuar.</li>
+          <li>Supuesto: medida de mitigación disponible (aspersión / calefacción).</li>
+        </ul>
+        <p class="note" style="margin-top:14px;font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:11px">Ejemplo ilustrativo — no es un caso real ni un resultado atribuido a un cliente.</p>
+      </div>
+      <div class="card" style="border-style:dashed;display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
+        <div class="ico">📋</div>
+        <h3>Casos de campo reales</h3>
+        <p>Espacio reservado para resultados de <b>pilotos reales</b>, con datos medidos y verificables, cuando existan. No publicamos casos ni cifras que no hayan ocurrido.</p>
+        <span class="tag" style="margin-top:12px">Pendiente — maqueta</span>
+      </div>
     </div>
   </div></section>
 
