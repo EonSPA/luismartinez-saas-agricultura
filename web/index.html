@@ -112,8 +112,8 @@
   .feat li.no{color:#5b6582}
   .feat li.no:before{content:"—";color:#4a5572}
   /* ---------- products ---------- */
-  .prod img,.prodimg{width:100%;height:150px;border-radius:12px;display:grid;place-items:center;font-size:46px;
-    background:radial-gradient(120px 80px at 50% 30%,rgba(63,167,255,.2),transparent),var(--bg2);margin-bottom:14px}
+  .prod img,.prodimg{width:100%;height:140px;border-radius:12px;display:grid;place-items:center;
+    background:radial-gradient(130px 85px at 50% 35%,rgba(61,220,132,.16),transparent),var(--bg2);border:1px solid var(--line);margin-bottom:14px}
   .prod .row{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
   .prod .p{font-size:20px;font-weight:800}
   /* ---------- checkout ---------- */
@@ -201,6 +201,67 @@
   .compare{overflow:auto}
   .compare table{min-width:640px}
   .center{text-align:center}
+  /* ---------- rediseño editorial (menos "plantilla IA") ---------- */
+  .eyebrow{display:flex;align-items:center;gap:11px;font-size:12.5px;font-weight:600;letter-spacing:.2px;color:var(--brand);margin-bottom:15px}
+  .eyebrow::before{content:"";width:26px;height:1px;background:currentColor;opacity:.5}
+  .ico-svg{width:1.3em;height:1.3em;display:block;flex:0 0 auto}
+  .ic{display:inline-grid;place-items:center;width:38px;height:38px;border:1px solid var(--line);border-radius:11px;color:var(--brand);flex:0 0 auto}
+  .ic svg{width:20px;height:20px}
+  .prodimg svg{width:54px;height:54px;color:var(--brand)}
+  .rolebtn .ri svg{width:18px;height:18px}
+  .side nav a svg{width:18px;height:18px;flex:0 0 auto}
+  .rolebadge svg{width:12px;height:12px}
+  /* hero split */
+  .hero2{display:grid;grid-template-columns:1.06fr .94fr;gap:52px;align-items:center}
+  .hero-copy h1{max-width:15ch}
+  .hero-copy .lead{max-width:48ch;margin-bottom:22px}
+  .hero-link{display:inline-flex;align-items:center;gap:6px;color:var(--brand);font-weight:600;font-size:15px;padding:14px 8px}
+  .hero-link:hover{text-decoration:underline}
+  .hero-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:26px;color:var(--muted);font-size:13px}
+  .hero-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--line);flex:0 0 auto}
+  .hero-panel{position:relative}
+  @media(max-width:960px){.hero2{grid-template-columns:1fr;gap:34px}.hero-panel{max-width:440px}}
+  /* lista de capacidades (editorial, no grilla de tarjetas) */
+  .feat-list{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:6px}
+  .feat-item{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;padding:22px 0;border-top:1px solid var(--line)}
+  .feat-item h3{font-size:16px;margin-bottom:5px}
+  .feat-item p{font-size:14px;color:var(--muted);line-height:1.55}
+  @media(max-width:720px){.feat-list{grid-template-columns:1fr}}
+  /* pasos limpios (sin círculos con degradado) */
+  .steps2{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:26px}
+  .stepc{padding-top:16px;border-top:2px solid var(--brand)}
+  .stepc .num{font-variant-numeric:tabular-nums;font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.6px}
+  .stepc h3{font-size:17px;margin:9px 0 6px}
+  .stepc p{font-size:14px;color:var(--muted)}
+  @media(max-width:720px){.steps2{grid-template-columns:1fr;gap:0}.stepc{border-top:1px solid var(--line);padding:20px 0}.stepc:first-child{border-top:2px solid var(--brand)}}
+  /* split editorial asimétrico */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+  .split.narrow{grid-template-columns:1.08fr .92fr}
+  @media(max-width:860px){.split,.split.narrow{grid-template-columns:1fr;gap:28px}}
+  .pointlist{list-style:none;display:flex;flex-direction:column;gap:18px;margin-top:22px}
+  .pointlist li{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+  .pointlist b{display:block;font-size:15px;margin-bottom:3px}
+  .pointlist p{font-size:14px;color:var(--muted);margin:0;line-height:1.55}
+  /* comparación pública vs marca */
+  .vs-wrap{border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-top:6px}
+  .vs{width:100%;border-collapse:collapse;font-size:14px}
+  .vs th,.vs td{padding:15px 16px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+  .vs thead th{font-size:13px;font-weight:700;text-transform:none;letter-spacing:0;color:var(--txt)}
+  .vs .rowh{color:var(--muted);font-weight:600;font-size:12.5px;width:24%;text-transform:none;letter-spacing:0}
+  .vs .markcol{background:linear-gradient(180deg,rgba(61,220,132,.09),rgba(61,220,132,.03))}
+  .vs thead th.markcol{color:var(--brand);font-weight:800}
+  .vs tr:last-child td{border-bottom:none}
+  .vs td b{color:var(--txt)}
+  /* callout sin borde-izquierdo de color (evita el "tell" IA) */
+  .callout{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:12.5px;color:var(--muted);margin-top:18px}
+  /* mini-mapa de cuarteles (visual "de producto") */
+  .blockmap{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:12px}
+  .qtile{border:1px solid var(--line);border-radius:11px;padding:11px 11px 13px;background:var(--panel)}
+  .qtile .qn{font-size:10.5px;color:var(--muted)}
+  .qtile .qt{font-size:19px;font-weight:800;letter-spacing:-.5px;margin-top:1px}
+  .maplegend{display:flex;gap:16px;flex-wrap:wrap;margin-top:11px;font-size:11.5px;color:var(--muted)}
+  .maplegend span{display:inline-flex;align-items:center;gap:6px}
+  .maplegend i{width:9px;height:9px;border-radius:3px;display:inline-block}
 </style>
 </head>
 <body>
@@ -415,7 +476,7 @@ function chromeTop(){
       </div>
       <div class="right">
         <button class="btn ghost sm" data-lang aria-label="${lang==="es"?"Switch to English":"Cambiar a español"}">${lang==="es"?"EN":"ES"}</button>
-        <a class="btn ghost sm cartdot" href="#/checkout" aria-label="${t("cart")}, ${cn} ${cn===1?"artículo":"artículos"}"><span aria-hidden="true">🛒</span><span data-cartcount></span></a>
+        <a class="btn ghost sm cartdot" href="#/checkout" aria-label="${t("cart")}, ${cn} ${cn===1?"artículo":"artículos"}"><span aria-hidden="true" style="display:inline-flex">${icon("cart")}</span><span data-cartcount></span></a>
         <a class="btn ghost sm" href="#/login">${t("enter")}</a>
         <a class="btn primary sm" href="#/registro">${t("start")}</a>
       </div>
@@ -443,95 +504,114 @@ function chromeFoot(){
    Vistas marketing
    ==================================================================== */
 routes.home=()=>`
-  <header class="hero"><div class="wrap">
-    <span class="tag">${t("hero_tag")}</span>
-    <h1>${t("hero_h1")}</h1>
-    <p class="lead">${t("hero_lead")}</p>
-    <div class="cta">
-      <a class="btn primary lg" href="#/contacto">${t("hero_cta1")}</a>
-      <a class="btn ghost lg" href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("hero_cta2")}</a>
-    </div>
-    <div class="stats">
-      <div><b>4G LTE</b><span>${t("st_conn")}</span></div>
-      <div><b>−40…85 °C</b><span>${t("st_temp")}</span></div>
-      <div><b>6+ ${lang==="en"?"sensors":"sensores"}</b><span>${t("st_sensors")}</span></div>
-      <div><b>24/7</b><span>${t("st_mon")}</span></div>
-    </div>
-    <div class="heroart card" style="padding:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <span style="font-size:12px;color:var(--muted)">🍒 Cerezo · Fundo demo, Curicó</span>
-        <span style="font-size:11px;font-weight:800;color:#fecdd3;background:rgba(251,113,133,.16);border:1px solid rgba(251,113,133,.5);border-radius:999px;padding:3px 9px">● HELADA</span>
+  <header class="hero"><div class="wrap hero2">
+    <div class="hero-copy">
+      <p class="eyebrow">Estación agroclimática · fruta de exportación</p>
+      <h1>${t("hero_h1")}</h1>
+      <p class="lead">${t("hero_lead")}</p>
+      <div class="cta">
+        <a class="btn primary lg" href="#/contacto">${t("hero_cta1")}</a>
+        <a class="hero-link" href="${DASHBOARD_URL}" target="_blank" rel="noopener">${t("hero_cta2")}</a>
       </div>
-      <div style="font-size:44px;font-weight:800;letter-spacing:-1.5px;color:#fecdd3;line-height:1">−1,4 <span style="font-size:18px;color:var(--muted);font-weight:700">°C</span></div>
-      ${miniChart()}
-      <div style="display:flex;gap:10px;margin-top:10px">
-        ${miniKpi("Mínima","−2,5°","down")}${miniKpi("Suelo 15cm","22%","")}${miniKpi("Horas-frío","1.148","up")}
+      <div class="hero-meta">
+        <span>4G LTE, sin WiFi</span><span class="dot"></span>
+        <span>Cerezo · palto · kiwi · arándano · uva · nogal</span>
       </div>
-      <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Demo · datos simulados</div>
+    </div>
+    <div class="hero-panel">
+      <div class="card" style="padding:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span style="font-size:12px;color:var(--muted)">Cuartel C1 · Cerezo · Curicó</span>
+          <span style="font-size:11px;font-weight:800;color:#fecdd3;background:rgba(251,113,133,.16);border:1px solid rgba(251,113,133,.5);border-radius:999px;padding:3px 9px">● Helada</span>
+        </div>
+        <div style="font-size:46px;font-weight:800;letter-spacing:-1.5px;color:#fecdd3;line-height:1">−1,4 <span style="font-size:18px;color:var(--muted);font-weight:700">°C</span></div>
+        ${miniChart()}
+        <div style="display:flex;gap:10px;margin-top:10px">
+          ${miniKpi("Mínima","−2,5°","down")}${miniKpi("Suelo 15cm","22%","")}${miniKpi("Horas-frío","1.148","up")}
+        </div>
+        <div style="font-size:10.5px;color:var(--muted);margin-top:8px">Demo · datos simulados</div>
+      </div>
     </div>
   </div></header>
 
   <section class="block" id="modulos"><div class="wrap">
-    <div class="tag">${t("mod_tag")}</div><h2 class="h2">${t("mod_title")}</h2>
+    <p class="eyebrow">Plataforma</p><h2 class="h2">${t("mod_title")}</h2>
     <p class="sub">${t("mod_sub")}</p>
-    <div class="grid g3">${MODULES.map(m=>`<div class="card"><div class="ico">${m.emoji}</div><h3>${TT(m)}</h3><p>${TD(m)}</p></div>`).join("")}</div>
+    <div class="feat-list">${MODULES.map((m,i)=>`<div class="feat-item"><span class="ic">${icon(MOD_ICONS[i])}</span><div><h3>${TT(m)}</h3><p>${TD(m)}</p></div></div>`).join("")}</div>
   </div></section>
 
   <section class="block" id="como"><div class="wrap">
-    <div class="tag">${t("how_tag")}</div><h2 class="h2">${t("how_title")}</h2>
-    <div class="grid g2" style="margin-top:20px"><div class="steps">
-      <div class="step"><div class="n"></div><div><h3>${t("how1_t")}</h3><p class="muted">${t("how1_d")}</p></div></div>
-      <div class="step"><div class="n"></div><div><h3>${t("how2_t")}</h3><p class="muted">${t("how2_d")}</p></div></div>
-      <div class="step"><div class="n"></div><div><h3>${t("how3_t")}</h3><p class="muted">${t("how3_d")}</p></div></div>
+    <p class="eyebrow">Cómo funciona</p><h2 class="h2">${t("how_title")}</h2>
+    <div class="steps2">
+      <div class="stepc"><span class="num">01 / Instalación</span><h3>${t("how1_t")}</h3><p>${t("how1_d")}</p></div>
+      <div class="stepc"><span class="num">02 / Conexión</span><h3>${t("how2_t")}</h3><p>${t("how2_d")}</p></div>
+      <div class="stepc"><span class="num">03 / Decisión</span><h3>${t("how3_t")}</h3><p>${t("how3_d")}</p></div>
     </div>
-    <div class="card" style="display:grid;place-items:center;min-height:240px">${miniChart(true)}</div>
+  </div></section>
+
+  <section class="block" id="cuartel"><div class="wrap">
+    <p class="eyebrow">Resolución</p><h2 class="h2">Al nivel del cuartel, no del valle</h2>
+    <p class="sub">No solo te avisa de la helada: <b>la anticipa por cultivo</b> y te dice si regar, cuánto frío llevas y cuánto reponer — por sector, en una sola pantalla.</p>
+    <div class="split narrow">
+      <ul class="pointlist">
+        <li><span class="ic">${icon("pin")}</span><div><b>Una estación por cuartel</b><p>La helada radiativa es intensamente local: un sector puede helar y el de al lado no. Mides donde decides, no a kilómetros.</p></div></li>
+        <li><span class="ic">${icon("thermo")}</span><div><b>Umbral por cultivo y variedad</b><p>Cerezo, palto, kiwi, arándano, uva y nogal: distinto umbral de daño y acumulación de frío. Cada cuartel se configura por su especie y fenología.</p></div></li>
+        <li><span class="ic">${icon("grid")}</span><div><b>Prioriza qué proteger primero</b><p>El mapa ordena qué sector está más expuesto esta madrugada, para actuar donde más riesgo hay.</p></div></li>
+      </ul>
+      <div>
+        <div class="blockmap">
+          <div class="qtile"><div class="qn">C1 · Cerezo</div><div class="qt" style="color:#fecdd3">−1,4°</div><span class="badge b-bad" style="margin-top:7px;display:inline-block">Helada</span></div>
+          <div class="qtile"><div class="qn">C2 · Cerezo</div><div class="qt">−0,3°</div><span class="badge b-warn" style="margin-top:7px;display:inline-block">Riesgo</span></div>
+          <div class="qtile"><div class="qn">C3 · Palto</div><div class="qt">2,1°</div><span class="badge b-warn" style="margin-top:7px;display:inline-block">Vigilar</span></div>
+          <div class="qtile"><div class="qn">C4 · Arándano</div><div class="qt">3,8°</div><span class="badge b-good" style="margin-top:7px;display:inline-block">OK</span></div>
+          <div class="qtile"><div class="qn">C5 · Kiwi</div><div class="qt">1,2°</div><span class="badge b-warn" style="margin-top:7px;display:inline-block">Riesgo</span></div>
+          <div class="qtile"><div class="qn">C6 · Uva</div><div class="qt">4,5°</div><span class="badge b-good" style="margin-top:7px;display:inline-block">OK</span></div>
+        </div>
+        <div class="maplegend"><span><i style="background:#fb7185"></i>Helada</span><span><i style="background:#fbbf24"></i>Riesgo</span><span><i style="background:#22c55e"></i>OK</span><span style="margin-left:auto">Demo · datos simulados</span></div>
+      </div>
     </div>
   </div></section>
 
   <section class="block"><div class="wrap">
-    <div class="tag">${t("uc_tag")}</div><h2 class="h2">${t("uc_title")}</h2>
-    <div class="grid g4">${USECASES.map(u=>`<div class="card"><div class="ico">${u.emoji}</div><h3>${TT(u)}</h3><p>${TD(u)}</p></div>`).join("")}</div>
-  </div></section>
-
-  <section class="block"><div class="wrap">
-    <div class="tag">Diferencia</div><h2 class="h2">Lo que sí medimos</h2>
-    <p class="sub">No es un termómetro ni un medidor de aire: es <b>clima + suelo + helada</b>, las variables que deciden tu temporada.</p>
-    <div class="grid g4">
-      ${[["🌡️","Clima real del cuartel","Temp/HR, viento, lluvia, radiación y punto de rocío en el sitio — no un pronóstico regional."],
-         ["🌱","Suelo por profundidad","Humedad y temperatura a 15/30/60 cm para regar por dato, no por calendario."],
-         ["❄️","Helada anticipada","Proyección de la mínima y hora estimada, con umbral de daño por cultivo."],
-         ["🐛","Frío, grados-día y plaga","Horas-frío, salida de dormancia y riesgo de plaga/enfermedad por especie."]
-        ].map(c=>`<div class="card"><div class="ico">${c[0]}</div><h3>${esc(c[1])}</h3><p>${esc(c[2])}</p></div>`).join("")}
-    </div>
-  </div></section>
-
-  <section class="block"><div class="wrap">
-    <div class="tag">ROI</div><h2 class="h2">¿Cuánto vale evitar una helada?</h2>
-    <p class="sub">Ejemplo ilustrativo para dimensionar el valor. <b>No es un caso real ni una cifra medida</b>: son supuestos que puedes reemplazar por los tuyos.</p>
-    <div class="grid g2">
-      <div class="card">
-        <div class="ico">🧮</div>
-        <h3>Ejemplo ilustrativo</h3>
-        <p>Supongamos un cuartel de cerezo en plena producción. Una helada en floración sin protección puede comprometer buena parte de la fruta de ese sector. Si la <b>alerta anticipada</b> permite activar aspersión o calefacción a tiempo, se protege esa producción. El ejercicio es comparar el <b>valor en riesgo</b> con el <b>costo del sistema por temporada</b>.</p>
-        <ul style="margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:14px;line-height:1.9">
-          <li>Supuesto: superficie y producción del cuartel (defínelas tú).</li>
-          <li>Supuesto: precio de exportación de la fruta comprometida.</li>
-          <li>Supuesto: ventana de anticipación suficiente para actuar.</li>
-          <li>Supuesto: medida de mitigación disponible (aspersión / calefacción).</li>
+    <p class="eyebrow">Valor</p><h2 class="h2">¿Cuánto vale evitar una helada?</h2>
+    <p class="sub">Ejemplo ilustrativo para dimensionar el valor. <b>No es un caso real ni una cifra medida</b>: son supuestos que reemplazas por los tuyos.</p>
+    <div class="split">
+      <div>
+        <p class="muted" style="font-size:15px;line-height:1.65">Supongamos un cuartel de cerezo en plena producción. Una helada en floración sin protección puede comprometer buena parte de la fruta de ese sector. Si la <b style="color:var(--txt)">alerta anticipada</b> permite activar aspersión o calefacción a tiempo, se protege esa producción. El ejercicio es comparar el <b style="color:var(--txt)">valor en riesgo</b> con el <b style="color:var(--txt)">costo del sistema por temporada</b>.</p>
+        <ul class="pointlist" style="margin-top:22px">
+          <li><span class="ic">${icon("target")}</span><div><p>Superficie y producción del cuartel (defínelas tú).</p></div></li>
+          <li><span class="ic">${icon("trend")}</span><div><p>Precio de exportación de la fruta comprometida.</p></div></li>
+          <li><span class="ic">${icon("clock")}</span><div><p>Ventana de anticipación suficiente para actuar.</p></div></li>
+          <li><span class="ic">${icon("bolt")}</span><div><p>Medida de mitigación disponible (aspersión / calefacción).</p></div></li>
         </ul>
-        <p class="note" style="margin-top:14px;font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:11px">Ejemplo ilustrativo — no es un caso real ni un resultado atribuido a un cliente.</p>
       </div>
-      <div class="card" style="border-style:dashed;display:flex;flex-direction:column;justify-content:center;align-items:flex-start">
-        <div class="ico">📋</div>
+      <div class="card" style="border-style:dashed;align-self:stretch;display:flex;flex-direction:column;justify-content:center">
         <h3>Casos de campo reales</h3>
-        <p>Espacio reservado para resultados de <b>pilotos reales</b>, con datos medidos y verificables, cuando existan. No publicamos casos ni cifras que no hayan ocurrido.</p>
-        <span class="tag" style="margin-top:12px">Pendiente — maqueta</span>
+        <p style="font-size:14px;color:var(--muted);margin-top:6px">Espacio reservado para resultados de <b style="color:var(--txt)">pilotos reales</b>, con datos medidos y verificables, cuando existan. No publicamos casos ni cifras que no hayan ocurrido.</p>
+        <span class="tag" style="margin-top:16px;align-self:flex-start">Pendiente — maqueta</span>
       </div>
     </div>
+    <p class="callout">Ejemplo ilustrativo — no es un caso real ni un resultado atribuido a un cliente.</p>
+  </div></section>
+
+  <section class="block" id="estado"><div class="wrap">
+    <p class="eyebrow">Franqueza</p><h2 class="h2">¿Por qué pagar si el Estado avisa gratis?</h2>
+    <p class="sub">La red pública <b>(agromet.cl)</b> envía alertas de helada gratis por SMS y correo — conviene tenerla. Pero avisa a nivel <b>zonal</b>, con estaciones dispersas. Esto es lo que cambia cuando el dato es tuyo, por cuartel.</p>
+    <div class="vs-wrap"><table class="vs">
+      <thead><tr><th class="rowh"></th><th>Alerta pública · agromet.cl</th><th class="markcol">${esc(BRAND)}</th></tr></thead>
+      <tbody>
+        <tr><td class="rowh">Cobertura</td><td>Zonal, estaciones dispersas a varios km</td><td class="markcol"><b>Una estación en tu cuartel</b></td></tr>
+        <tr><td class="rowh">Dato</td><td>Interpolación regional</td><td class="markcol"><b>Microclima medido en tu sitio</b></td></tr>
+        <tr><td class="rowh">Helada</td><td>Aviso por umbral general</td><td class="markcol"><b>Proyección de la mínima y su hora, por cultivo</b></td></tr>
+        <tr><td class="rowh">Acción</td><td>Solo alerta</td><td class="markcol"><b>+ riego por humedad, horas-frío, ET₀ y recomendación</b></td></tr>
+        <tr><td class="rowh">Costo</td><td>Gratis</td><td class="markcol">De pago · plan por campo</td></tr>
+      </tbody>
+    </table></div>
+    <p class="callout">Recomendamos mantener la alerta pública (agromet.cl) como respaldo. Nuestra propuesta es complementaria: más densidad, dato del sitio y acción integrada.</p>
   </div></section>
 
   <section class="block" id="roles"><div class="wrap">
-    <div class="tag">${t("roles_tag")}</div><h2 class="h2">${t("roles_title")}</h2>
+    <p class="eyebrow">${t("roles_tag")}</p><h2 class="h2">${t("roles_title")}</h2>
     <p class="sub">${t("roles_sub")}</p>
     <div class="grid g3">
       ${Object.keys(ROLES).map(r=>roleCard(r,roleDesc(r))).join("")}
@@ -555,19 +635,52 @@ function roleDesc(r){
   return (d[r]||["",""])[lang==="en"?1:0];
 }
 
-function roleCard(r,desc){const R=ROLES[r];return `<div class="card"><div class="ico" style="background:${R.color}22">${R.ico}</div>
-  <h3>${R.label}</h3><p>${desc}</p></div>`;}
+function roleCard(r,desc){const R=ROLES[r];return `<div class="card"><span class="ic" style="border-color:${R.color}66;color:${R.color}">${icon(ROLE_ICONS[r])}</span>
+  <h3 style="margin-top:14px">${R.label}</h3><p>${desc}</p></div>`;}
 function miniKpi(l,v,d){return `<div style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:10px;color:var(--muted)">${l}</div><div style="font-size:16px;font-weight:800">${v}</div></div>`;}
 function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><polyline fill="none" stroke="#3ddc84" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
+
+/* ---------- íconos de línea propios (sin emoji, sin dependencias) ---------- */
+const ICONS = {
+  frost:'<path d="M12 3v18"/><path d="M4.6 7.5l14.8 9"/><path d="M19.4 7.5l-14.8 9"/><path d="M9.6 4.3 12 3l2.4 1.3"/><path d="M9.6 19.7 12 21l2.4-1.3"/>',
+  drop:'<path d="M12 3.5c3.2 3.6 5.5 6.6 5.5 9.4a5.5 5.5 0 0 1-11 0c0-2.8 2.3-5.8 5.5-9.4z"/><path d="M9.6 14.2a2.6 2.6 0 0 0 2.4 2.3"/>',
+  thermo:'<path d="M14 14.5V5a2 2 0 0 0-4 0v9.5a4 4 0 1 0 4 0z"/><path d="M12 8.5v6.2"/>',
+  leaf:'<path d="M5 19c9 1.5 15-4.5 15-13 0 0-11-1.5-14 4.5C4.4 13.4 5 19 5 19z"/><path d="M5 19c2.5-5.5 6.5-8 10.5-9"/>',
+  grid:'<path d="M4 4.8h16v14.4H4z"/><path d="M4 9.6h16M4 14.4h16M9.3 4.8v14.4M14.7 4.8v14.4"/>',
+  report:'<path d="M7 3.2h6.5L18 7.7V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.2a1 1 0 0 1 1-1z"/><path d="M13.3 3.2v4.6H18"/><path d="M9 13h6M9 16.5h4"/>',
+  pin:'<path d="M12 21c4-4.4 6-7.6 6-10.5A6 6 0 0 0 6 10.5C6 13.4 8 16.6 12 21z"/><circle cx="12" cy="10.3" r="2.3"/>',
+  target:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.3"/><path d="M12 2.4v3M12 18.6v3M2.4 12h3M18.6 12h3"/>',
+  bolt:'<path d="M13 2.5 4.5 13.6H11l-1 7.9L18.5 10H12l1-7.5z"/>',
+  clock:'<circle cx="12" cy="12" r="8.4"/><path d="M12 7.2v5l3.4 2"/>',
+  signal:'<path d="M5 20v-5M9.7 20v-8.5M14.3 20v-12M19 20v-4"/>',
+  trend:'<path d="M4 15.5 9.3 10l3.2 3 6.2-7"/><path d="M15.4 6h3.5v3.5"/>',
+  shield:'<path d="M12 3.2l7 3v4.9c0 4.4-3 7.4-7 8.9-4-1.5-7-4.5-7-8.9V6.2l7-3z"/>',
+  building:'<path d="M5 21V5.2a1 1 0 0 1 1-1h7.2a1 1 0 0 1 1 1V21"/><path d="M14.2 9.4H18a1 1 0 0 1 1 1V21"/><path d="M8 8.2h3.2M8 12h3.2M8 15.8h3.2"/><path d="M4 21h16"/>',
+  sprout:'<path d="M12 21v-8.5"/><path d="M12 12.5C12 9 9.6 7 5.5 7 5.5 11 8 12.9 12 12.9z"/><path d="M12 11.4C12 8.4 14.2 6.5 18.5 6.5c0 3.6-2.4 5.4-6.5 5.4z"/>',
+  flask:'<path d="M9 3.2h6M10 3.2v5.6l-4.8 8.1A1.9 1.9 0 0 0 6.8 20h10.4a1.9 1.9 0 0 0 1.6-3.1L14 8.8V3.2"/><path d="M8 14.6h8"/>',
+  gear:'<path d="M4 6.5h7.5M16 6.5h4"/><path d="M4 12h4M12.5 12h7.5"/><path d="M4 17.5h7.5M16 17.5h4"/><circle cx="13.5" cy="6.5" r="2.1"/><circle cx="10" cy="12" r="2.1"/><circle cx="13.5" cy="17.5" r="2.1"/>',
+  eye:'<path d="M2.4 12S6 5.5 12 5.5 21.6 12 21.6 12 18 18.5 12 18.5 2.4 12 2.4 12z"/><circle cx="12" cy="12" r="3"/>',
+  sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/>',
+  bell:'<path d="M6 16v-5a6 6 0 0 1 12 0v5l1.6 2.2H4.4L6 16z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  cart:'<circle cx="9.5" cy="19.2" r="1.3"/><circle cx="16.8" cy="19.2" r="1.3"/><path d="M3 4h2.1l2.2 11a1 1 0 0 0 1 .8h8.1a1 1 0 0 0 1-.8L20 8H6.3"/>',
+  users:'<circle cx="9" cy="8.5" r="3.1"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16.2 6a3 3 0 0 1 0 5.8"/><path d="M15.6 14.6a5.5 5.5 0 0 1 4.9 5.4"/>',
+  card:'<rect x="3" y="5.5" width="18" height="13" rx="2.2"/><path d="M3 9.7h18M6.5 14.5h4"/>',
+  dash:'<rect x="3.6" y="3.6" width="7" height="7" rx="1.6"/><rect x="13.4" y="3.6" width="7" height="7" rx="1.6"/><rect x="3.6" y="13.4" width="7" height="7" rx="1.6"/><rect x="13.4" y="13.4" width="7" height="7" rx="1.6"/>',
+};
+function icon(name){return `<svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||""}</svg>`;}
+const MOD_ICONS=["frost","drop","thermo","leaf","grid","report"];
+const ROLE_ICONS={superadmin:"shield",account_admin:"building",field_supervisor:"sprout",agronomo:"flask",tecnico:"gear",visor:"eye"};
+const PROD_ICONS={gateway:"signal",airmon:"thermo",s_th:"thermo",s_soil:"drop",s_light:"sun",s_co2:"leaf",s_baro:"target",s_ecth:"flask",a_relay:"bolt",a_adc:"gear"};
+const NAV_ICONS={monitoreo:"signal",resumen:"dash",empresas:"building",planes:"card",usuarios:"users",dispositivos:"signal",ajustes:"gear",campos:"sprout",facturacion:"card",estaciones:"signal",alarmas:"bell",reportes:"report",analitica:"trend",recomendaciones:"leaf",mantenimiento:"gear"};
 
 /* ---------- productos ---------- */
 routes.productos=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">${t("nav_hw")}</div><h1 class="h2">Equipos para el campo</h1>
+    <p class="eyebrow">${t("nav_hw")}</p><h1 class="h2">Equipos para el campo</h1>
     <p class="sub">Hardware AgroSense (Makerfabs) listo para desplegar: <b>gateway 4G</b>, <b>estación todo-en-uno</b> y <b>sensores LoRaWAN</b> (IP68, batería hasta 1 año, alcance hasta 5 km). Los sensores del campo transmiten al gateway y este sube los datos a la plataforma por 4G. <b>La venta online estará disponible próximamente.</b></p>
     <div class="grid g4">
       ${PRODUCTS.map(p=>`<div class="card prod" style="display:flex;flex-direction:column">
-        <div class="prodimg">${p.emoji}</div>
+        <div class="prodimg">${icon(PROD_ICONS[p.id]||"signal")}</div>
         <span class="tag" style="margin:12px 0 6px;align-self:flex-start">${esc(p.cat)}</span>
         <h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p>
         <div class="row" style="margin-top:auto">
@@ -586,10 +699,10 @@ routes.productos=()=>`
 routes.planes=()=>{
   const y=store.billing==="y";
   return `<section class="block"><div class="wrap">
-    <div class="center"><div class="tag">${t("nav_plans")}</div><h1 class="h2">Precios simples, escala cuando quieras</h1>
+    <div class="center"><h1 class="h2">Precios simples, escala cuando quieras</h1>
     <p class="sub" style="margin:0 auto 14px">Cambia de plan en cualquier momento. Sin permanencia.</p>
     <div class="toggle" role="group" aria-label="Periodo de facturación"><button data-bill="m" class="${y?"":"on"}" aria-pressed="${y?"false":"true"}">Mensual</button><button data-bill="y" class="${y?"on":""}" aria-pressed="${y?"true":"false"}">Anual <span style="color:var(--brand)">−17%</span></button></div>
-    <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin tarjeta · ✓ 14 días de prueba · ✓ Cancela cuando quieras · ✓ Soporte en español</p></div>
+    <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin permanencia · ✓ Precios en CLP · ✓ Cancela cuando quieras · ✓ Soporte en español (Chile)</p></div>
     <div class="grid g3" style="margin-top:24px">
       ${PLANS.map(p=>{
         const price = p.custom?null:(y?p.y:p.m);
@@ -617,7 +730,8 @@ routes.planes=()=>{
 const PLAN_FEATURES=["Estaciones incluidas","Tiempo real y alarmas","Retención de históricos","Usuarios","Mapa de sensores","Reportes PDF/Excel","Roles y equipo","Soporte"];
 const PLAN_FAQ=[
   ["¿Qué cuenta como una estación?","Cada nodo 4G con sus sensores en una parcela. Puedes mover una estación entre campos sin costo."],
-  ["¿Necesito tarjeta para la prueba?","No. El plan Starter es gratis y la prueba de Pro dura 14 días sin tarjeta."],
+  ["¿Cómo pruebo la plataforma antes de contratar?","Con el plan Piloto: 1 campo, 1 estación y 1 temporada, dirigido y a medida. No hay plan gratis permanente, pero sí una evaluación acotada con tus propios cuarteles."],
+  ["¿Por qué pagar si el Estado avisa gratis?","La alerta pública (agromet.cl) es zonal y conviene tenerla. Aquí pagas resolución por cuartel, el dato de tu sitio y acción integrada (riego, horas-frío, ET₀), no solo el aviso."],
   ["¿Puedo cambiar o cancelar el plan?","Sí, en cualquier momento desde Facturación. Sin permanencia ni multas."],
   ["¿Cómo se factura el plan anual?","Un solo cobro al año con ~17% de descuento frente al mensual. El precio mostrado es el equivalente por mes."],
   ["¿Qué incluye el plan Empresa?","Estaciones y usuarios ilimitados, API, jerarquía de roles completa y soporte 24/7 con SLA. Se cotiza según tu operación."],
@@ -676,7 +790,7 @@ routes.login=()=>`
       <div class="muted center" style="font-size:12px;margin:16px 0 8px">${t("demo_as")}</div>
       <div class="rolebtns">
         ${Object.entries(DEMO_USERS).map(([email,u])=>{const R=ROLES[u.role];return `<button class="rolebtn" data-demo="${email}">
-          <span class="ri" style="background:${R.color}22">${R.ico}</span>
+          <span class="ri" style="border:1px solid ${R.color}66;color:${R.color}">${icon(ROLE_ICONS[u.role])}</span>
           <span style="flex:1"><b>${R.label}</b><br><span>${esc(u.name)} · ${esc(u.org)}</span></span><span class="muted">→</span></button>`;}).join("")}
       </div>
       <p class="muted center" style="font-size:12px;margin-top:16px">${t("no_account")} <a href="#/registro" style="color:var(--brand)">${t("create_one")}</a></p>
@@ -736,10 +850,10 @@ const HELP=[
 ];
 routes.ayuda=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">${t("help")}</div><h1 class="h2">${t("help_title")}</h1>
+    <p class="eyebrow">${t("help")}</p><h1 class="h2">${t("help_title")}</h1>
     <p class="sub">${t("help_sub")}</p>
     <div class="grid g3" style="margin-bottom:26px">
-      ${[["🚀",t("h_start"),t("h_start_d")],["📡",t("h_dev"),t("h_dev_d")],["🔔",t("h_alarms"),t("h_alarms_d")]].map(c=>`<div class="card"><div class="ico">${c[0]}</div><h3>${c[1]}</h3><p>${c[2]}</p></div>`).join("")}
+      ${[["bolt",t("h_start"),t("h_start_d")],["signal",t("h_dev"),t("h_dev_d")],["bell",t("h_alarms"),t("h_alarms_d")]].map(c=>`<div class="card"><span class="ic">${icon(c[0])}</span><h3 style="margin-top:13px">${c[1]}</h3><p>${c[2]}</p></div>`).join("")}
     </div>
     <div class="panelcard"><h3>${t("faq")}</h3>
       ${HELP.map((h,i)=>`<details style="border-bottom:1px solid var(--line)"><summary style="padding:14px 16px;cursor:pointer;font-weight:600">${esc(h.q)}</summary><p class="muted" style="padding:0 16px 14px">${esc(h.a)}</p></details>`).join("")}
@@ -749,19 +863,19 @@ routes.ayuda=()=>`
 
 /* ---------- recursos / blog ---------- */
 const POSTS=[
-  {emoji:"❄️",t:"Guía: prevenir heladas con monitoreo en tiempo real",d:"Cómo anticipar y mitigar daños por helada usando alertas de temperatura.",tag:"Guía"},
-  {emoji:"💧",t:"Riego de precisión: del dato a la decisión",d:"Convierte humedad y clima en programas de riego eficientes.",tag:"Agronomía"},
-  {emoji:"📡",t:"Desplegar una red de sensores 4G en tu fundo",d:"Buenas prácticas de instalación, energía solar y cobertura.",tag:"Hardware"},
-  {emoji:"📈",t:"Indicadores que todo productor debería seguir",d:"Grados-día, horas-frío y estrés hídrico explicados.",tag:"Datos"},
-  {emoji:"🔌",t:"Integra tus datos con ThingSpeak y MQTT",d:"Lleva la telemetría a tus propias herramientas.",tag:"Integraciones"},
-  {emoji:"🌱",t:"Caso: 18% menos agua en una temporada",d:"Cómo un cliente optimizó riego con datos por parcela.",tag:"Caso de éxito"},
+  {ic:"frost",t:"Guía: prevenir heladas con monitoreo en tiempo real",d:"Cómo anticipar y mitigar daños por helada usando alertas de temperatura.",tag:"Guía"},
+  {ic:"drop",t:"Riego de precisión: del dato a la decisión",d:"Convierte humedad y clima en programas de riego eficientes.",tag:"Agronomía"},
+  {ic:"signal",t:"Desplegar una red de sensores 4G en tu fundo",d:"Buenas prácticas de instalación, energía solar y cobertura.",tag:"Hardware"},
+  {ic:"trend",t:"Indicadores que todo productor debería seguir",d:"Grados-día, horas-frío y estrés hídrico explicados.",tag:"Datos"},
+  {ic:"gear",t:"Integra tus datos por API y MQTT",d:"Lleva la telemetría a tus propias herramientas.",tag:"Integraciones"},
+  {ic:"thermo",t:"Horas-frío y porciones: cómo se calculan",d:"Modelos de acumulación de frío y su lectura por variedad.",tag:"Agronomía"},
 ];
 routes.recursos=()=>`
   <section class="block"><div class="wrap">
-    <div class="tag">${t("resources")}</div><h1 class="h2">${t("resources_title")}</h1>
+    <p class="eyebrow">${t("resources")}</p><h1 class="h2">${t("resources_title")}</h1>
     <p class="sub">${t("resources_sub")}</p>
     <div class="grid g3">
-      ${POSTS.map(p=>`<div class="card prod"><div class="prodimg">${p.emoji}</div>
+      ${POSTS.map(p=>`<div class="card prod"><div class="prodimg">${icon(p.ic)}</div>
         <span class="tag" style="margin-bottom:8px">${esc(p.tag)}</span>
         <h3>${esc(p.t)}</h3><p>${esc(p.d)}</p>
         <a class="btn ghost sm" href="#/recursos" style="margin-top:12px">${t("read_more")} →</a></div>`).join("")}
@@ -774,7 +888,7 @@ routes.contacto=()=>{
   const co_q=qp?esc("Quiero cotizar: "+qp):"";
   return `
   <section class="block"><div class="wrap" style="max-width:720px">
-    <div class="tag">${t("contact_sales")}</div><h1 class="h2">${qp?"Cotiza tu equipo":"Hablemos de tu operación"}</h1>
+    <p class="eyebrow">${t("contact_sales")}</p><h1 class="h2">${qp?"Cotiza tu equipo":"Hablemos de tu operación"}</h1>
     <p class="sub">${qp?`Solicita la cotización de <b>${esc(qp)}</b>. `:""}Cuéntanos tu cultivo y superficie y te armamos una propuesta (equipos + plan). Respondemos en horario hábil.</p>
     <form id="contactForm" class="card">
       <div class="grid g2"><div class="field"><label for="co_name">Nombre</label><input id="co_name" required placeholder="María Pérez"></div>
@@ -833,7 +947,7 @@ function renderApp(parts){
     <aside class="side" id="side">
       <a class="brand" href="#/home">${mark(28)} ${esc(BRAND)}</a>
       <div class="sep">${esc(sess.org)}</div>
-      <nav aria-label="Secciones">${nav.map(n=>`<a href="#/app/${n[0]}" class="${n[0]===page?"on":""}" ${n[0]===page?'aria-current="page"':""}><span aria-hidden="true">${n[2]}</span> ${esc(n[1])}</a>`).join("")}</nav>
+      <nav aria-label="Secciones">${nav.map(n=>`<a href="#/app/${n[0]}" class="${n[0]===page?"on":""}" ${n[0]===page?'aria-current="page"':""}><span aria-hidden="true" style="display:inline-flex">${icon(NAV_ICONS[n[0]]||"dash")}</span> ${esc(n[1])}</a>`).join("")}</nav>
       <div class="sep">Monitoreo</div>
       <nav aria-label="Monitoreo"><a href="${DASHBOARD_URL}" target="_blank" rel="noopener"><span aria-hidden="true">⛶</span> Abrir en pantalla completa ↗</a></nav>
     </aside>
@@ -842,7 +956,7 @@ function renderApp(parts){
         <button class="iconbtn" id="burger" aria-label="Abrir menú" aria-controls="side" aria-expanded="false" style="width:38px;height:38px">☰</button>
         <h1 style="font-size:18px;margin:0">${esc((nav.find(n=>n[0]===page)||[,"—"])[1])}</h1>
         <div class="who">
-          <span class="rolebadge" style="color:${ROLES[sess.role].color}"><span aria-hidden="true">${ROLES[sess.role].ico}</span> ${esc(ROLES[sess.role].label)}</span>
+          <span class="rolebadge" style="color:${ROLES[sess.role].color}"><span aria-hidden="true" style="display:inline-flex;vertical-align:-2px">${icon(ROLE_ICONS[sess.role])}</span> ${esc(ROLES[sess.role].label)}</span>
           <span class="avatar" aria-hidden="true">${initial}</span>
           <button class="btn ghost sm" id="logout">Salir</button>
         </div>
@@ -909,11 +1023,11 @@ function appPage(sess,page){
   if(page==="analitica") return `<div class="kpis">${kpi("Grados-día acum.","1.245","temporada")}${kpi("Estrés hídrico","Medio","índice 0.42")}${kpi("Horas-frío","320","")}${kpi("Predicción helada","72%","próx. 24 h","down")}</div>
     <div class="panelcard" style="margin-top:18px"><h3>Tendencia de temperatura (14 días)</h3><div style="padding:16px">${miniChart(true)}</div></div>`;
   if(page==="recomendaciones") return `<div class="grid g2">
-    ${[["❄️","Protección de heladas","Fundo Sur bajo 2 °C esta madrugada: activa riego por aspersión a las 03:00."],
-       ["💧","Ajuste de riego","Cuartel A con estrés hídrico medio: aumenta lámina 12% los próximos 3 días."],
-       ["🌱","Ventana de aplicación","Humedad y viento óptimos mañana 07–10 h para foliar en Parcela Río."],
-       ["📈","Rendimiento","Grados-día 8% sobre el año anterior: adelanta monitoreo de cosecha."]
-      ].map(r=>`<div class="card"><div class="ico">${r[0]}</div><h3>${r[1]}</h3><p>${r[2]}</p></div>`).join("")}</div>`;
+    ${[["frost","Protección de heladas","Fundo Sur bajo 2 °C esta madrugada: activa riego por aspersión a las 03:00."],
+       ["drop","Ajuste de riego","Cuartel A con estrés hídrico medio: aumenta lámina 12% los próximos 3 días."],
+       ["sun","Ventana de aplicación","Humedad y viento óptimos mañana 07–10 h para foliar en Parcela Río."],
+       ["trend","Rendimiento","Grados-día 8% sobre el año anterior: adelanta monitoreo de cosecha."]
+      ].map(r=>`<div class="card"><span class="ic">${icon(r[0])}</span><h3 style="margin-top:13px">${r[1]}</h3><p>${r[2]}</p></div>`).join("")}</div>`;
   if(page==="mantenimiento") return tableCard("Mantenimiento",["Dispositivo","Tarea","Programada","Estado"],[
     ["AME-07","Cambiar batería","Hoy",bdg("Pendiente","warn")],["AME-09","Revisar antena 4G","Mañana",bdg("Pendiente","warn")],
     ["AME-03","Calibrar SGP30","12/07",bdg("Programada","muted")],["AME-01","Limpieza de sensores","Hecha 28/06",bdg("Completada","good")]]);

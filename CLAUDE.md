@@ -90,12 +90,32 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - Flujo de publicación vigente: rama → **PR → merge a `main`** vía GitHub MCP
   (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
 - **Próximos pasos sugeridos** (dónde quedamos, sin prioridad forzada):
-  1. Aplicar el posicionamiento a la web: bloque **"por cuartel / por variedad"** + FAQ
-     **"¿por qué pagar si el Estado avisa gratis?"** (ver `docs/estudio-mercado.md`).
+  1. ✅ **HECHO** (web, esta rama): bloque **"Al nivel del cuartel, no del valle"** (por
+     cuartel / por variedad, `#cuartel`) + sección/FAQ **"¿Por qué pagar si el Estado
+     avisa gratis?"** (`#estado`) en la portada, y la misma pregunta corta en la FAQ de
+     planes. De paso se corrigió la copia obsoleta de planes ("14 días · sin tarjeta" y
+     la FAQ del plan "Starter/Pro gratis") para alinear con el "sin plan gratis".
   2. **Research dirigido** de los competidores que el proxy bloqueó (Wiseconn, Semios,
      Pessl/Metos, Sencrop, CropX) y el **pricing de Instacrops**.
   3. Bloqueante #1: **definir la marca** → reemplazar `[Marca]` + contactos en web,
      dashboard y brochure de una pasada.
+  4. Falta replicar el énfasis "por cuartel/variedad" y el argumento vs. Estado en el
+     **dashboard** y el **brochure** (hoy solo en la web de marketing).
+  5. ✅ **HECHO — rediseño "anti-IA" de `web/index.html`** (a pedido: "que no parezca
+     página creada con IA"). Basado en research de "tells" de IA (grillas de tarjetas con
+     emoji, chip centrado sobre el H1, borde-izquierdo de color, franjas de stats). Cambios:
+     **sistema de íconos SVG de línea propios** (objeto `ICONS`+`icon()`, sin emoji ni
+     dependencias → sin copyright); **hero split** (copy editorial + panel de producto,
+     sin chip ni stats); capacidades en **lista editorial 2-col** (no grilla); pasos con
+     filete y numeración tabular; **cuartel** como split + **mini-mapa de cuarteles**; el
+     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `[Marca]`;
+     `.callout` en vez de borde-izquierdo; se **eliminaron 2 secciones redundantes**
+     (Casos de uso + "Lo que sí medimos"). Emoji reemplazados por íconos también en
+     productos, ayuda, recursos, login (botones demo), nav (carrito), y el **área demo
+     RBAC** (sidebar + badge de rol + recomendaciones). **Regla dura:** se quitó un
+     **caso falso** en Recursos ("Caso: 18% menos agua… un cliente") por cero invención.
+     Verificado con screenshots (desktop+móvil), sin errores de consola. Falta darle el
+     mismo trato al **dashboard** y **brochure** para coherencia visual.
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
@@ -118,7 +138,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - **About del repo** (descripción + web + topics): pendiente; probablemente manual
   (no hay tool MCP para editarlo). Valores sugeridos ya redactados.
 - **Decimales**: unificar a coma chilena (hay mezcla `−1,4` vs `8.1`).
-- **Planes**: la franja "14 días de prueba · sin tarjeta" quedó a contrapelo del "sin plan gratis".
+- **Planes**: ✅ resuelto en web — la franja ahora dice "Sin permanencia · Precios en CLP ·
+  Cancela cuando quieras · Soporte en español (Chile)" y la FAQ ya no ofrece "Starter/Pro gratis".
+  Revisar que dashboard/brochure no arrastren la misma franja obsoleta.
 - **Mapa de cuarteles**: hoy tarjetas (sin Google Maps, para no depender de API key).
 
 ## Pendientes / ideas abiertas — BLOQUEANTES primero
