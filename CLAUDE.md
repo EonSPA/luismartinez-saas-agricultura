@@ -101,6 +101,21 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      dashboard y brochure de una pasada.
   4. Falta replicar el énfasis "por cuartel/variedad" y el argumento vs. Estado en el
      **dashboard** y el **brochure** (hoy solo en la web de marketing).
+  5. ✅ **HECHO — rediseño "anti-IA" de `web/index.html`** (a pedido: "que no parezca
+     página creada con IA"). Basado en research de "tells" de IA (grillas de tarjetas con
+     emoji, chip centrado sobre el H1, borde-izquierdo de color, franjas de stats). Cambios:
+     **sistema de íconos SVG de línea propios** (objeto `ICONS`+`icon()`, sin emoji ni
+     dependencias → sin copyright); **hero split** (copy editorial + panel de producto,
+     sin chip ni stats); capacidades en **lista editorial 2-col** (no grilla); pasos con
+     filete y numeración tabular; **cuartel** como split + **mini-mapa de cuarteles**; el
+     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `[Marca]`;
+     `.callout` en vez de borde-izquierdo; se **eliminaron 2 secciones redundantes**
+     (Casos de uso + "Lo que sí medimos"). Emoji reemplazados por íconos también en
+     productos, ayuda, recursos, login (botones demo), nav (carrito), y el **área demo
+     RBAC** (sidebar + badge de rol + recomendaciones). **Regla dura:** se quitó un
+     **caso falso** en Recursos ("Caso: 18% menos agua… un cliente") por cero invención.
+     Verificado con screenshots (desktop+móvil), sin errores de consola. Falta darle el
+     mismo trato al **dashboard** y **brochure** para coherencia visual.
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
