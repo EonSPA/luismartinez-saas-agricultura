@@ -90,6 +90,20 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - Flujo de publicación vigente: rama → **PR → merge a `main`** vía GitHub MCP
   (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
 
+## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
+- **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
+  (InstaFrost), suelo, riego y agentes IA por **WhatsApp**, modelo suscripción. Diferenciarse
+  por **especialización en fruta de exportación + rigor agronómico** (horas-frío/porciones,
+  ET₀, umbrales por cultivo/variedad, por **cuartel**, trazabilidad GlobalGAP).
+- **Rival gratuito estructural: RAN-AGROMET** (Estado, 433 estaciones, alerta de helada gratis
+  por SMS/email). Justificar el pago con **densidad por cuartel + dato del sitio + acción
+  integrada** (no solo avisar). Sumar en la web una FAQ "¿por qué pagar si el Estado avisa gratis?".
+- **Agurotech (NL)**: suelo FDR multiprofundidad + riego, pero helada **reactiva por umbral**
+  (no predictiva) y sin Chile.
+- **Pendiente de research** (proxy bloqueó sus webs): Wiseconn, Semios, Pessl/Metos, Sencrop,
+  CropX, Phytech, Hortau — y el **pricing real de Instacrops** para calibrar el plan Producción.
+- Regla: cifras de mercado = estimaciones de vendors; nada de datos no verificados como hechos.
+
 ## Pendientes técnicos abiertos
 - **ThingSpeak / generador de firmware**: el dashboard viejo (lector ThingSpeak + comandos
   AT) se **retiró** en la reconstrucción agrícola (demo-only). Recuperable si se quiere
