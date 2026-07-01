@@ -3,1661 +3,490 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com; script-src 'self' 'unsafe-inline' https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.thingspeak.com https://maps.googleapis.com https://*.googleapis.com; object-src 'none'; base-uri 'none'">
-<meta name="description" content="Monitor de calidad del aire 4G LTE CAT1: tiempo real, históricos, alarmas, mapa de sensores y configuración del dispositivo.">
-<meta name="theme-color" content="#0b1020">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+<meta name="description" content="Estación agroclimática 4G: alerta de helada, humedad de suelo, horas-frío, grados-día y ET₀ para fruta de exportación. Demostración con datos simulados.">
+<meta name="theme-color" content="#0a140d">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Air Monitor">
-<title>4G LTE CAT1 Air Monitor — Dashboard</title>
+<meta name="apple-mobile-web-app-title" content="Estación agro">
+<title>[Marca] — Estación agroclimática (demo)</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="favicon.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
   :root{
-    --bg:#0a140d; --panel:#13241a; --panel2:#193021; --line:#284a31;
-    --txt:#eaf5ec; --muted:#a3bcab; --accent:#3ddc84; --brand2:#a3e635;
-    --good:#34d399; --warn:#fbbf24; --bad:#fb7185; --info:#a78bfa;
-    --shadow:0 6px 24px rgba(0,0,0,.4);
+    --bg:#0a140d;--bg2:#0f1c13;--panel:#13241a;--panel2:#183020;--line:#284a31;
+    --txt:#eaf5ec;--muted:#a3bcab;--brand:#3ddc84;--brand2:#a3e635;--accent:#f59e0b;
+    --sky:#38bdf8;--soil:#c08457;--good:#22c55e;--warn:#fbbf24;--bad:#fb7185;--frost:#7dd3fc;
+    --shadow:0 10px 40px rgba(0,0,0,.45);
   }
-  *{box-sizing:border-box}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
-  body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#173a22 0,var(--bg) 55%);
-    color:var(--txt);font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;min-height:100vh}
-  .topbar{position:sticky;top:0;z-index:10;background:rgba(10,15,30,.82);backdrop-filter:blur(8px);
-    padding-top:env(safe-area-inset-top)}
-  header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-  .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--brand2));
-    display:grid;place-items:center;font-weight:800;color:#06122b}
-  h1{font-size:17px;margin:0;letter-spacing:.2px}
-  .sub{color:var(--muted);font-size:12px}
-  .spacer{flex:1}
-  .status-pill{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);
-    padding:7px 11px;border-radius:999px;font-size:13px;white-space:nowrap}
-  .dot{width:9px;height:9px;border-radius:50%;background:var(--good);box-shadow:0 0 0 4px rgba(52,211,153,.18)}
-  .dot.off{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18)}
-  .signal{display:flex;align-items:flex-end;gap:2px;height:16px}
-  .signal i{width:4px;background:var(--muted);border-radius:1px;display:block}
-  .signal i.on{background:var(--good)}
-  .bat{position:relative;width:34px;height:16px;border:2px solid var(--muted);border-radius:3px}
-  .bat:after{content:"";position:absolute;right:-4px;top:4px;width:3px;height:6px;background:var(--muted);border-radius:0 2px 2px 0}
-  .bat span{position:absolute;left:1px;top:1px;bottom:1px;background:var(--good);border-radius:1px;transition:width .4s}
-  .alarmpill{cursor:pointer}
-  .alarmpill.has{border-color:var(--bad);color:var(--bad);box-shadow:0 0 0 3px rgba(251,113,133,.12)}
-  .alarmpill.has .dot{background:var(--bad);box-shadow:0 0 0 4px rgba(251,113,133,.18);animation:blink 1s infinite}
-  @keyframes blink{50%{opacity:.35}}
-  nav.tabs{display:flex;gap:6px;padding:0 22px;border-bottom:1px solid var(--line);overflow-x:auto}
-  nav.tabs button{background:none;border:none;color:var(--muted);padding:13px 14px;cursor:pointer;font-size:14px;
-    border-bottom:2px solid transparent;font-weight:500}
-  nav.tabs button.active{color:var(--txt);border-bottom-color:var(--accent)}
-  nav.tabs button:hover{color:var(--txt)}
-  main{padding:20px 22px;max-width:1320px;margin:0 auto}
-  .view{display:none}.view.active{display:block}
-  .grid{display:grid;gap:16px}
-  .kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
-  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
-    border-radius:16px;padding:16px;box-shadow:var(--shadow)}
-  .card.alarm{border-color:var(--bad);box-shadow:0 0 0 1px var(--bad),var(--shadow)}
-  /* panel de recomendaciones */
-  #recoList{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:10px;margin-top:6px}
-  .reco-item{display:flex;gap:11px;align-items:flex-start;padding:11px 13px;border-radius:12px;
-    background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--muted)}
-  .reco-item.sev-good{border-left-color:var(--good)}
-  .reco-item.sev-warn{border-left-color:var(--warn)}
-  .reco-item.sev-bad{border-left-color:var(--bad)}
-  .reco-item.sev-info{border-left-color:var(--accent)}
-  .reco-item .ri{font-size:20px;line-height:1.1;flex:0 0 auto}
-  .reco-item b{font-size:13.5px;display:block;margin-bottom:2px}
-  .reco-item p{font-size:12.5px;color:var(--muted);margin:0}
-  .kpi .top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
-  .kpi .val{font-size:30px;font-weight:700;margin-top:6px;display:flex;align-items:baseline;gap:6px}
-  .kpi .unit{font-size:13px;color:var(--muted);font-weight:500}
-  .badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:999px}
-  .b-good{background:rgba(52,211,153,.14);color:var(--good)}
-  .b-warn{background:rgba(251,191,36,.14);color:var(--warn)}
-  .b-bad{background:rgba(251,113,133,.14);color:var(--bad)}
-  .spark{margin-top:10px;width:100%;height:36px;display:block}
-  .row2{grid-template-columns:1.4fr 1fr;align-items:stretch}
-  @media(max-width:880px){.row2{grid-template-columns:1fr}}
-  .card h3{margin:0 0 4px;font-size:14px}
-  .card .hint{color:var(--muted);font-size:12px;margin-bottom:10px}
-  canvas.chart{width:100%;height:240px;display:block}
-  canvas.chartbig{width:100%;height:340px;display:block}
-  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
-  .legend span{cursor:default}
-  .legend b{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
-  .aqi{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:100%}
-  .aqi .ring{position:relative;width:160px;height:160px}
-  .aqi .num{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
-  .aqi .num b{font-size:42px;display:block;line-height:1}
-  .aqi .num small{color:var(--muted);font-size:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{overflow-x:hidden}
+  body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.45;-webkit-text-size-adjust:100%}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+  /* DEMO banner */
+  .demobar{background:repeating-linear-gradient(45deg,rgba(245,158,11,.14),rgba(245,158,11,.14) 12px,rgba(245,158,11,.06) 12px,rgba(245,158,11,.06) 24px);
+    border-bottom:1px solid var(--line);color:#ffe4b0;font-size:12.5px;font-weight:600;text-align:center;padding:6px 12px;position:sticky;top:0;z-index:30}
+  .demobar b{color:#fff}
+  /* header */
+  header{background:var(--bg2);border-bottom:1px solid var(--line);position:sticky;top:29px;z-index:20}
+  .hd{display:flex;align-items:center;gap:12px;padding:12px 0;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16px}
+  .mark{width:30px;height:30px}
+  .st{margin-left:2px}
+  .st .n{font-weight:700;font-size:14px}
+  .st .s{font-size:11.5px;color:var(--muted)}
+  .chips{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 10px}
+  .chip b{color:var(--txt)}
+  .cropsel{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 6px 3px 11px}
+  .cropsel select{background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font:inherit;font-size:12px}
+  /* tabs */
+  .tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{white-space:nowrap;background:none;border:none;color:var(--muted);font:inherit;font-size:13.5px;font-weight:600;padding:12px 14px;cursor:pointer;border-bottom:2px solid transparent}
+  .tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+  main{padding:18px 0 60px}
+  /* cards */
+  .grid{display:grid;gap:12px}
+  .g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g6{grid-template-columns:repeat(6,1fr)}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:14px}
+  .kpi .l{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.3px}
+  .kpi .v{font-size:26px;font-weight:800;letter-spacing:-.5px;margin-top:6px}
+  .kpi .v small{font-size:13px;font-weight:600;color:var(--muted)}
+  .kpi .d{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .sec-t{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin:24px 4px 10px}
+  /* frost hero */
+  .frost{border:1px solid var(--line);border-radius:18px;padding:18px 20px;position:relative;overflow:hidden;
+    background:radial-gradient(700px 300px at 90% -20%,rgba(125,211,252,.16),transparent 60%),linear-gradient(180deg,var(--panel),var(--panel2))}
+  .frost.red{border-color:rgba(251,113,133,.55);box-shadow:0 0 0 1px rgba(251,113,133,.25),0 10px 40px rgba(0,0,0,.5)}
+  .frost .hrow{display:flex;align-items:flex-start;gap:20px;flex-wrap:wrap}
+  .frost .big{font-size:56px;font-weight:800;letter-spacing:-2px;line-height:1}
+  .frost .big small{font-size:22px;color:var(--muted);font-weight:700}
+  .sem{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:13px;padding:6px 12px;border-radius:999px}
+  .sem.red{background:rgba(251,113,133,.16);color:#fecdd3;border:1px solid rgba(251,113,133,.5)}
+  .sem.amber{background:rgba(245,158,11,.16);color:#ffe4b0;border:1px solid rgba(245,158,11,.5)}
+  .sem.green{background:rgba(34,197,94,.14);color:#bbf7d0;border:1px solid rgba(34,197,94,.4)}
+  .dot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 10px currentColor}
+  .frost .meta{display:flex;gap:26px;flex-wrap:wrap;margin-top:6px}
+  .frost .meta .k{font-size:11.5px;color:var(--muted)}
+  .frost .meta .val{font-size:19px;font-weight:800}
+  .action{margin-top:14px;background:rgba(251,113,133,.10);border:1px solid rgba(251,113,133,.35);border-radius:12px;padding:11px 14px;font-size:13.5px}
+  .action.amber{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.35)}
+  .action b{color:#fff}
+  /* bars */
+  .soilrow{display:flex;align-items:center;gap:12px;margin:9px 0}
+  .soilrow .lab{width:120px;font-size:12.5px;color:var(--muted);flex:none}
+  .soilrow .lab b{color:var(--txt);display:block;font-size:13px}
+  .track{position:relative;flex:1;height:16px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .fill{position:absolute;top:0;left:0;bottom:0;border-radius:8px}
+  .mk{position:absolute;top:-4px;bottom:-4px;width:2px}
+  .soilrow .pct{width:52px;text-align:right;font-weight:800;font-size:14px;flex:none}
+  .prog{position:relative;height:12px;background:var(--bg2);border:1px solid var(--line);border-radius:7px;overflow:hidden;margin-top:8px}
+  .prog>i{position:absolute;left:0;top:0;bottom:0;border-radius:7px;display:block}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  /* recs */
+  .rec{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}
+  .rec:first-child{border-top:none}
+  .rec .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:17px;flex:none;background:rgba(61,220,132,.14)}
+  .rec .ic.red{background:rgba(251,113,133,.16)}.rec .ic.amber{background:rgba(245,158,11,.16)}.rec .ic.sky{background:rgba(56,189,248,.14)}
+  .rec h4{font-size:14px;margin-bottom:2px}
+  .rec p{font-size:12.5px;color:var(--muted)}
+  .pri{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:6px;margin-left:auto;flex:none}
+  .pri.alta{background:rgba(251,113,133,.18);color:#fecdd3}.pri.media{background:rgba(245,158,11,.18);color:#ffe4b0}.pri.baja{background:rgba(34,197,94,.14);color:#bbf7d0}
+  /* misc */
+  .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .muted{color:var(--muted)}
+  h3.ct{font-size:15px;margin-bottom:2px}
+  .sub{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .collapse{border:1px dashed var(--line);border-radius:14px;overflow:hidden}
+  .collapse>summary{list-style:none;cursor:pointer;padding:14px;display:flex;align-items:center;gap:10px;font-weight:700}
+  .collapse>summary::-webkit-details-marker{display:none}
+  .collapse>summary .tagm{margin-left:auto;font-size:10.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px;text-transform:uppercase;letter-spacing:.4px}
+  .collapse .inner{padding:0 14px 14px}
   table{width:100%;border-collapse:collapse;font-size:13px}
-  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line)}
-  th:first-child,td:first-child{text-align:left}
-  th{color:var(--muted);font-weight:600;font-size:12px;position:sticky;top:0;background:var(--panel)}
-  tbody tr:hover{background:rgba(61,220,132,.06)}
-  .tablewrap{max-height:340px;overflow:auto;border-radius:10px}
-  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
-  .btn{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:8px 14px;border-radius:10px;
-    cursor:pointer;font-size:13px;display:inline-flex;gap:7px;align-items:center}
-  .btn:hover{border-color:var(--accent)}
-  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--brand2));border:none;color:#06122b;font-weight:600}
-  .btn.danger{border-color:var(--bad);color:var(--bad)}
-  .btn.sm{padding:5px 10px;font-size:12px}
-  .seg{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .seg button{background:none;border:none;color:var(--muted);padding:7px 12px;cursor:pointer;font-size:13px}
-  .seg button.active{background:rgba(61,220,132,.16);color:var(--txt)}
-  input.f,select.f{background:var(--panel);border:1px solid var(--line);color:var(--txt);padding:7px 9px;border-radius:9px;font-size:13px}
-  input.num{width:78px;text-align:right}
-  .src{font-size:12px;color:var(--muted)}
-  .src b{color:var(--warn)}
-  footer{color:var(--muted);font-size:12px;text-align:center;padding:24px}
-  a{color:var(--accent)}
-  .modal{position:fixed;inset:0;background:rgba(4,8,18,.7);display:none;place-items:center;z-index:30}
-  .modal.open{display:grid}
-  .modal .card{max-width:440px;width:92%}
-  .modal label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
-  .modal input{width:100%}
-  .stat{display:flex;gap:22px;flex-wrap:wrap;margin:4px 0 14px}
-  .stat div{font-size:13px;color:var(--muted)}
-  .stat b{display:block;font-size:22px;color:var(--txt);font-weight:700}
-  .banner{margin:0 0 16px;border-radius:14px;border:1px solid var(--bad);background:rgba(251,113,133,.08);
-    padding:12px 16px;display:none}
-  .banner.show{display:block}
-  .banner .bt{display:flex;align-items:center;gap:10px;font-weight:600;color:var(--bad);margin-bottom:6px}
-  .banner ul{margin:0;padding-left:18px;font-size:13px}
-  .cfgtable td,.cfgtable th{text-align:center}
-  .cfgtable td:first-child,.cfgtable th:first-child{text-align:left}
-  .lvl{font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px}
-  .lvl.alarm{background:rgba(251,113,133,.16);color:var(--bad)}
-  .lvl.clear{background:rgba(52,211,153,.16);color:var(--good)}
-  .empty{color:var(--muted);font-size:13px;padding:18px;text-align:center}
-  /* configuración */
-  .cfgwrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px;align-items:start}
-  .cfgcard h3{display:flex;align-items:center;gap:8px}
-  .frow{display:grid;grid-template-columns:1fr 150px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
-  .frow:last-child{border-bottom:none}
-  .frow label{font-size:13px;color:var(--txt)}
-  .frow label small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-  .frow input,.frow select{width:100%}
-  .frow input[type=checkbox]{width:auto;justify-self:end}
-  .frow.span{grid-template-columns:1fr}
-  .pin{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;background:rgba(61,220,132,.12);
-    color:#bfe9cc;border:1px solid var(--line);border-radius:6px;padding:2px 6px}
-  .switchhdr{display:flex;align-items:center;justify-content:space-between;margin:-4px 0 8px}
-  .gen{margin-top:16px}
-  .gen .tabsx{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-  pre.out{background:#0a0f1f;border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto;
-    max-height:420px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.5;color:#c7d2e6;white-space:pre}
-  .pinmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
-  .pinmap div{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:12px}
-  .pinmap b{display:block;color:var(--muted);font-weight:500;font-size:11px}
-  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--good);color:#06200f;
-    padding:10px 18px;border-radius:10px;font-weight:600;font-size:13px;opacity:0;transition:opacity .3s;z-index:40;pointer-events:none}
-  .toast.show{opacity:1}
-  /* mapa */
-  .maplayout{display:grid;grid-template-columns:1fr 360px;gap:16px;align-items:stretch}
-  @media(max-width:920px){.maplayout{grid-template-columns:1fr}}
-  .mapbox{position:relative;height:580px;border-radius:16px;overflow:hidden;border:1px solid var(--line);
-    background:#0c1326}
-  #gmap{position:absolute;inset:0}
-  .fallmap{position:absolute;inset:0;background:
-     linear-gradient(0deg,rgba(61,220,132,.05),rgba(61,220,132,.05)),
-     repeating-linear-gradient(0deg,transparent 0 38px,rgba(120,140,180,.06) 38px 39px),
-     repeating-linear-gradient(90deg,transparent 0 38px,rgba(120,140,180,.06) 38px 39px),
-     radial-gradient(900px 500px at 30% 20%,#16223f 0,#0c1326 70%)}
-  .fallmap:before{content:"";position:absolute;left:8%;top:62%;width:84%;height:7px;background:rgba(96,165,250,.18);
-    border-radius:6px;transform:rotate(-9deg);box-shadow:0 60px 0 -1px rgba(96,165,250,.12)}
-  .fallmap .wm{position:absolute;right:12px;bottom:8px;font-size:10px;color:var(--muted)}
-  .pin{position:absolute;transform:translate(-50%,-100%);cursor:pointer;z-index:2;text-align:center;transition:transform .12s}
-  .pin:hover{z-index:5}
-  .pin .head{width:24px;height:24px;border-radius:50% 50% 50% 0;transform:rotate(45deg);margin:0 auto;
-    border:2px solid rgba(255,255,255,.85);box-shadow:0 4px 10px rgba(0,0,0,.5)}
-  .pin .dotc{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:#0c1326}
-  .pin .lbl{font-size:10px;font-weight:600;margin-top:3px;background:rgba(10,15,30,.8);padding:1px 6px;border-radius:6px;white-space:nowrap;display:inline-block}
-  .pin.sel{transform:translate(-50%,-100%) scale(1.25)}
-  .mapside{display:flex;flex-direction:column;gap:12px}
-  .stlist{max-height:170px;overflow:auto}
-  .stitem{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;border:1px solid transparent}
-  .stitem:hover{background:rgba(61,220,132,.06)}
-  .stitem.sel{background:rgba(61,220,132,.1);border-color:var(--line)}
-  .stitem .nm{font-size:13px;font-weight:600}
-  .stitem .co{font-size:11px;color:var(--muted)}
-  .mreadings{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0}
-  .mreading{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px}
-  .mreading small{font-size:10px;color:var(--muted);display:block}
-  .mreading b{font-size:16px}
-  .coordrow{display:flex;gap:8px;align-items:center;margin-top:8px}
-  .coordrow input{width:100%}
-  .expbtns{display:flex;gap:8px;margin-top:12px}
-  .expbtns .btn{flex:1;justify-content:center}
-  /* responsive / móvil */
-  .tablewrap table{min-width:480px}
-  .toast{bottom:calc(20px + env(safe-area-inset-bottom))}
-  @media(max-width:600px){
-    .hide-sm{display:none}
-    header{padding:10px 14px;gap:10px}
-    .sub{display:none}
-    nav.tabs{padding:0 10px}
-    nav.tabs button{padding:12px 11px;font-size:13px;white-space:nowrap}
-    main{padding:16px 12px}
-    .btn.sm{padding:9px 12px}
-    .seg button{padding:10px 13px}
-    .card{padding:13px}
-    .cfgwrap{grid-template-columns:1fr}
-    .mapbox{height:46vh;min-height:300px}
-    pre.out{white-space:pre-wrap;word-break:break-word}
-    #geoBtn{min-width:44px;min-height:40px}
-  }
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .b-good{background:rgba(34,197,94,.14);color:#bbf7d0}.b-warn{background:rgba(245,158,11,.16);color:#ffe4b0}.b-bad{background:rgba(251,113,133,.16);color:#fecdd3}.b-muted{background:var(--panel);color:var(--muted)}
+  .quarter{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel)}
+  .quarter.risk{border-color:rgba(251,113,133,.5)}
+  .btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:10px;padding:9px 13px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));border:none;color:#04121e}
+  .note{font-size:11.5px;color:var(--muted);border-left:3px solid var(--line);padding:4px 0 4px 11px;margin-top:10px}
+  @media(max-width:900px){.g6,.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:1fr 1fr}.frost .big{font-size:46px}}
+  @media(max-width:560px){.g2,.g3{grid-template-columns:1fr}.chips{width:100%;margin-left:0}.soilrow .lab{width:96px}}
 </style>
 </head>
 <body>
-<div class="topbar">
+<div class="demobar" id="demobar">🧪 <b>DEMO — datos simulados</b> · escenario ilustrativo: cerezos en Curicó, madrugada con helada · no son lecturas reales de un cliente</div>
 <header>
-  <div class="logo" aria-hidden="true">AM</div>
-  <div>
-    <h1>4G LTE CAT1 Air Monitor</h1>
-    <div class="sub">ESP32-S3 · A76XX/SIM7670 · estación de calidad del aire</div>
+  <div class="wrap hd">
+    <span class="brand">
+      <svg class="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="url(#g)"/>
+        <path d="M14 30c4-1 6-5 6-10 0 6 3 9 7 9 3 0 5-2 6-5" stroke="#04121e" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <circle cx="34" cy="15" r="3.4" fill="#04121e"/>
+        <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
+      [Marca]
+    </span>
+    <span class="st"><span class="n" id="stName">Fundo demo · Curicó, Maule</span><span class="s" id="stSub">Estación agroclimática · ESP32-S3 + 4G LTE CAT1</span></span>
+    <span class="chips">
+      <span class="cropsel">Cultivo
+        <select id="crop" aria-label="Cultivo">
+          <option value="cerezo">🍒 Cerezo</option>
+          <option value="palto">🥑 Palto</option>
+          <option value="kiwi">🥝 Kiwi</option>
+          <option value="arandano">🫐 Arándano</option>
+          <option value="uva">🍇 Uva de mesa</option>
+          <option value="nogal">🌰 Nogal</option>
+          <option value="ciruelo">🟣 Ciruelo</option>
+        </select>
+      </span>
+      <span class="chip" id="clock">🕔 05:20</span>
+      <span class="chip">📶 <b>4G</b> · CSQ 21</span>
+      <span class="chip">🔋 <b>82%</b> · solar</span>
+    </span>
   </div>
-  <div class="spacer"></div>
-  <button class="status-pill alarmpill" id="alarmPill" title="Alarmas activas" aria-label="Ir a alarmas"><span class="dot" id="alarmDot" style="background:var(--good)"></span><span id="alarmTxt">Sin alarmas</span></button>
-  <div class="status-pill" id="connPill"><span class="dot" id="connDot"></span><span id="connTxt">En línea</span></div>
-  <div class="status-pill hide-sm" title="Señal 4G (AT+CSQ)">
-    <span class="signal" id="sig" aria-hidden="true"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
-    <span id="csq">CSQ —</span>
-  </div>
-  <div class="status-pill hide-sm" title="Batería (AT+CBC)">
-    <span class="bat" aria-hidden="true"><span id="batFill" style="width:80%"></span></span>
-    <span id="batTxt">—</span>
-  </div>
+  <div class="wrap"><div class="tabs" id="tabs">
+    <button class="tab on" data-tab="vivo">Tiempo real</button>
+    <button class="tab" data-tab="hist">Históricos</button>
+    <button class="tab" data-tab="cuarteles">Cuarteles</button>
+    <button class="tab" data-tab="alarmas">Alarmas</button>
+    <button class="tab" data-tab="config">Configuración</button>
+  </div></div>
 </header>
-
-<nav class="tabs" role="tablist" aria-label="Secciones">
-  <button data-tab="realtime" class="active" role="tab" aria-selected="true">📈 Tiempo real</button>
-  <button data-tab="history" role="tab" aria-selected="false">🗂️ Históricos</button>
-  <button data-tab="alarms" role="tab" aria-selected="false">🔔 Alarmas</button>
-  <button data-tab="map" role="tab" aria-selected="false">🗺️ Mapa</button>
-  <button data-tab="config" role="tab" aria-selected="false">⚙️ Configuración</button>
-</nav>
-</div>
-
-<main>
-  <div class="toolbar">
-    <button class="btn primary" id="playBtn">⏸ Pausar</button>
-    <div class="seg" id="srcSeg">
-      <button data-src="demo" class="active">Demo</button>
-      <button data-src="thingspeak">ThingSpeak</button>
-    </div>
-    <button class="btn" id="notifBtn">🔕 Activar notificaciones</button>
-    <button class="btn primary" id="installBtn" style="display:none">⬇️ Instalar app</button>
-    <span class="src" id="srcLabel">Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s</span>
-    <div class="spacer"></div>
-    <span class="sub" id="clock"></span>
-  </div>
-
-  <div class="banner" id="banner">
-    <div class="bt">⚠️ <span id="bannerTitle">Alarmas activas</span></div>
-    <ul id="bannerList"></ul>
-  </div>
-
-  <!-- ===================== TIEMPO REAL ===================== -->
-  <section class="view active" id="view-realtime">
-    <div class="grid kpis" id="kpis"></div>
-    <div class="card reco" id="recoCard" style="margin-top:16px">
-      <h3>💡 Recomendaciones</h3>
-      <div class="hint">Sugerencias automáticas según las lecturas actuales del dispositivo</div>
-      <div id="recoList"></div>
-    </div>
-    <div class="grid row2" style="margin-top:16px">
-      <div class="card">
-        <h3>Tendencia ambiental</h3>
-        <div class="hint">Temperatura (°C) y humedad (% rH) — AHT10</div>
-        <canvas class="chart" id="chartTH"></canvas>
-        <div class="legend">
-          <span><b style="background:#3fa7ff"></b>Temperatura °C</span>
-          <span><b style="background:#34d399"></b>Humedad %rH</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Índice de calidad del aire</h3>
-        <div class="hint">Estimado a partir de eCO₂ y TVOC (SGP30)</div>
-        <div class="aqi">
-          <div class="ring"><canvas id="aqiRing" width="320" height="320" style="width:160px;height:160px"></canvas>
-            <div class="num"><b id="aqiVal">—</b><small id="aqiLbl">calculando…</small></div>
-          </div>
-          <div class="badge" id="aqiBadge">—</div>
-        </div>
-      </div>
-    </div>
-    <div class="grid row2" style="margin-top:16px">
-      <div class="card">
-        <h3>Gases</h3>
-        <div class="hint">eCO₂ (ppm) y TVOC (ppb) — SGP30</div>
-        <canvas class="chart" id="chartGas"></canvas>
-        <div class="legend">
-          <span><b style="background:#a78bfa"></b>eCO₂ ppm</span>
-          <span><b style="background:#fbbf24"></b>TVOC ppb</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Lecturas recientes</h3>
-        <div class="hint">Últimas muestras del dispositivo</div>
-        <div class="tablewrap">
-          <table>
-            <thead><tr><th>Hora</th><th>T°C</th><th>%rH</th><th>eCO₂</th><th>TVOC</th><th>Lux</th></tr></thead>
-            <tbody id="tbody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== HISTÓRICOS ===================== -->
-  <section class="view" id="view-history">
-    <div class="toolbar">
-      <div class="seg" id="rangeSeg">
-        <button data-range="3600000">1 h</button>
-        <button data-range="21600000">6 h</button>
-        <button data-range="86400000" class="active">24 h</button>
-        <button data-range="604800000">7 d</button>
-        <button data-range="0">Todo</button>
-      </div>
-      <div class="seg" id="metricSeg"></div>
-      <div class="spacer"></div>
-      <button class="btn sm" id="csvBtn">⬇️ Exportar CSV</button>
-      <button class="btn sm danger" id="clearHistBtn">🗑️ Borrar históricos</button>
-    </div>
-    <div class="card">
-      <h3 id="histTitle">Histórico</h3>
-      <div class="hint" id="histHint">Selecciona sensor y rango</div>
-      <div class="stat" id="histStats"></div>
-      <canvas class="chartbig" id="chartHist"></canvas>
-      <div class="legend"><span id="histLegend"></span><span class="src" id="histCount" style="margin-left:auto"></span></div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <h3>Muestras (máx. 200 más recientes del rango)</h3>
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th>Fecha y hora</th><th>T°C</th><th>%rH</th><th>eCO₂</th><th>TVOC</th><th>Lux</th><th>Bat V</th><th>CSQ</th></tr></thead>
-          <tbody id="histBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== ALARMAS ===================== -->
-  <section class="view" id="view-alarms">
-    <div class="grid row2">
-      <div class="card">
-        <h3>Reglas de alarma</h3>
-        <div class="hint">Umbral alto/bajo y cambio brusco por sensor. Vacío = desactivado.</div>
-        <div class="tablewrap">
-          <table class="cfgtable">
-            <thead><tr><th>Sensor</th><th>Mín</th><th>Máx</th><th>Δ cambio</th><th>Ventana</th></tr></thead>
-            <tbody id="cfgBody"></tbody>
-          </table>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-          <label class="src">Sin datos / offline tras
-            <input class="f num" id="offlineMin" type="number" min="1" step="1" style="width:60px"> min</label>
-          <div class="spacer"></div>
-          <button class="btn sm" id="resetCfg">Restaurar</button>
-          <button class="btn sm primary" id="saveCfg">Guardar reglas</button>
-        </div>
-      </div>
-      <div class="card" id="activeCard">
-        <h3>Alarmas activas</h3>
-        <div class="hint">Estado en tiempo real</div>
-        <div id="activeList"><div class="empty">Sin alarmas activas ✅</div></div>
-        <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-          <label class="src"><input type="checkbox" id="soundChk" checked> Sonido al disparar</label>
-          <button class="btn sm" id="testAlarm">Probar alarma</button>
-        </div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:16px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <h3 style="margin:0">Historial de eventos</h3>
-        <div class="spacer"></div>
-        <button class="btn sm danger" id="clearLog">Vaciar historial</button>
-      </div>
-      <div class="hint" style="margin-top:4px">Cada activación y reposición de alarma</div>
-      <div class="tablewrap" style="max-height:380px">
-        <table>
-          <thead><tr><th>Fecha y hora</th><th>Sensor</th><th>Tipo</th><th>Estado</th><th>Valor</th><th>Detalle</th></tr></thead>
-          <tbody id="logBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== MAPA ===================== -->
-  <section class="view" id="view-map">
-    <div class="toolbar">
-      <span class="src">Posiciona cada sensor por geolocalización sobre el mapa. Haz clic en un marcador para ver su ficha, histórico y exportarlo.</span>
-      <div class="spacer"></div>
-      <button class="btn sm" id="addStation">➕ Añadir estación</button>
-    </div>
-    <div class="maplayout">
-      <div class="mapbox" id="mapbox"></div>
-      <div class="mapside">
-        <div class="card">
-          <h3>Estaciones</h3>
-          <div class="hint" id="mapModeHint">—</div>
-          <div class="stlist" id="stList"></div>
-        </div>
-        <div class="card" id="stDetail"><div class="empty">Selecciona una estación en el mapa</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== CONFIGURACIÓN ===================== -->
-  <section class="view" id="view-config">
-    <div class="toolbar">
-      <span class="src">Configuración del dispositivo y periféricos. Se guarda en el navegador y genera los artefactos para el firmware.</span>
-      <div class="spacer"></div>
-      <button class="btn sm" id="cfgImport">⬆️ Importar JSON</button>
-      <button class="btn sm danger" id="cfgReset">Restaurar valores</button>
-      <button class="btn sm primary" id="cfgSave">💾 Guardar</button>
-      <input type="file" id="cfgFile" accept="application/json" style="display:none">
-    </div>
-    <div class="cfgwrap" id="cfgSections"></div>
-
-    <div class="card gen" style="margin-top:16px">
-      <h3>Generar artefactos para el dispositivo</h3>
-      <div class="hint">A partir de la configuración de arriba se generan los archivos que necesita el ESP32-S3 y el módem.</div>
-      <div class="tabsx" id="genTabs">
-        <button class="btn sm primary" data-gen="configh">config.h (firmware)</button>
-        <button class="btn sm" data-gen="at">Comandos AT (módem)</button>
-        <button class="btn sm" data-gen="json">JSON de provisión</button>
-      </div>
-      <pre class="out" id="cfgOut"></pre>
-      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
-        <button class="btn sm" id="genCopy">📋 Copiar</button>
-        <button class="btn sm" id="genDownload">⬇️ Descargar</button>
-        <span class="src" id="genNote" style="align-self:center"></span>
-      </div>
-    </div>
-  </section>
-
-  <footer>
-    Dashboard de ejemplo · Proyecto
-    <a href="https://github.com/Makerfabs/4G-LTE-CAT1-Air-Monitor" target="_blank" rel="noopener">Makerfabs 4G-LTE-CAT1-Air-Monitor</a>.
-    Históricos guardados localmente en tu navegador (IndexedDB). Datos simulados salvo que conectes ThingSpeak.
-  </footer>
-</main>
-
-<div class="modal" id="modal">
-  <div class="card">
-    <h3>Conectar a ThingSpeak</h3>
-    <div class="hint">Lee el canal usado por el ejemplo <code>Transmit_the_detection_data_to_Thingspeak</code>.</div>
-    <label>Channel ID</label>
-    <input class="f" id="tsChannel" placeholder="p.ej. 1234567">
-    <label>Read API Key (opcional para canales públicos)</label>
-    <input class="f" id="tsKey" placeholder="XXXXXXXXXXXXXXXX">
-    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end">
-      <button class="btn" id="tsCancel">Cancelar</button>
-      <button class="btn primary" id="tsConnect">Conectar</button>
-    </div>
-    <p class="src" style="margin-top:12px">Mapeo: 1=Temp, 2=Humedad, 3=eCO₂, 4=TVOC, 5=Lux, 6=Batería.</p>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
+<main><div class="wrap" id="view"></div></main>
 
 <script>
 "use strict";
-
-/* ============================================================
-   Helpers de seguridad / robustez
-   ============================================================ */
-// Escapa texto para interpolación segura en innerHTML (anti-XSS)
-function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-// Parseo numérico tolerante: devuelve fallback si no es finito
-function numv(x,fb){const n=parseFloat(x);return Number.isFinite(n)?n:fb;}
-// min/max sin spread (seguro para arrays enormes)
-function amin(a){let m=Infinity;for(let i=0;i<a.length;i++)if(a[i]<m)m=a[i];return m;}
-function amax(a){let m=-Infinity;for(let i=0;i<a.length;i++)if(a[i]>m)m=a[i];return m;}
-function asum(a){let s=0;for(let i=0;i<a.length;i++)s+=a[i];return s;}
-// Escapa una cadena para literal C ("...") en config.h
-function cstr(s){return String(s==null?"":s).replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/[\r\n]+/g," ");}
-// Sanea un valor que va a un comando AT (sin saltos de línea ni comillas)
-function atSan(s){return String(s==null?"":s).replace(/[\r\n"]+/g," ");}
-// Longitud en bytes (UTF-8) para campos AT
-function byteLen(s){return new TextEncoder().encode(String(s)).length;}
-// Celda CSV: comilla siempre el texto, duplica comillas y neutraliza fórmulas
-function csvCell(v){if(typeof v==="number")return v;let s=String(v==null?"":v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
-// Escapa para XML SpreadsheetML, quitando caracteres de control no permitidos
-function xmlEsc(s){return String(s==null?"":s).replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g,"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-// localStorage con captura de cuota
-function setLS(k,v){try{localStorage.setItem(k,v);return true;}catch(e){toast("No se pudo guardar (almacenamiento lleno)");return false;}}
-
-/* ============================================================
-   Metadatos de sensores
-   ============================================================ */
-const METRICS = [
-  {key:"temp", label:"Temperatura", unit:"°C",  color:"#3fa7ff", fmt:v=>v.toFixed(1),
-   status:v=> v<18||v>30?"warn":"good"},
-  {key:"hum",  label:"Humedad",     unit:"%rH", color:"#34d399", fmt:v=>v.toFixed(0),
-   status:v=> v<30||v>70?"warn":"good"},
-  {key:"eco2", label:"eCO₂",        unit:"ppm", color:"#a78bfa", fmt:v=>v.toFixed(0),
-   status:v=> v>1500?"bad":v>1000?"warn":"good"},
-  {key:"tvoc", label:"TVOC",        unit:"ppb", color:"#fbbf24", fmt:v=>v.toFixed(0),
-   status:v=> v>660?"bad":v>250?"warn":"good"},
-  {key:"lux",  label:"Luz",         unit:"lux", color:"#22d3ee", fmt:v=>v.toFixed(0),
-   status:v=> "good"},
-  {key:"bat",  label:"Batería",     unit:"V",   color:"#f472b6", fmt:v=>v.toFixed(2),
-   status:v=> v<3.5?"bad":v<3.7?"warn":"good"},
-];
-// csq se rastrea para alarmas/cabecera pero no es tarjeta KPI
-const CSQ_META = {key:"csq", label:"Señal 4G", unit:"CSQ", color:"#60a5fa", fmt:v=>v.toFixed(0)};
-const ALL = [...METRICS, CSQ_META];
-const byKey = Object.fromEntries(ALL.map(m=>[m.key,m]));
-const MAXLIVE = 40;       // puntos en gráficas de tiempo real
-const RECENT_MAX = 1200;  // buffer en memoria para cambio brusco (~1h a 3s)
-const STATUS_TXT = {good:"Normal", warn:"Atención", bad:"Alto"};
-
-/* ============================================================
-   IndexedDB — históricos y log de alarmas
-   ============================================================ */
-const DB_NAME="airmon", DB_VER=1; let db;
-function openDB(){return new Promise((res,rej)=>{
-  const r=indexedDB.open(DB_NAME,DB_VER);
-  r.onupgradeneeded=e=>{const d=e.target.result;
-    if(!d.objectStoreNames.contains("readings")) d.createObjectStore("readings",{keyPath:"t"});
-    if(!d.objectStoreNames.contains("alarms")) d.createObjectStore("alarms",{keyPath:"id",autoIncrement:true});
-  };
-  r.onsuccess=e=>{db=e.target.result;res(db);}; r.onerror=()=>rej(r.error);
-});}
-function tx(store,mode){return db.transaction(store,mode).objectStore(store);}
-function putReading(rec){return new Promise((res,rej)=>{const q=tx("readings","readwrite").put(rec);q.onsuccess=res;q.onerror=()=>rej(q.error);});}
-function bulkPut(store,rows){return new Promise((res,rej)=>{const t=db.transaction(store,"readwrite");const s=t.objectStore(store);rows.forEach(r=>s.put(r));t.oncomplete=res;t.onerror=()=>rej(t.error);});}
-function countReadings(){return new Promise((res,rej)=>{const q=tx("readings","readonly").count();q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error);});}
-function getRange(fromT,toT){return new Promise((res,rej)=>{
-  const range=fromT? IDBKeyRange.bound(fromT,toT):null;
-  const out=[];const q=tx("readings","readonly").openCursor(range);
-  q.onsuccess=e=>{const c=e.target.result; if(c){out.push(c.value);c.continue();} else res(out);};
-  q.onerror=()=>rej(q.error);
-});}
-function clearStore(store){return new Promise((res,rej)=>{const q=tx(store,"readwrite").clear();q.onsuccess=res;q.onerror=()=>rej(q.error);});}
-function logAlarm(ev){return new Promise((res,rej)=>{const q=tx("alarms","readwrite").add(ev);q.onsuccess=res;q.onerror=()=>rej(q.error);});}
-function getAlarms(limit){return new Promise((res,rej)=>{
-  const out=[];const q=tx("alarms","readonly").openCursor(null,"prev");
-  q.onsuccess=e=>{const c=e.target.result; if(c&&out.length<limit){out.push(c.value);c.continue();} else res(out);};
-  q.onerror=()=>rej(q.error);
-});}
-
-/* ============================================================
-   Configuración de alarmas (localStorage)
-   ============================================================ */
-const DEFAULT_CFG={
-  temp:{low:5,  high:32,  rate:5,   win:300},
-  hum :{low:20, high:80,  rate:25,  win:300},
-  eco2:{low:null,high:1500,rate:600, win:300},
-  tvoc:{low:null,high:660, rate:300, win:300},
-  lux :{low:null,high:null,rate:null,win:300},
-  bat :{low:3.5,high:null, rate:null,win:300},
-  csq :{low:8,  high:null, rate:null,win:300},
-  offlineMin:2
+/* ================= Escenario base coherente (una sola historia de campo) =================
+   Cerezos, Curicó (Maule), ~8 de septiembre, madrugada. Helada radiativa en curso:
+   cielo despejado + viento calmo + aire seco (punto de rocío bajo) → fuerte enfriamiento.
+   El frío invernal ya está cumplido → las yemas están en brotación y por eso quedan
+   vulnerables a la helada. Suelo con humedad adecuada (no es noche de riego, es de helada). */
+const SCN = {
+  place:"Fundo demo · Curicó, Maule", crop:"cerezo",
+  // curva de temperatura del aire de la noche (min desde 18:00) → °C
+  nightCurve:[[0,9.0],[60,6.8],[120,4.6],[180,3.0],[240,1.9],[300,1.0],[360,0.4],[420,-0.2],
+    [480,-0.8],[540,-1.3],[600,-1.7],[640,-2.1],[680,-2.5],[700,-2.3],[720,-1.4],[780,0.6],[840,3.2],[900,7.0]],
+  minTemp:-2.5, minAtMin:680,           // mínima estimada 05:20 + ... = 06:40 (18:00 + 680 min)
+  startMin:560,                          // "ahora" = 18:00 + 560 = 03:20 (helada activa) ... avanza en vivo
+  hr:78, dew:-3.4, wind:1.6, windDir:"SE", windDeg:135, radiation:0, radPeak:520,
+  rainDay:0, rainSeason:318, leafWet:0,
+  soil:[ {d:"15 cm", t:8.1, m:22}, {d:"30 cm", t:9.8, m:28}, {d:"60 cm", t:11.6, m:31} ],
+  soilFC:32, soilPMP:12,                 // capacidad de campo / punto marchitez (suelo franco)
+  chillHF:1148, chillPor:71,             // Horas Frío <7,2°C y Porciones de Frío (Dynamic)
+  gdd:52,                                // grados-día acumulados temporada (desde 1-ago)
+  et0:1.9, kc:0.45, caTemp:0.4, caCO2:1180, caHR:92
 };
-function loadCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.cfg"));return c&&c.temp?c:structuredClone(DEFAULT_CFG);}catch(e){return structuredClone(DEFAULT_CFG);}}
-function saveCfgLS(){setLS("airmon.cfg",JSON.stringify(S.cfg));}
-
-/* ============================================================
-   Estado
-   ============================================================ */
-const S={
-  running:true, source:"demo",
-  liveT:[], live:Object.fromEntries(ALL.map(m=>[m.key,[]])),
-  recentT:[], recent:Object.fromEntries(ALL.map(m=>[m.key,[]])),
-  lastT:0, csq:0, batPct:0,
-  active:{}, cfg:loadCfg(),
-  view:"realtime", sound:true, notify:false,
-  ts:{channel:null,key:null},
+/* Requerimientos y modelos por cultivo (metas de frío, base GDD, plaga por grados-día, umbral de daño por helada) */
+const CROPS = {
+  cerezo:  {emoji:"🍒", name:"Cerezo",       chillHF:1100, chillPor:65, gddBase:10, pest:"Drosophila suzukii", frostCrit:-1.1, stage:"Brotación / inicio floración"},
+  palto:   {emoji:"🥑", name:"Palto",        chillHF:0,    chillPor:0,  gddBase:10, pest:"Conchuela / trips",   frostCrit:-1.0, stage:"Floración (muy sensible)"},
+  kiwi:    {emoji:"🥝", name:"Kiwi",         chillHF:800,  chillPor:60, gddBase:10, pest:"—",                  frostCrit:-1.5, stage:"Brotación"},
+  arandano:{emoji:"🫐", name:"Arándano",     chillHF:600,  chillPor:45, gddBase:7,  pest:"Drosophila suzukii", frostCrit:-1.5, stage:"Brotación / flor"},
+  uva:     {emoji:"🍇", name:"Uva de mesa",  chillHF:300,  chillPor:30, gddBase:10, pest:"Lobesia botrana",    frostCrit:-0.5, stage:"Pre-brotación"},
+  nogal:   {emoji:"🌰", name:"Nogal",        chillHF:700,  chillPor:55, gddBase:10, pest:"Carpocapsa (Cydia pomonella)", frostCrit:-1.5, stage:"Yema hinchada"},
+  ciruelo: {emoji:"🟣", name:"Ciruelo",      chillHF:800,  chillPor:58, gddBase:10, pest:"Carpocapsa / grafolita", frostCrit:-1.3, stage:"Botón / floración"}
 };
+let CROP = "cerezo";
+let tmin = SCN.startMin;            // reloj del escenario (min desde 18:00), avanza "en vivo"
+let timer = null;
 
-/* ============================================================
-   Generación de datos
-   ============================================================ */
-function genSeed(t){ // determinista, para sembrar histórico
-  const s=t/1000;
-  const w=(a,p,ph)=>a*Math.sin(s/p+ph);
-  const dn=(t%86400000)/86400000;             // 0..1 a lo largo del día
-  const dayT=Math.sin((dn-0.25)*2*Math.PI);   // pico de tarde
-  const spikePh=Math.floor(t/(1800000));       // cada 30 min
-  const spike=(spikePh%17===0)?900:(spikePh%29===0)?1500:0;
-  return {
-    t,
-    temp:+(22+dayT*4+w(0.6,40,1)).toFixed(2),
-    hum :+(52-dayT*12+w(3,55,2)).toFixed(1),
-    eco2:+(480+w(120,30,3)+spike+Math.max(0,dayT)*120).toFixed(0),
-    tvoc:+(80+w(50,25,4)+spike*0.5).toFixed(0),
-    lux :+Math.max(0,(Math.max(0,dayT)*900+w(40,12,2))).toFixed(0),
-    bat :+(4.05-dn*0.35).toFixed(3),
-    csq :Math.round(20+w(6,0.5,1)),
-  };
+/* ---- helpers ---- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function minToClock(m){ const tot=(18*60+m)%1440; const h=Math.floor(tot/60), mm=tot%60; return String(h).padStart(2,"0")+":"+String(mm).padStart(2,"0"); }
+function lerpCurve(curve,m){ // interpola °C en la curva nocturna
+  if(m<=curve[0][0])return curve[0][1];
+  for(let i=1;i<curve.length;i++){ if(m<=curve[i][0]){ const [x0,y0]=curve[i-1],[x1,y1]=curve[i]; const f=(m-x0)/(x1-x0); return y0+(y1-y0)*f; } }
+  return curve[curve.length-1][1];
 }
-let batDrain=0;
-function genLive(){ // en vivo (demo) con algo de ruido
-  const now=Date.now(), s=now/1000;
-  const w=(a,p,ph=0)=>a*Math.sin(s/p+ph), nz=a=>(Math.random()-0.5)*a;
-  const spike=Math.random()<0.06?Math.random()*900:0;
-  batDrain+=0.0006;
-  return {
-    t:now,
-    temp:+(24+w(2.5,90)+nz(0.4)).toFixed(2),
-    hum :+(48+w(8,120,1)+nz(2)).toFixed(1),
-    eco2:+(520+w(120,70,3)+spike+nz(40)).toFixed(0),
-    tvoc:+(90+w(60,60,4)+spike*0.6+nz(20)).toFixed(0),
-    lux :+Math.max(0,340+w(260,140,2)+nz(40)).toFixed(0),
-    bat :+Math.max(3.3,3.98-batDrain+nz(0.01)).toFixed(3),
-    csq :Math.max(0,Math.min(31,Math.round(20+w(6,9)+nz(3)))),
-  };
-}
+const tempNow=()=>lerpCurve(SCN.nightCurve,tmin);
+const minsToMin=()=>Math.max(0,SCN.minAtMin-tmin);
 
-/* ============================================================
-   Ingesta de una muestra
-   ============================================================ */
-async function ingest(rec, persist=true){
-  // buffers en memoria
-  S.liveT.push(rec.t); if(S.liveT.length>MAXLIVE)S.liveT.shift();
-  S.recentT.push(rec.t); if(S.recentT.length>RECENT_MAX)S.recentT.shift();
-  ALL.forEach(m=>{
-    const v=rec[m.key];
-    S.live[m.key].push(v); if(S.live[m.key].length>MAXLIVE)S.live[m.key].shift();
-    S.recent[m.key].push(v); if(S.recent[m.key].length>RECENT_MAX)S.recent[m.key].shift();
-  });
-  S.lastT=rec.t;
-  S.csq=rec.csq;
-  S.batPct=Math.round(Math.min(100,Math.max(0,(rec.bat-3.3)/(4.2-3.3)*100)));
-  if(persist){ try{await putReading(rec);}catch(e){console.warn(e);} }
-  evaluateAlarms(rec);
-  if(S.view==="realtime") renderRealtime();
-  renderHeader();
-}
+/* semáforo de helada según cultivo */
+function frostLevel(t){ const c=CROPS[CROP]; if(t<=c.frostCrit) return "red"; if(t<=c.frostCrit+2) return "amber"; return "green"; }
+function frostLabel(l){ return l==="red"?"HELADA — riesgo de daño":l==="amber"?"Alerta — temperatura crítica cerca":"Sin riesgo de helada"; }
+function frostColor(l){ return l==="red"?"var(--bad)":l==="amber"?"var(--warn)":"var(--good)"; }
 
-/* ============================================================
-   Motor de alarmas
-   ============================================================ */
-const TYPE_TXT={high:"Umbral alto",low:"Umbral bajo",rate:"Cambio brusco",offline:"Sin datos"};
-function valueAgo(key,secs){
-  const target=Date.now()-secs*1000;
-  const ts=S.recentT;
-  for(let i=ts.length-1;i>=0;i--){ if(ts[i]<=target) return S.recent[key][i]; }
-  return null;
-}
-function setActive(akey, info){
-  if(!S.active[akey]){ // flanco de subida
-    S.active[akey]={...info, since:Date.now()};
-    onAlarmRaise(S.active[akey]);
-    logAlarm({t:Date.now(),metric:info.metric,type:info.type,level:"alarm",value:info.value,msg:info.msg});
-    return true;
-  } else { S.active[akey].value=info.value; S.active[akey].msg=info.msg; }
-  return false;
-}
-function clearActive(akey){
-  if(S.active[akey]){
-    const a=S.active[akey]; delete S.active[akey];
-    logAlarm({t:Date.now(),metric:a.metric,type:a.type,level:"clear",value:a.value,msg:byKey[a.metric].label+" normalizado"});
-    renderAlarms();
-  }
-}
-function evaluateAlarms(rec){
-  let changed=false;
-  ALL.forEach(m=>{
-    const c=S.cfg[m.key]||{}; const v=rec[m.key]; if(v==null)return;
-    // Umbral alto
-    const kHigh=m.key+":high";
-    if(c.high!=null && v>c.high){ if(setActive(kHigh,{metric:m.key,type:"high",value:v,msg:`${m.label} alto: ${m.fmt(v)} ${m.unit} (> ${c.high})`}))changed=true; }
-    else if(S.active[kHigh] && v < c.high-Math.abs(c.high)*0.02){ clearActive(kHigh); changed=true; }
-    // Umbral bajo
-    const kLow=m.key+":low";
-    if(c.low!=null && v<c.low){ if(setActive(kLow,{metric:m.key,type:"low",value:v,msg:`${m.label} bajo: ${m.fmt(v)} ${m.unit} (< ${c.low})`}))changed=true; }
-    else if(S.active[kLow] && v > c.low+Math.abs(c.low)*0.02){ clearActive(kLow); changed=true; }
-    // Cambio brusco
-    if(c.rate!=null){
-      const past=valueAgo(m.key,c.win||300);
-      if(past!=null){ const d=Math.abs(v-past);
-        const kR=m.key+":rate";
-        if(d>c.rate){ if(setActive(kR,{metric:m.key,type:"rate",value:v,msg:`${m.label} cambio brusco: Δ${d.toFixed(1)} ${m.unit} en ${Math.round((c.win||300)/60)} min`,expire:Date.now()+45000}))changed=true; }
-      }
-    }
-  });
-  if(changed) renderAlarms();
-}
-function offlineWatch(){
-  const k="system:offline";
-  const tout=(S.cfg.offlineMin||2)*60000;
-  if(S.lastT && Date.now()-S.lastT>tout){
-    setActive(k,{metric:"csq",type:"offline",value:0,msg:`Sin lecturas desde hace ${Math.round((Date.now()-S.lastT)/60000)} min`});
-  } else if(S.active[k]){ clearActive(k); }
-  // expirar alarmas de cambio brusco (registra reposición en el log)
-  let exp=false;
-  Object.keys(S.active).forEach(ak=>{const a=S.active[ak]; if(a.expire&&Date.now()>a.expire){clearActive(ak);exp=true;}});
-  if(exp) renderAlarms();
-  renderHeader();
-}
-function onAlarmRaise(a){
-  if(S.sound) beep(a.type==="rate"?660:440);
-  if(S.notify && "Notification" in window && Notification.permission==="granted"){
-    try{new Notification("⚠️ Alarma: "+byKey[a.metric].label,{body:a.msg});}catch(e){}
-  }
-}
-let actx;
-function beep(freq){
-  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-    const o=actx.createOscillator(),g=actx.createGain();
-    o.frequency.value=freq;o.type="sine";o.connect(g);g.connect(actx.destination);
-    g.gain.setValueAtTime(.12,actx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.4);
-    o.start();o.stop(actx.currentTime+.4);
-  }catch(e){}
-}
-
-/* ============================================================
-   AQI estimado
-   ============================================================ */
-function computeAQI(eco2,tvoc){
-  const c=Math.min(100,Math.max(0,(eco2-400)/16));
-  const v=Math.min(100,Math.max(0,tvoc/6.6));
-  const score=Math.round(c*0.55+v*0.45);
-  let lbl="Excelente",cls="good";
-  if(score>75){lbl="Insalubre";cls="bad";}
-  else if(score>50){lbl="Pobre";cls="bad";}
-  else if(score>30){lbl="Moderado";cls="warn";}
-  else if(score>15){lbl="Bueno";cls="good";}
-  return {score,lbl,cls};
-}
-
-/* ============================================================
-   Render — cabecera y banner
-   ============================================================ */
-function renderHeader(){
-  const sig=document.getElementById("sig").children;
-  const bars=Math.round(S.csq/31*5);
-  for(let i=0;i<5;i++) sig[i].className=i<bars?"on":"";
-  document.getElementById("csq").textContent="CSQ "+S.csq;
-  document.getElementById("batFill").style.width=S.batPct+"%";
-  document.getElementById("batFill").style.background=S.batPct<20?"var(--bad)":S.batPct<40?"var(--warn)":"var(--good)";
-  document.getElementById("batTxt").textContent=S.batPct+"%";
-  const n=Object.keys(S.active).length;
-  const pill=document.getElementById("alarmPill");
-  pill.classList.toggle("has",n>0);
-  document.getElementById("alarmTxt").textContent=n?`${n} alarma${n>1?"s":""}`:"Sin alarmas";
-  if(!n)document.getElementById("alarmDot").style.background="var(--good)";
-  // banner
-  const arr=Object.values(S.active);
-  const b=document.getElementById("banner");
-  b.classList.toggle("show",arr.length>0);
-  if(arr.length){
-    document.getElementById("bannerTitle").textContent=`${arr.length} alarma${arr.length>1?"s":""} activa${arr.length>1?"s":""}`;
-    document.getElementById("bannerList").innerHTML=arr.map(a=>`<li>${esc(a.msg)}</li>`).join("");
-  }
-}
-
-/* ============================================================
-   Render — tiempo real
-   ============================================================ */
-const kpiBox=document.getElementById("kpis");
-function buildKpis(){
-  kpiBox.innerHTML="";
-  METRICS.forEach(m=>{
-    const el=document.createElement("div");
-    el.className="card kpi"; el.id="kpi-"+m.key;
-    el.innerHTML=`<div class="top"><span>${m.label}</span><span class="badge" id="bd-${m.key}">—</span></div>
-      <div class="val"><span id="vl-${m.key}">—</span><span class="unit">${m.unit}</span></div>
-      <canvas class="spark" id="sp-${m.key}"></canvas>`;
-    kpiBox.appendChild(el);
-  });
-}
-function renderRealtime(){
-  METRICS.forEach(m=>{
-    const arr=S.live[m.key]; if(!arr.length)return;
-    const v=arr[arr.length-1];
-    document.getElementById("vl-"+m.key).textContent=m.fmt(v);
-    // estado: alarma activa manda
-    const hasAlarm=S.active[m.key+":high"]||S.active[m.key+":low"]||S.active[m.key+":rate"];
-    const st=hasAlarm?"bad":m.status(v);
-    const bd=document.getElementById("bd-"+m.key);
-    bd.textContent=hasAlarm?"Alarma":STATUS_TXT[st]; bd.className="badge b-"+st;
-    document.getElementById("kpi-"+m.key).classList.toggle("alarm",!!hasAlarm);
-    drawSpark(document.getElementById("sp-"+m.key),arr,m.color);
-  });
-  drawLine(document.getElementById("chartTH"),[{data:S.live.temp,color:"#3fa7ff"},{data:S.live.hum,color:"#34d399"}]);
-  drawLine(document.getElementById("chartGas"),[{data:S.live.eco2,color:"#a78bfa"},{data:S.live.tvoc,color:"#fbbf24"}]);
-  const eco2=S.live.eco2.at(-1),tvoc=S.live.tvoc.at(-1);
-  if(eco2!=null){const a=computeAQI(eco2,tvoc);
-    document.getElementById("aqiVal").textContent=a.score;
-    document.getElementById("aqiLbl").textContent="AQI estimado";
-    const badge=document.getElementById("aqiBadge");badge.textContent=a.lbl;badge.className="badge b-"+a.cls;
-    drawRing(document.getElementById("aqiRing"),a.score,a.cls);
-  }
-  renderLiveTable();
-  renderReco();
-}
-
-/* ============================================================
-   Motor de recomendaciones (según lecturas actuales)
-   ============================================================ */
-function valueTrend(key,secs){ // variación reciente (>0 sube, <0 baja)
-  const past=valueAgo(key,secs); const now=S.live[key]?.at(-1);
-  return (past==null||now==null)?null:now-past;
-}
-function computeReco(){
-  const g=k=>S.live[k]?.at(-1);
-  const temp=g("temp"),hum=g("hum"),eco2=g("eco2"),tvoc=g("tvoc"),lux=g("lux"),bat=g("bat"),csq=S.csq;
-  const r=[];
-  const add=(sev,icon,title,text)=>r.push({sev,icon,title,text});
-  // --- Temperatura / heladas / calor ---
-  if(temp!=null){
-    const dT=valueTrend("temp",600); // °C en 10 min
-    if(temp<=2) add("bad","❄️","Riesgo de helada","Temperatura crítica: activa riego por aspersión o calefactores para proteger el cultivo.");
-    else if(temp<=5) add("warn","🌡️","Vigilar helada","Temperatura baja"+(dT!=null&&dT<-1?" y descendiendo":"")+". Prepara protección antiheladas para la madrugada.");
-    else if(temp>=34) add("bad","🔥","Calor extremo","Riesgo de estrés térmico: considera sombreo o riego de refresco.");
-    else if(temp>=30) add("warn","☀️","Temperatura alta","Vigila el estrés por calor; evalúa adelantar el riego.");
-  }
-  // --- Humedad / riego / hongos ---
-  if(hum!=null){
-    if(hum<30) add("warn","💧","Aire seco","Humedad baja: posible estrés hídrico. Revisa el programa de riego.");
-    else if(hum>88) add("warn","🍄","Humedad muy alta","Riesgo de hongos/condensación. Mejora la ventilación del recinto.");
-  }
-  // --- Calidad del aire ---
-  if(eco2!=null){
-    if(eco2>1500) add("bad","💨","Ventila ahora","eCO₂ elevado: renueva el aire del ambiente para mejorar la calidad.");
-    else if(eco2>1000) add("warn","💨","Conviene ventilar","eCO₂ en aumento; abre o fuerza ventilación cuando puedas.");
-  }
-  if(tvoc!=null&&tvoc>660) add("bad","🧪","Compuestos volátiles altos","TVOC elevado: ventila y revisa posibles fuentes de emisión.");
-  // --- Luz ---
-  if(lux!=null&&temp!=null){
-    if(lux<40 && temp>10) add("info","💡","Poca luz","Iluminancia baja en horario activo; revisa sombreado o iluminación de apoyo.");
-  }
-  // --- Dispositivo: batería / señal ---
-  if(bat!=null){
-    if(bat<3.5) add("bad","🔋","Carga el dispositivo","Batería crítica: conéctalo para evitar pérdida de datos.");
-    else if(bat<3.7) add("warn","🔋","Batería baja","Programa la recarga o revisa el panel solar.");
-  }
-  if(csq!=null&&csq<8) add("warn","📶","Señal 4G débil","Cobertura baja (CSQ "+csq+"): reubica la antena para asegurar el envío de datos.");
-  if(S.lastT && Date.now()-S.lastT>(S.cfg.offlineMin||2)*60000) add("bad","📡","Sin datos","El dispositivo no reporta hace varios minutos: revisa energía y conexión.");
-  // --- Todo bien ---
-  if(!r.length) add("good","✅","Condiciones óptimas","Todas las variables están dentro de rango. No se requiere acción.");
-  // ordenar por severidad
-  const order={bad:0,warn:1,info:2,good:3};
-  r.sort((a,b)=>order[a.sev]-order[b.sev]);
-  return r;
-}
-function renderReco(){
-  const box=document.getElementById("recoList"); if(!box)return;
-  const list=computeReco();
-  box.innerHTML=list.map(x=>`<div class="reco-item sev-${x.sev}"><span class="ri" aria-hidden="true">${x.icon}</span>
-    <div><b>${x.title}</b><p>${x.text}</p></div></div>`).join("");
-  // resalta la tarjeta si hay algo crítico
-  const card=document.getElementById("recoCard");
-  if(card)card.classList.toggle("alarm",list.some(x=>x.sev==="bad"));
-}
-function renderLiveTable(){
-  const tb=document.getElementById("tbody");tb.innerHTML="";
-  const n=S.liveT.length;
-  for(let i=n-1;i>=Math.max(0,n-12);i--){
-    const tr=document.createElement("tr");const g=k=>S.live[k][i];
-    tr.innerHTML=`<td>${fmtTime(S.liveT[i])}</td><td>${g("temp").toFixed(1)}</td><td>${g("hum").toFixed(0)}</td>
-      <td>${g("eco2").toFixed(0)}</td><td>${g("tvoc").toFixed(0)}</td><td>${g("lux").toFixed(0)}</td>`;
-    tb.appendChild(tr);
-  }
-}
-
-/* ============================================================
-   Render — históricos
-   ============================================================ */
-let histMetric="temp", histRange=86400000;
-function buildMetricSeg(){
-  const seg=document.getElementById("metricSeg");seg.innerHTML="";
-  METRICS.forEach((m,i)=>{const b=document.createElement("button");b.textContent=m.label;b.dataset.m=m.key;
-    if(m.key===histMetric)b.className="active";
-    b.onclick=()=>{histMetric=m.key;[...seg.children].forEach(c=>c.classList.toggle("active",c.dataset.m===m.key));loadHistory();};
-    seg.appendChild(b);});
-}
-async function loadHistory(){
-  const m=byKey[histMetric];
-  const from=histRange?Date.now()-histRange:0;
-  let rows=await getRange(from,Date.now()+1);
-  document.getElementById("histTitle").textContent=m.label+" — histórico";
-  document.getElementById("histLegend").innerHTML=`<b style="display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;background:${m.color}"></b>${m.label} (${m.unit})`;
-  document.getElementById("histCount").textContent=rows.length+" muestras";
-  if(!rows.length){
-    document.getElementById("histHint").textContent="No hay datos en este rango todavía";
-    document.getElementById("histStats").innerHTML="";
-    drawHistory(document.getElementById("chartHist"),[],m);
-    document.getElementById("histBody").innerHTML='<tr><td colspan="8" class="empty">Sin muestras</td></tr>';
-    return;
-  }
-  const vals=rows.map(r=>r[histMetric]);
-  const mn=Math.min(...vals),mx=Math.max(...vals),avg=vals.reduce((a,b)=>a+b,0)/vals.length;
-  document.getElementById("histHint").textContent=`${fmtDate(rows[0].t)} → ${fmtDate(rows.at(-1).t)}`;
-  document.getElementById("histStats").innerHTML=
-    `<div>Mín<b>${m.fmt(mn)} ${m.unit}</b></div><div>Máx<b>${m.fmt(mx)} ${m.unit}</b></div>
-     <div>Media<b>${m.fmt(avg)} ${m.unit}</b></div><div>Actual<b>${m.fmt(vals.at(-1))} ${m.unit}</b></div>`;
-  drawHistory(document.getElementById("chartHist"),downsample(rows,420),m);
-  // tabla últimas 200
-  const tb=document.getElementById("histBody");tb.innerHTML="";
-  rows.slice(-200).reverse().forEach(r=>{const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${fmtDate(r.t)}</td><td>${r.temp.toFixed(1)}</td><td>${r.hum.toFixed(0)}</td>
-      <td>${r.eco2.toFixed(0)}</td><td>${r.tvoc.toFixed(0)}</td><td>${r.lux.toFixed(0)}</td>
-      <td>${r.bat.toFixed(2)}</td><td>${r.csq}</td>`;tb.appendChild(tr);});
-}
-function downsample(rows,target){
-  if(rows.length<=target)return rows;
-  const step=rows.length/target,out=[];
-  for(let i=0;i<target;i++)out.push(rows[Math.floor(i*step)]);
-  return out;
-}
-
-/* ============================================================
-   Render — alarmas (config, activas, log)
-   ============================================================ */
-function buildCfgForm(){
-  const tb=document.getElementById("cfgBody");tb.innerHTML="";
-  ALL.forEach(m=>{
-    const c=S.cfg[m.key]||{};
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${m.label} <span class="src">${m.unit}</span></td>
-      <td><input class="f num" data-k="${m.key}" data-f="low"  type="number" step="any" value="${c.low ??""}"></td>
-      <td><input class="f num" data-k="${m.key}" data-f="high" type="number" step="any" value="${c.high??""}"></td>
-      <td><input class="f num" data-k="${m.key}" data-f="rate" type="number" step="any" value="${c.rate??""}"></td>
-      <td><select class="f" data-k="${m.key}" data-f="win">
-        ${[60,120,300,600,900].map(s=>`<option value="${s}" ${(c.win||300)===s?"selected":""}>${s/60} min</option>`).join("")}
-      </select></td>`;
-    tb.appendChild(tr);
-  });
-  document.getElementById("offlineMin").value=S.cfg.offlineMin||2;
-}
-function readCfgForm(){
-  document.querySelectorAll("#cfgBody input,#cfgBody select").forEach(el=>{
-    const k=el.dataset.k,f=el.dataset.f;S.cfg[k]=S.cfg[k]||{};
-    if(f==="win")S.cfg[k].win=+el.value;
-    else S.cfg[k][f]=el.value===""?null:+el.value;
-  });
-  S.cfg.offlineMin=+document.getElementById("offlineMin").value||2;
-  saveCfgLS();
-}
-function renderAlarms(){
-  const arr=Object.entries(S.active);
-  const box=document.getElementById("activeList");
-  document.getElementById("activeCard").classList.toggle("alarm",arr.length>0);
-  if(!arr.length){box.innerHTML='<div class="empty">Sin alarmas activas ✅</div>';}
-  else{box.innerHTML=arr.map(([k,a])=>{
-    const sev=a.type==="rate"?"warn":"bad";
-    return `<div style="display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)">
-      <span class="badge b-${sev}">${TYPE_TXT[a.type]}</span>
-      <span>${esc(a.msg)}</span><span class="spacer" style="flex:1"></span>
-      <span class="src">${fmtTime(a.since)}</span></div>`;}).join("");}
-  renderLog();
-  renderHeader();
-}
-async function renderLog(){
-  const rows=await getAlarms(200);
-  const tb=document.getElementById("logBody");
-  if(!rows.length){tb.innerHTML='<tr><td colspan="6" class="empty">Sin eventos registrados</td></tr>';return;}
-  tb.innerHTML=rows.map(r=>{const m=byKey[r.metric]||{label:r.metric,unit:""};
-    return `<tr><td>${fmtDate(r.t)}</td><td>${m.label}</td><td>${TYPE_TXT[r.type]||r.type}</td>
-      <td><span class="lvl ${r.level}">${r.level==="alarm"?"DISPARO":"REPUESTO"}</span></td>
-      <td>${r.value!=null?(m.fmt?m.fmt(r.value):r.value)+" "+(m.unit||""):"—"}</td>
-      <td class="src" style="text-align:left">${esc(r.msg||"")}</td></tr>`;}).join("");
-}
-
-/* ============================================================
-   Dibujo en canvas
-   ============================================================ */
-function fitCanvas(cv){
-  const dpr=window.devicePixelRatio||1,r=cv.getBoundingClientRect();
-  if(cv.width!==Math.round(r.width*dpr)||cv.height!==Math.round(r.height*dpr)){cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);}
-  const ctx=cv.getContext("2d");ctx.setTransform(dpr,0,0,dpr,0,0);return {ctx,w:r.width,h:r.height};
-}
-function drawSpark(cv,data,color){
-  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);if(data.length<2)return;
-  const mn=Math.min(...data),mx=Math.max(...data),rng=(mx-mn)||1;
-  const x=i=>i/(data.length-1)*w,y=v=>h-4-((v-mn)/rng)*(h-8);
-  ctx.beginPath();data.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
-  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
-  ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
-  const g=ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,color+"44");g.addColorStop(1,color+"00");ctx.fillStyle=g;ctx.fill();
-}
-function drawLine(cv,series){
-  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);
-  const pad={l:6,r:6,t:10,b:18};
-  ctx.strokeStyle="#27314f";ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const yy=pad.t+(h-pad.t-pad.b)*i/4;ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();}
-  series.forEach(s=>{const d=s.data;if(d.length<2)return;
-    const mn=Math.min(...d),mx=Math.max(...d),rng=(mx-mn)||1;
-    const x=i=>pad.l+i/(d.length-1)*(w-pad.l-pad.r),y=v=>pad.t+(1-(v-mn)/rng)*(h-pad.t-pad.b);
-    ctx.beginPath();d.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));
-    ctx.strokeStyle=s.color;ctx.lineWidth=2.2;ctx.lineJoin="round";ctx.stroke();
-    const l=d.length-1;ctx.beginPath();ctx.arc(x(l),y(d[l]),3.2,0,7);ctx.fillStyle=s.color;ctx.fill();
-  });
-}
-function drawHistory(cv,rows,m){
-  const {ctx,w,h}=fitCanvas(cv);ctx.clearRect(0,0,w,h);
-  const pad={l:50,r:12,t:12,b:26};
-  if(rows.length<2){ctx.fillStyle="#8a96b3";ctx.font="13px system-ui";ctx.fillText("Sin datos en el rango",pad.l,h/2);return;}
-  const vals=rows.map(r=>r[m.key]);let mn=Math.min(...vals),mx=Math.max(...vals);
-  if(mn===mx){mn-=1;mx+=1;} const pd=(mx-mn)*0.08;mn-=pd;mx+=pd;
-  const t0=rows[0].t,t1=rows.at(-1).t,tr=(t1-t0)||1;
-  const X=t=>pad.l+(t-t0)/tr*(w-pad.l-pad.r),Y=v=>pad.t+(1-(v-mn)/(mx-mn))*(h-pad.t-pad.b);
-  // grid + eje Y
-  ctx.strokeStyle="#27314f";ctx.fillStyle="#8a96b3";ctx.font="11px system-ui";ctx.lineWidth=1;
-  for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4,yy=Y(v);
-    ctx.beginPath();ctx.moveTo(pad.l,yy);ctx.lineTo(w-pad.r,yy);ctx.stroke();
-    ctx.fillText(m.fmt(v),6,yy+3);}
-  // eje X (tiempo)
-  for(let i=0;i<=4;i++){const t=t0+tr*i/4,xx=X(t);
-    ctx.fillText(fmtAxis(t,tr),xx-(i===4?42:i===0?0:18),h-8);}
-  // área + línea
-  ctx.beginPath();rows.forEach((r,i)=>{const x=X(r.t),y=Y(r[m.key]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
-  ctx.strokeStyle=m.color;ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
-  ctx.lineTo(X(t1),Y(mn));ctx.lineTo(X(t0),Y(mn));ctx.closePath();
-  const g=ctx.createLinearGradient(0,pad.t,0,h-pad.b);g.addColorStop(0,m.color+"33");g.addColorStop(1,m.color+"00");ctx.fillStyle=g;ctx.fill();
-}
-function drawRing(cv,score,cls){
-  const ctx=cv.getContext("2d"),w=cv.width,cx=w/2,cy=w/2,r=w/2-26;ctx.clearRect(0,0,w,w);
-  const col=cls==="bad"?"#fb7185":cls==="warn"?"#fbbf24":"#34d399";
-  ctx.lineWidth=24;ctx.lineCap="round";
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.strokeStyle="#27314f";ctx.stroke();
-  const a0=-Math.PI/2;ctx.beginPath();ctx.arc(cx,cy,r,a0,a0+Math.PI*2*(score/100));ctx.strokeStyle=col;ctx.stroke();
-}
-
-/* ============================================================
-   Utilidades de fecha
-   ============================================================ */
-const fmtTime=t=>new Date(t).toLocaleTimeString("es-ES",{hour12:false});
-const fmtDate=t=>new Date(t).toLocaleString("es-ES",{hour12:false});
-function fmtAxis(t,span){const d=new Date(t);
-  return span>86400000? d.toLocaleDateString("es-ES",{day:"2-digit",month:"2-digit"})
-    : d.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"});}
-
-/* ============================================================
-   Bucle y controles
-   ============================================================ */
-let timer=null;
-function tickDemo(){ if(!S.running||S.source!=="demo")return; ingest(genLive()); }
-function startTimer(){clearInterval(timer);timer=setInterval(tickDemo,3000);}
-
-function switchTab(tab){
-  S.view=tab;
-  document.querySelectorAll("nav.tabs button").forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle("active",on);b.setAttribute("aria-selected",on?"true":"false");});
-  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id==="view-"+tab));
-  if(tab==="realtime")renderRealtime();
-  if(tab==="history")loadHistory();
-  if(tab==="alarms")renderAlarms();
-  if(tab==="config")renderConfig();
-  if(tab==="map")renderMap();
-}
-
-/* ============================================================
-   Arranque
-   ============================================================ */
-const RETENTION_MS=30*24*3600*1000;  // conserva 30 días de históricos
-function pruneOld(){try{const cut=Date.now()-RETENTION_MS;const s=tx("readings","readwrite");const q=s.openCursor(IDBKeyRange.upperBound(cut));q.onsuccess=e=>{const c=e.target.result;if(c){c.delete();c.continue();}};}catch(e){}}
-(async function init(){
-  buildKpis();buildCfgForm();buildMetricSeg();
-  try{
-    await openDB();
-  }catch(e){
-    console.warn("IndexedDB no disponible:",e);
-    toast("Sin almacenamiento local: históricos deshabilitados en esta sesión");
-  }
-  // sembrar 24h de históricos si está vacío
-  try{
-    if(db && await countReadings()===0){
-      const now=Date.now(),start=now-24*3600*1000,rows=[];
-      for(let t=start;t<=now;t+=60000)rows.push(genSeed(t));
-      await bulkPut("readings",rows);
-      // algunos eventos de alarma de ejemplo en el log
-      await bulkPut("alarms",[
-        {t:now-3600000*6,metric:"eco2",type:"high",level:"alarm",value:1612,msg:"eCO₂ alto: 1612 ppm (> 1500)"},
-        {t:now-3600000*6+300000,metric:"eco2",type:"high",level:"clear",value:980,msg:"eCO₂ normalizado"},
-        {t:now-3600000*2,metric:"temp",type:"rate",level:"alarm",value:29.4,msg:"Temperatura cambio brusco: Δ6.1 °C en 5 min"},
-      ]);
-    }
-    if(db) pruneOld();
-    // precargar buffers en vivo con las últimas muestras del histórico
-    if(db){
-      const recent=(await getRange(Date.now()-RECENT_MAX*60000,Date.now()+1)).slice(-RECENT_MAX);
-      recent.slice(-MAXLIVE).forEach(r=>{S.liveT.push(r.t);ALL.forEach(m=>S.live[m.key].push(r[m.key]));});
-      recent.forEach(r=>{S.recentT.push(r.t);ALL.forEach(m=>S.recent[m.key].push(r[m.key]));});
-      if(recent.length){const r=recent.at(-1);S.lastT=r.t;S.csq=r.csq;S.batPct=Math.round(Math.min(100,Math.max(0,(r.bat-3.3)/(4.2-3.3)*100)));}
-    }
-  }catch(e){console.warn(e);}
-  renderRealtime();renderHeader();renderAlarms();
-  startTimer();setInterval(offlineWatch,5000);setInterval(pruneOld,3600000);updateClock();
-})();
-
-function updateClock(){document.getElementById("clock").textContent="Actualizado: "+new Date().toLocaleTimeString("es-ES");setTimeout(updateClock,1000);}
-
-/* --- listeners --- */
-document.querySelectorAll("nav.tabs button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
-document.getElementById("playBtn").onclick=function(){
-  S.running=!S.running;this.textContent=S.running?"⏸ Pausar":"▶ Reanudar";
-  document.getElementById("connDot").className="dot"+(S.running?"":" off");
-  document.getElementById("connTxt").textContent=S.running?"En línea":"Pausado";
-};
-document.getElementById("srcSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;
-  if(b.dataset.src==="thingspeak"){document.getElementById("modal").classList.add("open");}
-  else{S.source="demo";[...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="demo"));
-    document.getElementById("srcLabel").innerHTML='Fuente: <b>datos simulados (demo)</b> · actualización cada 3 s';
-    startTimer();}  // reanuda el bucle demo y descarta el sondeo de ThingSpeak
-};
-document.getElementById("notifBtn").onclick=async function(){
-  if(!("Notification" in window)){toast("Este navegador no soporta notificaciones");return;}
-  const p=await Notification.requestPermission();S.notify=p==="granted";
-  this.textContent=S.notify?"🔔 Notificaciones activas":"🔕 Notificaciones bloqueadas";
-};
-// históricos
-document.getElementById("rangeSeg").onclick=e=>{const b=e.target.closest("button");if(!b)return;
-  histRange=+b.dataset.range;[...document.getElementById("rangeSeg").children].forEach(c=>c.classList.toggle("active",c===b));loadHistory();};
-document.getElementById("csvBtn").onclick=async()=>{
-  const from=histRange?Date.now()-histRange:0;const rows=await getRange(from,Date.now()+1);
-  const head="fecha,timestamp,temp,hum,eco2,tvoc,lux,bat,csq\n";
-  const body=rows.map(r=>[new Date(r.t).toISOString(),r.t,r.temp,r.hum,r.eco2,r.tvoc,r.lux,r.bat,r.csq].join(",")).join("\n");
-  const blob=new Blob([head+body],{type:"text/csv"});const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);a.download="airmonitor_historico.csv";a.click();URL.revokeObjectURL(a.href);
-};
-document.getElementById("clearHistBtn").onclick=async()=>{if(confirm("¿Borrar todos los históricos almacenados?")){await clearStore("readings");loadHistory();}};
-// alarmas
-document.getElementById("saveCfg").onclick=()=>{readCfgForm();toast("Reglas guardadas");};
-document.getElementById("resetCfg").onclick=()=>{if(confirm("¿Restaurar las reglas de alarma a los valores por defecto?")){S.cfg=structuredClone(DEFAULT_CFG);saveCfgLS();buildCfgForm();toast("Reglas restauradas");}};
-document.getElementById("soundChk").onchange=e=>S.sound=e.target.checked;
-document.getElementById("testAlarm").onclick=()=>{
-  setActive("test:high",{metric:"temp",type:"high",value:35,msg:"Prueba de alarma: Temperatura 35 °C",expire:Date.now()+8000});
-  renderAlarms();
-};
-document.getElementById("clearLog").onclick=async()=>{if(confirm("¿Vaciar el historial de eventos?")){await clearStore("alarms");renderLog();}};
-document.getElementById("alarmPill").onclick=()=>switchTab("alarms");
-// ThingSpeak
-const modal=document.getElementById("modal");
-document.getElementById("tsCancel").onclick=()=>modal.classList.remove("open");
-document.getElementById("tsConnect").onclick=async()=>{
-  const ch=document.getElementById("tsChannel").value.trim(),key=document.getElementById("tsKey").value.trim();
-  if(!ch){toast("Indica el Channel ID");return;}
-  modal.classList.remove("open");S.source="thingspeak";S.ts={channel:ch,key};
-  [...document.getElementById("srcSeg").children].forEach(c=>c.classList.toggle("active",c.dataset.src==="thingspeak"));
-  document.getElementById("srcLabel").innerHTML=`Fuente: <b>ThingSpeak canal ${esc(ch)}</b> · sondeo cada 15 s`;
-  const poll=async()=>{ if(!S.running||S.source!=="thingspeak")return;
-    try{
-      const url=`https://api.thingspeak.com/channels/${encodeURIComponent(ch)}/feeds.json?results=20`+(key?`&api_key=${encodeURIComponent(key)}`:"");
-      const r=await fetch(url);if(!r.ok)throw new Error("HTTP "+r.status);
-      const j=await r.json();const feeds=j.feeds||[];
-      for(const f of feeds){
-        const t=new Date(f.created_at).getTime();
-        if(!Number.isFinite(t))continue;
-        const rec={t,temp:numv(f.field1,0),hum:numv(f.field2,0),eco2:numv(f.field3,0),
-          tvoc:numv(f.field4,0),lux:numv(f.field5,0),bat:numv(f.field6,0),csq:numv(f.field7,0)};
-        if(rec.t>S.lastT) await ingest(rec);
-      }
-    }catch(e){document.getElementById("srcLabel").textContent=`Fuente: error ThingSpeak (${e.message})`;}
-  };
-  await poll();clearInterval(timer);timer=setInterval(poll,15000);
-};
-window.addEventListener("resize",()=>{if(S.view==="realtime")renderRealtime();else if(S.view==="history")loadHistory();});
-
-/* ============================================================
-   CONFIGURACIÓN DEL DISPOSITIVO Y PERIFÉRICOS
-   ============================================================ */
-const DEFAULT_DEVCFG={
-  device:{ id:"AirM01", name:"Estación de aire", location:"Sala", firmware:"fw_test v1.4" },
-  sensors:{
-    aht10:{ enabled:true, addr:"0x38", tempOffset:0, humOffset:0 },
-    sgp30:{ enabled:true, addr:"0x58", baseECO2:"", baseTVOC:"", warmupS:15 },
-    bh1750:{ enabled:true, addr:"0x23", mode:"CONT_HI_RES" },
-    pcf8563:{ enabled:true, addr:"0x51" },
-    battery:{ enabled:true, calFactor:2.0 },
-  },
-  i2c:{ sda:17, scl:18, freqkHz:100 },
-  gpio:{ power3v3:21, power1v8:48, button:8, led:47, batPin:14, rtcIrq:13,
-         modemRx:1, modemTx:2, gsmPwrkey:42, gsmRst:41, gsmDtr:39 },
-  modem:{ module:"A7670 (A76XX)", baud:115200, apn:"internet", apnUser:"", apnPass:"", simPin:"", netMode:"auto" },
-  cloud:{ target:"thingspeak",
-    thingspeak:{ writeKey:"", channel:"" },
-    datacake:{ endpoint:"https://api.datacake.co/integrations/api/XXXXXXXX/", serial:"" },
-    mqtt:{ host:"mqtt.recreacloud.com", port:8885, tls:true, user:"", pass:"", clientId:"AirM01", topic:"airmonitor/AirM01" },
-    http:{ url:"" },
-  },
-  wifi:{ apSsid:"Makerfabs-", apPwd:"12345678", staSsid:"", staPwd:"" },
-  power:{ reportSec:3600, readSec:3, deepSleep:true },
-  map:{ gmapsKey:"", centerLat:-33.4489, centerLng:-70.6693, zoom:13 },
-};
-function loadDevCfg(){try{const c=JSON.parse(localStorage.getItem("airmon.devcfg"));return deepMerge(structuredClone(DEFAULT_DEVCFG),c||{});}catch(e){return structuredClone(DEFAULT_DEVCFG);}}
-function saveDevCfg(){setLS("airmon.devcfg",JSON.stringify(DEVCFG));}
-function deepMerge(base,ext){for(const k in ext){if(ext[k]&&typeof ext[k]==="object"&&!Array.isArray(ext[k])){base[k]=deepMerge(base[k]||{},ext[k]);}else base[k]=ext[k];}return base;}
-let DEVCFG=loadDevCfg();
-const gp=p=>p.split(".").reduce((o,k)=>o?.[k],DEVCFG);
-const sp=(p,v)=>{const ks=p.split(".");let o=DEVCFG;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks.at(-1)]=v;};
-
-// Esquema de formularios
-const NETMODES=[["auto","Automático"],["lte","Solo 4G/LTE"],["gsm","Solo 2G/GSM"]];
-const SCHEMA=[
-  {id:"device",title:"🆔 Identidad del dispositivo",hint:"Identificación y ubicación de la estación",fields:[
-    {p:"device.id",l:"ID del sensor",t:"text",h:"DEFAULT_SENSOR_ID"},
-    {p:"device.name",l:"Nombre",t:"text"},
-    {p:"device.location",l:"Ubicación",t:"text"},
-    {p:"device.firmware",l:"Firmware",t:"text"},
-  ]},
-  {id:"i2c",title:"🔌 Bus I²C",hint:"Pines compartidos por todos los sensores",fields:[
-    {p:"i2c.sda",l:"SDA",t:"pin"},{p:"i2c.scl",l:"SCL",t:"pin"},
-    {p:"i2c.freqkHz",l:"Frecuencia",t:"num",u:"kHz"},
-  ]},
-  {id:"aht10",title:"🌡️ AHT10 · Temp/Humedad",hint:"Sensor de temperatura y humedad",toggle:"sensors.aht10.enabled",fields:[
-    {p:"sensors.aht10.addr",l:"Dirección I²C",t:"text"},
-    {p:"sensors.aht10.tempOffset",l:"Offset temperatura",t:"num",u:"°C"},
-    {p:"sensors.aht10.humOffset",l:"Offset humedad",t:"num",u:"%rH"},
-  ]},
-  {id:"sgp30",title:"💨 SGP30 · Gases",hint:"eCO₂ / TVOC / H₂ / Etanol",toggle:"sensors.sgp30.enabled",fields:[
-    {p:"sensors.sgp30.addr",l:"Dirección I²C",t:"text"},
-    {p:"sensors.sgp30.baseECO2",l:"Baseline eCO₂",t:"text",h:"calibración (hex/dec)"},
-    {p:"sensors.sgp30.baseTVOC",l:"Baseline TVOC",t:"text",h:"calibración (hex/dec)"},
-    {p:"sensors.sgp30.warmupS",l:"Calentamiento",t:"num",u:"s"},
-  ]},
-  {id:"bh1750",title:"💡 BH1750 · Luz",hint:"Sensor de iluminancia",toggle:"sensors.bh1750.enabled",fields:[
-    {p:"sensors.bh1750.addr",l:"Dirección I²C",t:"text"},
-    {p:"sensors.bh1750.mode",l:"Modo",t:"sel",opts:[["CONT_HI_RES","Continuo alta res."],["ONE_HI_RES","Una lectura alta res."],["CONT_LO_RES","Continuo baja res."]]},
-  ]},
-  {id:"pcf8563",title:"🕐 PCF8563 · RTC",hint:"Reloj de tiempo real",toggle:"sensors.pcf8563.enabled",fields:[
-    {p:"sensors.pcf8563.addr",l:"Dirección I²C",t:"text"},
-    {p:"gpio.rtcIrq",l:"Pin IRQ",t:"pin"},
-  ]},
-  {id:"battery",title:"🔋 Batería",hint:"Medición de tensión por ADC",toggle:"sensors.battery.enabled",fields:[
-    {p:"gpio.batPin",l:"Pin ADC",t:"pin"},
-    {p:"sensors.battery.calFactor",l:"Factor divisor",t:"num"},
-  ]},
-  {id:"modem",title:"📶 Módem 4G LTE",hint:"Conexión celular y operador (APN)",fields:[
-    {p:"modem.module",l:"Módulo",t:"sel",opts:[["A7670 (A76XX)","A7670 (A76XX)"],["SIM7670","SIM7670"]]},
-    {p:"modem.apn",l:"APN",t:"text",h:"del operador móvil"},
-    {p:"modem.apnUser",l:"Usuario APN",t:"text"},
-    {p:"modem.apnPass",l:"Contraseña APN",t:"pass"},
-    {p:"modem.simPin",l:"PIN de la SIM",t:"pass",h:"vacío si no tiene"},
-    {p:"modem.netMode",l:"Modo de red",t:"sel",opts:NETMODES},
-    {p:"modem.baud",l:"Baudios UART",t:"num"},
-    {p:"gpio.modemRx",l:"UART RX (ESP→módem)",t:"pin"},
-    {p:"gpio.modemTx",l:"UART TX (ESP→módem)",t:"pin"},
-    {p:"gpio.gsmPwrkey",l:"GSM PWRKEY",t:"pin"},
-    {p:"gpio.gsmRst",l:"GSM RST",t:"pin"},
-    {p:"gpio.gsmDtr",l:"GSM DTR",t:"pin"},
-  ]},
-  {id:"cloud",title:"☁️ Destino de datos",hint:"Plataforma a la que el dispositivo envía las lecturas",fields:[
-    {p:"cloud.target",l:"Plataforma",t:"sel",opts:[["thingspeak","ThingSpeak"],["datacake","Datacake"],["mqtt","MQTT(S)"],["http","HTTP propio"]]},
-    // thingspeak
-    {p:"cloud.thingspeak.writeKey",l:"Write API Key",t:"text",show:"thingspeak"},
-    {p:"cloud.thingspeak.channel",l:"Channel ID",t:"text",show:"thingspeak"},
-    // datacake
-    {p:"cloud.datacake.endpoint",l:"Endpoint URL",t:"text",show:"datacake"},
-    {p:"cloud.datacake.serial",l:"Serial del dispositivo",t:"text",show:"datacake"},
-    // mqtt
-    {p:"cloud.mqtt.host",l:"Broker host",t:"text",show:"mqtt"},
-    {p:"cloud.mqtt.port",l:"Puerto",t:"num",show:"mqtt"},
-    {p:"cloud.mqtt.tls",l:"TLS (MQTTS)",t:"bool",show:"mqtt"},
-    {p:"cloud.mqtt.user",l:"Usuario",t:"text",show:"mqtt"},
-    {p:"cloud.mqtt.pass",l:"Contraseña",t:"pass",show:"mqtt"},
-    {p:"cloud.mqtt.clientId",l:"Client ID",t:"text",show:"mqtt"},
-    {p:"cloud.mqtt.topic",l:"Topic",t:"text",show:"mqtt"},
-    // http
-    {p:"cloud.http.url",l:"URL destino",t:"text",show:"http"},
-  ]},
-  {id:"wifi",title:"📡 WiFi / Portal de config",hint:"Punto de acceso de configuración y red WiFi opcional",fields:[
-    {p:"wifi.apSsid",l:"AP SSID (config)",t:"text"},
-    {p:"wifi.apPwd",l:"AP contraseña",t:"pass"},
-    {p:"wifi.staSsid",l:"WiFi SSID",t:"text",h:"opcional"},
-    {p:"wifi.staPwd",l:"WiFi contraseña",t:"pass"},
-  ]},
-  {id:"power",title:"⏱️ Reporte y energía",hint:"Periodicidad de envío y ahorro de energía",fields:[
-    {p:"power.reportSec",l:"Intervalo de reporte",t:"num",u:"s",h:"DEFAULT_SLEEP_TIME"},
-    {p:"power.readSec",l:"Intervalo de lectura",t:"num",u:"s"},
-    {p:"power.deepSleep",l:"Deep sleep entre reportes",t:"bool"},
-  ]},
-  {id:"map",title:"🗺️ Mapa / Geolocalización",hint:"Google Maps para posicionar los sensores (pestaña Mapa)",fields:[
-    {p:"map.gmapsKey",l:"Google Maps API key",t:"text",h:"vacío = mapa de respaldo"},
-    {p:"map.centerLat",l:"Centro · latitud",t:"num"},
-    {p:"map.centerLng",l:"Centro · longitud",t:"num"},
-    {p:"map.zoom",l:"Zoom inicial",t:"num"},
-  ]},
-];
-function renderConfig(){
-  const wrap=document.getElementById("cfgSections");wrap.innerHTML="";
-  // mapa de pines resumen
-  const g=DEVCFG.gpio;
-  const pins=[["3V3 EN","power3v3"],["1V8 EN","power1v8"],["SDA","sda*"],["SCL","scl*"],["Botón","button"],["LED","led"],
-    ["Batería","batPin"],["RTC IRQ","rtcIrq"],["Módem RX","modemRx"],["Módem TX","modemTx"],["PWRKEY","gsmPwrkey"],["RST","gsmRst"],["DTR","gsmDtr"]];
-  const pinVal=k=>k==="sda*"?DEVCFG.i2c.sda:k==="scl*"?DEVCFG.i2c.scl:g[k];
-  const mapCard=document.createElement("div");mapCard.className="card cfgcard";mapCard.style.gridColumn="1/-1";
-  mapCard.innerHTML=`<h3>📍 Mapa de pines (ESP32-S3)</h3><div class="hint">Asignación actual de GPIO</div>
-    <div class="pinmap">${pins.map(([n,k])=>`<div><b>${n}</b><span class="pin">GPIO ${pinVal(k)}</span></div>`).join("")}</div>`;
-  wrap.appendChild(mapCard);
-
-  SCHEMA.forEach(sec=>{
-    const card=document.createElement("div");card.className="card cfgcard";card.id="sec-"+sec.id;
-    let html=`<div class="switchhdr"><div><h3>${sec.title}</h3></div>`;
-    if(sec.toggle){const on=gp(sec.toggle);html+=`<label class="src">Activo <input type="checkbox" data-p="${sec.toggle}" ${on?"checked":""}></label>`;}
-    html+=`</div><div class="hint">${sec.hint}</div>`;
-    sec.fields.forEach(f=>{
-      if(f.show && DEVCFG.cloud.target!==f.show) return;
-      const v=gp(f.p)??"";
-      let ctrl;
-      if(f.t==="bool")ctrl=`<input type="checkbox" data-p="${f.p}" ${v?"checked":""}>`;
-      else if(f.t==="sel")ctrl=`<select class="f" data-p="${f.p}">${f.opts.map(o=>`<option value="${o[0]}" ${o[0]==v?"selected":""}>${o[1]}</option>`).join("")}</select>`;
-      else if(f.t==="num"||f.t==="pin")ctrl=`<input class="f" type="number" data-p="${f.p}" value="${v}">`;
-      else if(f.t==="pass")ctrl=`<input class="f" type="password" data-p="${f.p}" value="${v}">`;
-      else ctrl=`<input class="f" type="text" data-p="${f.p}" value="${v}">`;
-      const tag=f.t==="pin"?` <span class="pin">GPIO</span>`:f.u?` <small style="display:inline;color:var(--muted)">${f.u}</small>`:"";
-      html+=`<div class="frow"><label>${f.l}${tag}${f.h?`<small>${f.h}</small>`:""}</label>${ctrl}</div>`;
-    });
-    card.innerHTML=html;wrap.appendChild(card);
-  });
-  // listeners de inputs
-  wrap.querySelectorAll("[data-p]").forEach(el=>{
-    el.addEventListener("change",()=>{
-      const p=el.dataset.p;
-      let val=el.type==="checkbox"?el.checked:(el.type==="number"?(el.value===""?"":+el.value):el.value);
-      sp(p,val);saveDevCfg();
-      if(p==="cloud.target")renderConfig();           // refrescar campos dependientes
-      if(p.startsWith("i2c.")||p.startsWith("gpio."))renderConfig(); // refrescar mapa de pines
-    });
-  });
-  refreshGen();
-}
-
-/* -------- Generadores -------- */
-function genConfigH(){
-  const d=DEVCFG,s=d.sensors,g=d.gpio,c=d.cloud;
-  const yn=b=>b?1:0;
-  let o=`/* config.h — generado por el dashboard Air Monitor */\n#ifndef CONFIG_H\n#define CONFIG_H\n\n`;
-  o+=`// --- Identidad ---\n#define DEVICE_ID        "${cstr(d.device.id)}"\n#define DEVICE_NAME      "${cstr(d.device.name)}"\n#define DEVICE_LOCATION  "${cstr(d.device.location)}"\n\n`;
-  o+=`// --- Bus I2C ---\n#define I2C_SDA   ${d.i2c.sda}\n#define I2C_SCL   ${d.i2c.scl}\n#define I2C_FREQ  ${d.i2c.freqkHz*1000}\n\n`;
-  o+=`// --- Pines / periféricos ---\n#define POWER_3V3 ${g.power3v3}\n#define POWER_1V8 ${g.power1v8}\n#define BUTTON_PIN ${g.button}\n#define LED_PIN ${g.led}\n#define BAT_PIN ${g.batPin}\n#define RTC_IRQ ${g.rtcIrq}\n#define IO_RXD2 ${g.modemRx}\n#define IO_TXD2 ${g.modemTx}\n#define IO_GSM_PWRKEY ${g.gsmPwrkey}\n#define IO_GSM_RST ${g.gsmRst}\n#define IO_GSM_DTR ${g.gsmDtr}\n\n`;
-  o+=`// --- Sensores (1=activo) ---\n#define EN_AHT10  ${yn(s.aht10.enabled)}   // addr ${s.aht10.addr}\n#define EN_SGP30  ${yn(s.sgp30.enabled)}   // addr ${s.sgp30.addr}\n#define EN_BH1750 ${yn(s.bh1750.enabled)}   // addr ${s.bh1750.addr}\n#define EN_PCF8563 ${yn(s.pcf8563.enabled)}  // addr ${s.pcf8563.addr}\n#define EN_BATTERY ${yn(s.battery.enabled)}\n`;
-  o+=`#define TEMP_OFFSET ${s.aht10.tempOffset}\n#define HUM_OFFSET  ${s.aht10.humOffset}\n#define BAT_CAL_FACTOR ${s.battery.calFactor}\n`;
-  if(s.sgp30.baseECO2||s.sgp30.baseTVOC)o+=`#define SGP30_BASE_ECO2 ${s.sgp30.baseECO2||0}\n#define SGP30_BASE_TVOC ${s.sgp30.baseTVOC||0}\n`;
-  o+=`\n// --- Módem 4G / APN ---\n#define MODEM_MODULE "${cstr(d.modem.module)}"\n#define MODEM_BAUD ${d.modem.baud}\n#define APN "${cstr(d.modem.apn)}"\n#define APN_USER "${cstr(d.modem.apnUser)}"\n#define APN_PASS "${cstr(d.modem.apnPass)}"\n#define SIM_PIN "${cstr(d.modem.simPin)}"\n\n`;
-  o+=`// --- Reporte / energía ---\n#define REPORT_INTERVAL_S ${d.power.reportSec}\n#define READ_INTERVAL_S ${d.power.readSec}\n#define DEEP_SLEEP ${yn(d.power.deepSleep)}\n#define uS_TO_S_FACTOR 1000000ULL\n\n`;
-  o+=`// --- WiFi / portal AP ---\n#define AP_SSID "${cstr(d.wifi.apSsid)}"\n#define AP_PWD  "${cstr(d.wifi.apPwd)}"\n#define WIFI_SSID "${cstr(d.wifi.staSsid)}"\n#define WIFI_PASS "${cstr(d.wifi.staPwd)}"\n\n`;
-  o+=`// --- Destino de datos: ${cstr(c.target)} ---\n`;
-  if(c.target==="thingspeak")o+=`#define TS_WRITE_KEY "${cstr(c.thingspeak.writeKey)}"\n#define TS_CHANNEL "${cstr(c.thingspeak.channel)}"\n`;
-  else if(c.target==="datacake")o+=`#define DATACAKE_URL "${cstr(c.datacake.endpoint)}"\n#define DATACAKE_SERIAL "${cstr(c.datacake.serial)}"\n`;
-  else if(c.target==="mqtt")o+=`#define MQTT_SERVER "${cstr(c.mqtt.host)}"\n#define MQTT_PORT ${c.mqtt.port}\n#define MQTT_TLS ${yn(c.mqtt.tls)}\n#define MQTT_USER "${cstr(c.mqtt.user)}"\n#define MQTT_PASS "${cstr(c.mqtt.pass)}"\n#define MQTT_CLIENTID "${cstr(c.mqtt.clientId)}"\n#define MQTT_TOPIC "${cstr(c.mqtt.topic)}"\n`;
-  else o+=`#define HTTP_URL "${cstr(c.http.url)}"\n`;
-  o+=`\n// AVISO: este archivo contiene credenciales en texto plano. No lo subas a un repositorio público.\n#endif\n`;
-  return o;
-}
-function genAT(){
-  const d=DEVCFG,c=d.cloud;
-  let o=`# Secuencia de comandos AT — ${d.modem.module}\n# Inicialización celular y conexión de datos\n\n`;
-  o+=`AT                       # comprobar módem\nATE0                     # eco off\n`;
-  if(d.modem.simPin)o+=`AT+CPIN=${atSan(d.modem.simPin)}        # desbloquear SIM\n`;else o+=`AT+CPIN?                 # estado SIM (READY)\n`;
-  o+=`AT+CSQ                   # calidad de señal\nAT+CREG?                 # registro en red\nAT+CGDCONT=1,"IP","${atSan(d.modem.apn)}"   # APN del operador\nAT+CGACT=1,1             # activar contexto PDP\nAT+CGPADDR=1             # IP asignada\n\n`;
-  if(c.target==="thingspeak"){
-    o+=`# --- Envío a ThingSpeak (HTTPS GET) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","https://api.thingspeak.com/update?api_key=${atSan(c.thingspeak.writeKey)}&field1=<T>&field2=<H>&field3=<TVOC>&field4=<eCO2>&field5=<H2>&field6=<Eth>&field7=<lux>&field8=<bat>"\nAT+HTTPACTION=0\nAT+HTTPTERM\n`;
-  }else if(c.target==="datacake"){
-    o+=`# --- Envío a Datacake (HTTP POST JSON) ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${atSan(c.datacake.endpoint)}"\nAT+HTTPPARA="CONTENT","application/json"\nAT+HTTPDATA=<len>,10000\n{"device":"${atSan(c.datacake.serial)}","temperature":<T>,"humidity":<H>}\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
-  }else if(c.target==="mqtt"){
-    const topic=atSan(c.mqtt.topic);
-    o+=`# --- Conexión MQTT${c.mqtt.tls?"S (TLS)":""} ---\nAT+CMQTTSTART\nAT+CMQTTACCQ=0,"${atSan(c.mqtt.clientId)}",${c.mqtt.tls?1:0}\n`;
-    if(c.mqtt.tls)o+=`AT+CSSLCFG="sslversion",0,4\nAT+CSSLCFG="authmode",0,1\nAT+CMQTTSSLCFG=0,0\n`;
-    o+=`AT+CMQTTCONNECT=0,"tcp://${atSan(c.mqtt.host)}:${c.mqtt.port}",60,1,"${atSan(c.mqtt.user)}","${atSan(c.mqtt.pass)}"\nAT+CMQTTTOPIC=0,${byteLen(topic)}\n${topic}\nAT+CMQTTPAYLOAD=0,<len>\n{"t":<T>,"h":<H>}\nAT+CMQTTPUB=0,1,60\n`;
-  }else{
-    o+=`# --- Envío HTTP propio ---\nAT+HTTPINIT\nAT+HTTPPARA="URL","${atSan(c.http.url)}"\nAT+HTTPACTION=1\nAT+HTTPTERM\n`;
-  }
-  o+=`\n# AVISO: estos comandos incluyen credenciales en texto plano.\n`;
-  return o;
-}
-function genJSON(){return JSON.stringify(DEVCFG,null,2);}
-let genMode="configh";
-function refreshGen(){
-  const out=document.getElementById("cfgOut");
-  if(genMode==="configh"){out.textContent=genConfigH();document.getElementById("genNote").textContent="Pega este archivo como config.h junto al sketch.";}
-  else if(genMode==="at"){out.textContent=genAT();document.getElementById("genNote").textContent="Comandos AT para inicializar el módem y enviar datos.";}
-  else{out.textContent=genJSON();document.getElementById("genNote").textContent="Backup/restauración de toda la configuración.";}
-}
-function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
-
-// listeners de la pestaña configuración
-document.getElementById("genTabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;
-  genMode=b.dataset.gen;[...document.getElementById("genTabs").children].forEach(c=>{c.classList.toggle("primary",c.dataset.gen===genMode);});refreshGen();};
-document.getElementById("genCopy").onclick=async()=>{try{await navigator.clipboard.writeText(document.getElementById("cfgOut").textContent);toast("Copiado al portapapeles");}catch(e){toast("No se pudo copiar");}};
-document.getElementById("genDownload").onclick=()=>{
-  const name=genMode==="configh"?"config.h":genMode==="at"?"comandos_at.txt":"airmonitor_config.json";
-  const blob=new Blob([document.getElementById("cfgOut").textContent],{type:"text/plain"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);toast("Descargado "+name);};
-document.getElementById("cfgSave").onclick=()=>{saveDevCfg();toast("Configuración guardada");};
-document.getElementById("cfgReset").onclick=()=>{if(confirm("¿Restaurar la configuración a los valores por defecto?")){DEVCFG=structuredClone(DEFAULT_DEVCFG);saveDevCfg();renderConfig();toast("Restaurado");}};
-document.getElementById("cfgImport").onclick=()=>document.getElementById("cfgFile").click();
-document.getElementById("cfgFile").onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
-  r.onload=()=>{try{DEVCFG=deepMerge(structuredClone(DEFAULT_DEVCFG),JSON.parse(r.result));saveDevCfg();renderConfig();toast("Configuración importada");}catch(err){toast("JSON inválido");}};r.readAsText(f);};
-
-/* ============================================================
-   MAPA · estaciones geolocalizadas + exportación
-   ============================================================ */
-const DEFAULT_STATIONS=[
-  {id:"AirM01",name:"Oficina central",lat:-33.4372,lng:-70.6506},
-  {id:"AirM02",name:"Bodega norte",  lat:-33.4180,lng:-70.6700},
-  {id:"AirM03",name:"Planta sur",    lat:-33.4720,lng:-70.6400,hot:true},
-  {id:"AirM04",name:"Patio exterior",lat:-33.4505,lng:-70.6850},
-  {id:"AirM05",name:"Laboratorio",   lat:-33.4290,lng:-70.6120},
-];
-function loadStations(){try{const s=JSON.parse(localStorage.getItem("airmon.stations"));return Array.isArray(s)&&s.length?s:structuredClone(DEFAULT_STATIONS);}catch(e){return structuredClone(DEFAULT_STATIONS);}}
-function saveStations(){setLS("airmon.stations",JSON.stringify(STATIONS));}
-let STATIONS=loadStations();
-let mapSelId=null, gMap=null, gMarkers={};
-const hashId=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h;};
-
-function genStationReading(st,t){
-  const h=hashId(st.id), s=t/1000;
-  const w=(a,p,ph)=>a*Math.sin(s/p+ph);
-  const day=Math.sin(((t%86400000)/86400000-0.25)*2*Math.PI);
-  const ecoBase=st.hot?1250:460+(h%160);
-  return {
-    t,
-    temp:+(19+(h%6)+day*4+w(0.6,40,1)).toFixed(2),
-    hum:+(45+(h%15)-day*10+w(3,55,2)).toFixed(1),
-    eco2:+Math.max(380,ecoBase+w(140,30,h%6)+(st.hot?Math.max(0,day)*500:0)).toFixed(0),
-    tvoc:+Math.max(0,70+(h%40)+w(50,25,4)+(st.hot?180:0)).toFixed(0),
-    lux:+Math.max(0,Math.max(0,day)*900+w(40,12,2)).toFixed(0),
-    bat:+(3.7+((h%30)/100)).toFixed(2),
-    csq:18+(h%12),
-  };
-}
-function stationLatest(st){return genStationReading(st,Date.now());}
-function stationHistory(st){const out=[],now=Date.now();for(let t=now-24*3600*1000;t<=now;t+=300000)out.push(genStationReading(st,t));return out;}
-function stationStatus(st){const r=stationLatest(st);if(r.eco2>1500||r.temp>32||r.tvoc>660)return"bad";if(r.eco2>1000||r.temp>30)return"warn";return"good";}
-const STCOL={good:"#34d399",warn:"#fbbf24",bad:"#fb7185"};
-
-let mapMode=null;
-function renderMap(){
-  const box=document.getElementById("mapbox");
-  const key=DEVCFG.map.gmapsKey;
-  if(key){
-    document.getElementById("mapModeHint").textContent="Google Maps · "+STATIONS.length+" estaciones · datos simulados";
-    if(mapMode!=="google:"+key){mapMode="google:"+key;gMap=null;box.innerHTML='<div class="empty">Cargando mapa…</div>';}
-    loadGoogleMaps(key)
-      .then(()=>{ if(!gMap)buildGoogleMap(box); else syncGoogleMarkers(); updateMapSelection(); })
-      .catch(()=>{ mapMode="fallback"; renderFallbackMap(box);
-        document.getElementById("mapModeHint").textContent="No se pudo cargar Google Maps · usando respaldo"; });
-  } else {
-    mapMode="fallback"; renderFallbackMap(box);
-    document.getElementById("mapModeHint").textContent="Mapa de respaldo (sin API key) · "+STATIONS.length+" estaciones · datos simulados";
-  }
-  renderStationList();
-  if(mapSelId)renderStationDetail(mapSelId);
-}
-let gmapsPromise=null;
-function loadGoogleMaps(key){
-  if(window.google&&window.google.maps)return Promise.resolve();
-  if(gmapsPromise)return gmapsPromise;
-  gmapsPromise=new Promise((res,rej)=>{const s=document.createElement("script");
-    s.src="https://maps.googleapis.com/maps/api/js?key="+encodeURIComponent(key);
-    s.async=true;s.onload=res;s.onerror=()=>{s.remove();gmapsPromise=null;rej(new Error("load"));};document.head.appendChild(s);
-    setTimeout(()=>{if(!(window.google&&window.google.maps)){s.remove();gmapsPromise=null;rej(new Error("timeout"));}},8000);});
-  return gmapsPromise;
-}
-function buildGoogleMap(box){
-  box.innerHTML='<div id="gmap"></div>';
-  gMap=new google.maps.Map(document.getElementById("gmap"),{center:{lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng},
-    zoom:+DEVCFG.map.zoom||13,mapTypeControl:false,streetViewControl:false,styles:DARK_MAP_STYLE});
-  syncGoogleMarkers();
-}
-function syncGoogleMarkers(){
-  Object.values(gMarkers).forEach(m=>m.setMap(null)); gMarkers={};
-  STATIONS.forEach(st=>{
-    const m=new google.maps.Marker({position:{lat:+st.lat,lng:+st.lng},map:gMap,title:st.name,
-      icon:{path:google.maps.SymbolPath.CIRCLE,scale:st.id===mapSelId?12:9,fillColor:STCOL[stationStatus(st)],fillOpacity:1,strokeColor:"#fff",strokeWeight:2}});
-    m.addListener("click",()=>selectStation(st.id));
-    gMarkers[st.id]=m;
-  });
-}
-function updateMapSelection(){
-  if(gMap){syncGoogleMarkers(); if(mapSelId&&gMarkers[mapSelId])gMap.panTo(gMarkers[mapSelId].getPosition());}
-}
-function renderFallbackMap(box){
-  const b=bbox();
-  box.innerHTML='<div class="fallmap"><span class="wm">mapa esquemático · configura una API key de Google Maps en Ajustes</span></div>';
-  const fm=box.firstChild;
-  STATIONS.forEach(st=>{
-    const x=10+(( +st.lng-b.minLng)/((b.maxLng-b.minLng)||1))*80;
-    const y=100-(10+((+st.lat-b.minLat)/((b.maxLat-b.minLat)||1))*80);
-    const col=STCOL[stationStatus(st)];
-    const pin=document.createElement("div");pin.className="pin"+(st.id===mapSelId?" sel":"");
-    pin.style.left=x+"%";pin.style.top=y+"%";
-    pin.innerHTML=`<div class="head" style="background:${col}"></div><div class="dotc"></div><div class="lbl">${esc(st.name)}</div>`;
-    pin.onclick=()=>selectStation(st.id);
-    fm.appendChild(pin);
-  });
-}
-function bbox(){
-  const lats=STATIONS.map(s=>+s.lat),lngs=STATIONS.map(s=>+s.lng);
-  let minLat=amin(lats),maxLat=amax(lats),minLng=amin(lngs),maxLng=amax(lngs);
-  const pl=(maxLat-minLat)*0.25||0.01,pg=(maxLng-minLng)*0.25||0.01;
-  return {minLat:minLat-pl,maxLat:maxLat+pl,minLng:minLng-pg,maxLng:maxLng+pg};
-}
-function renderStationList(){
-  const box=document.getElementById("stList");box.innerHTML="";
-  STATIONS.forEach(st=>{
-    const el=document.createElement("div");el.className="stitem"+(st.id===mapSelId?" sel":"");
-    el.innerHTML=`<span class="dot" style="background:${STCOL[stationStatus(st)]}"></span>
-      <div style="flex:1"><div class="nm">${esc(st.name)}</div><div class="co">${esc(st.id)} · ${(+st.lat).toFixed(4)}, ${(+st.lng).toFixed(4)}</div></div>`;
-    el.onclick=()=>selectStation(st.id);box.appendChild(el);
-  });
-}
-function selectStation(id){
-  mapSelId=id;
-  if(mapMode&&mapMode.indexOf("google")===0){updateMapSelection();}
-  else{renderFallbackMap(document.getElementById("mapbox"));}
-  renderStationList();
-  renderStationDetail(id);
-}
-function renderStationDetail(id){
-  const st=STATIONS.find(s=>s.id===id);if(!st)return;
-  const r=stationLatest(st),hist=stationHistory(st);
-  const vals=hist.map(h=>h.temp),mn=amin(vals),mx=amax(vals);
-  const pts=downsample(hist,40).map((h,i,a)=>{const x=i/(a.length-1)*250;const y=60-((h.temp-mn)/((mx-mn)||1))*52-4;return x+","+y;}).join(" ");
-  const stt=stationStatus(st);
-  document.getElementById("stDetail").innerHTML=`
-    <div style="display:flex;align-items:center;gap:8px">
-      <span class="dot" style="background:${STCOL[stt]}"></span>
-      <div style="flex:1"><h3 style="margin:0">${esc(st.name)}</h3><div class="hint" style="margin:0">${esc(st.id)} · ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}</div></div>
-      <span class="badge b-${stt}">${stt==="bad"?"Alerta":stt==="warn"?"Atención":"Normal"}</span>
+/* ================= Widgets ================= */
+function frostHero(){
+  const t=tempNow(), lvl=frostLevel(t), c=CROPS[CROP], mm=minsToMin();
+  const eta = tmin<SCN.minAtMin ? `en ~${mm} min (${minToClock(SCN.minAtMin)})` : `alcanzada ${minToClock(SCN.minAtMin)}`;
+  // mini curva SVG
+  const W=520,H=90, xs=m=>((m-0)/(900))*W, ys=v=>{const lo=-4,hi=10; return H-8-((v-lo)/(hi-lo))*(H-16);};
+  const pts=SCN.nightCurve.map(([m,v])=>`${xs(m).toFixed(0)},${ys(v).toFixed(0)}`).join(" ");
+  const critY=ys(c.frostCrit).toFixed(0), zeroY=ys(0).toFixed(0), nowX=xs(tmin).toFixed(0), nowY=ys(t).toFixed(0);
+  return `<div class="frost ${lvl==='red'?'red':''}">
+    <div class="row" style="justify-content:space-between">
+      <span class="sem ${lvl}"><span class="dot" style="color:${frostColor(lvl)}"></span>${frostLabel(lvl)}</span>
+      <span class="muted" style="font-size:12px">🌡️ Alerta de helada · ${esc(c.name)} · ${esc(c.stage)}</span>
     </div>
-    <div class="mreadings">
-      <div class="mreading"><small>Temp</small><b>${r.temp.toFixed(1)}</b><small>°C</small></div>
-      <div class="mreading"><small>Humedad</small><b>${r.hum.toFixed(0)}</b><small>%rH</small></div>
-      <div class="mreading"><small>eCO₂</small><b>${r.eco2.toFixed(0)}</b><small>ppm</small></div>
-      <div class="mreading"><small>TVOC</small><b>${r.tvoc.toFixed(0)}</b><small>ppb</small></div>
-      <div class="mreading"><small>Luz</small><b>${r.lux.toFixed(0)}</b><small>lux</small></div>
-      <div class="mreading"><small>Batería</small><b>${r.bat.toFixed(2)}</b><small>V</small></div>
+    <div class="hrow" style="margin-top:12px">
+      <div>
+        <div class="big" style="color:${lvl==='red'?'#fecdd3':'var(--txt)'}">${t.toFixed(1)}<small> °C</small></div>
+        <div class="meta">
+          <div><div class="k">Mínima estimada</div><div class="val" style="color:${frostColor(lvl)}">${SCN.minTemp.toFixed(1)} °C</div></div>
+          <div><div class="k">Hora de la mínima</div><div class="val">${eta}</div></div>
+          <div><div class="k">Umbral de daño (${esc(c.name)})</div><div class="val">${c.frostCrit.toFixed(1)} °C</div></div>
+          <div><div class="k">Viento · rocío</div><div class="val">${SCN.wind} km/h · ${SCN.dew} °C</div></div>
+        </div>
+      </div>
+      <svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;flex:1;min-width:260px" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="0" y1="${zeroY}" x2="${W}" y2="${zeroY}" stroke="#3a5a44" stroke-dasharray="3 4" stroke-width="1"/>
+        <line x1="0" y1="${critY}" x2="${W}" y2="${critY}" stroke="rgba(251,113,133,.6)" stroke-dasharray="4 4" stroke-width="1"/>
+        <polyline points="${pts}" fill="none" stroke="var(--frost)" stroke-width="2.5" stroke-linejoin="round"/>
+        <circle cx="${nowX}" cy="${nowY}" r="5" fill="${frostColor(lvl)}" stroke="#0a140d" stroke-width="2"/>
+      </svg>
     </div>
-    <div class="hint" style="margin:0 0 4px">Temperatura · últimas 24 h</div>
-    <svg width="100%" height="64" viewBox="0 0 250 64" preserveAspectRatio="none" style="background:var(--panel);border:1px solid var(--line);border-radius:10px">
-      <polyline fill="none" stroke="#3fa7ff" stroke-width="2" points="${pts}"/></svg>
-    <div class="coordrow">
-      <input class="f" id="stLat" type="number" step="any" value="${st.lat}" placeholder="lat">
-      <input class="f" id="stLng" type="number" step="any" value="${st.lng}" placeholder="lng">
-      <button class="btn sm" id="geoBtn" title="Usar mi ubicación" aria-label="Usar mi ubicación actual">📍</button>
+    <div class="action ${lvl==='amber'?'amber':''}">
+      ${lvl==='red'
+        ? `❄️ <b>Acción ahora:</b> activa <b>riego por aspersión sobre copa</b> antes de llegar a 0 °C y mantenlo hasta que el hielo se derrita tras el amanecer. Alternativa: torres de viento/calefactores. La ventana de anticipación es <b>~${mm} min</b>.`
+        : lvl==='amber'
+        ? `⚠️ <b>Prepara el sistema:</b> temperatura acercándose al umbral de daño de ${esc(c.name)}. Ten listo el riego de aspersión/calefacción y revisa el pronóstico de la mínima.`
+        : `✅ Sin riesgo de helada para ${esc(c.name)} en este momento. Monitoreo continuo activo.`}
     </div>
-    <div class="expbtns">
-      <button class="btn sm" id="expPDF">📄 PDF</button>
-      <button class="btn sm" id="expCSV">📑 CSV</button>
-      <button class="btn sm" id="expXLS">📊 Excel</button>
-    </div>
-    <button class="btn sm danger" id="delStation" style="margin-top:8px;width:100%;justify-content:center">Eliminar estación</button>`;
-  // listeners detalle
-  const upd=()=>{st.lat=+document.getElementById("stLat").value;st.lng=+document.getElementById("stLng").value;saveStations();renderMap();};
-  document.getElementById("stLat").onchange=upd;
-  document.getElementById("stLng").onchange=upd;
-  document.getElementById("geoBtn").onclick=()=>{
-    if(!navigator.geolocation){toast("Geolocalización no disponible");return;}
-    navigator.geolocation.getCurrentPosition(p=>{st.lat=+p.coords.latitude.toFixed(6);st.lng=+p.coords.longitude.toFixed(6);saveStations();renderMap();toast("Ubicación asignada");},
-      ()=>toast("No se pudo obtener la ubicación"));
-  };
-  document.getElementById("delStation").onclick=()=>{if(confirm("¿Eliminar "+st.name+"?")){STATIONS=STATIONS.filter(s=>s.id!==st.id);mapSelId=null;saveStations();renderMap();document.getElementById("stDetail").innerHTML='<div class="empty">Selecciona una estación en el mapa</div>';}};
-  document.getElementById("expCSV").onclick=()=>exportCSV(st,hist);
-  document.getElementById("expXLS").onclick=()=>exportExcel(st,hist);
-  document.getElementById("expPDF").onclick=()=>exportPDF(st,hist);
+  </div>`;
 }
-document.getElementById("addStation").onclick=()=>{
-  let n=1;const ids=new Set(STATIONS.map(s=>s.id));
-  while(ids.has("AirM"+String(n).padStart(2,"0")))n++;
-  const st={id:"AirM"+String(n).padStart(2,"0"),name:"Estación "+n,lat:+DEVCFG.map.centerLat,lng:+DEVCFG.map.centerLng};
-  STATIONS.push(st);saveStations();renderMap();selectStation(st.id);toast("Estación añadida");
-};
+function kpiRow(){
+  const t=tempNow();
+  const cards=[
+    ["🌡️","Temp. aire",`${t.toFixed(1)}<small> °C</small>`,"mín. hoy "+SCN.minTemp+" °C"],
+    ["💧","Humedad rel.",`${SCN.hr}<small> %</small>`,"punto de rocío "+SCN.dew+" °C"],
+    ["🧊","Punto de rocío",`${SCN.dew}<small> °C</small>`,"aire seco → enfría más"],
+    ["🌬️","Viento",`${SCN.wind}<small> km/h</small>`,SCN.windDir+" · calmo (helada radiativa)"],
+    ["🌧️","Lluvia",`${SCN.rainDay}<small> mm</small>`,"temporada "+SCN.rainSeason+" mm"],
+    ["☀️","Radiación",`${SCN.radiation}<small> W/m²</small>`,"noche · máx. día "+SCN.radPeak],
+  ];
+  return `<div class="grid g6">${cards.map(c=>`<div class="card kpi"><div class="l">${c[0]} ${c[1]}</div><div class="v">${c[2]}</div><div class="d">${c[3]}</div></div>`).join("")}</div>`;
+}
+function soilCard(){
+  const fc=SCN.soilFC,pmp=SCN.soilPMP;
+  const rows=SCN.soil.map(s=>{
+    const avail=clamp((s.m-pmp)/(fc-pmp)*100,0,100);
+    const col=avail<25?"var(--bad)":avail<45?"var(--warn)":"var(--brand)";
+    const wp=x=>clamp(x/45*100,0,100); // escala visual 0..45% vol
+    return `<div class="soilrow">
+      <div class="lab"><b>${s.d}</b>${s.t.toFixed(1)} °C suelo</div>
+      <div class="track">
+        <div class="fill" style="width:${wp(s.m)}%;background:linear-gradient(90deg,#7a5636,var(--soil))"></div>
+        <div class="mk" style="left:${wp(pmp)}%;background:var(--bad)"></div>
+        <div class="mk" style="left:${wp(fc)}%;background:var(--brand)"></div>
+      </div>
+      <div class="pct">${s.m}%</div>
+    </div>`;
+  }).join("");
+  return `<div class="card">
+    <h3 class="ct">💧 Humedad de suelo por profundidad</h3>
+    <div class="sub">Sonda capacitiva multiprofundidad · agua aprovechable entre punto de marchitez y capacidad de campo</div>
+    ${rows}
+    <div class="legend"><span><i style="background:var(--bad)"></i>Punto de marchitez (${pmp}%)</span><span><i style="background:var(--brand)"></i>Capacidad de campo (${fc}%)</span><span><i style="background:var(--soil)"></i>Humedad actual</span></div>
+    <div class="action amber" style="margin-top:12px">💡 <b>Recomendación de riego:</b> humedad <b>adecuada</b> en los tres estratos (reservas en profundidad). <b>No regar durante la helada</b>: el riego de suelo no protege las yemas y compite con la aspersión antihelada. Reponer recién cuando el estrato de 15 cm baje del 50% de agua aprovechable.</div>
+  </div>`;
+}
+function chillCard(){
+  const c=CROPS[CROP];
+  const pHF=c.chillHF? clamp(SCN.chillHF/c.chillHF*100,0,120):100;
+  const pPor=c.chillPor? clamp(SCN.chillPor/c.chillPor*100,0,120):100;
+  const okHF=SCN.chillHF>=c.chillHF, okPor=SCN.chillPor>=c.chillPor;
+  const bar=(p,ok,val,meta,unit)=>`<div class="row" style="justify-content:space-between;font-size:12.5px;margin-top:10px"><span class="muted">${unit}</span><span><b>${val}</b> <span class="muted">/ meta ${meta}</span></span></div>
+    <div class="prog"><i style="width:${clamp(p,0,100)}%;background:${ok?'linear-gradient(90deg,var(--brand),var(--brand2))':'var(--warn)'}"></i></div>`;
+  return `<div class="card">
+    <h3 class="ct">❄️ Acumulación de frío invernal · ${esc(c.name)}</h3>
+    <div class="sub">Define la salida de dormancia y la calidad de brotación/floración</div>
+    ${bar(pHF,okHF,SCN.chillHF+" h",c.chillHF?c.chillHF+" h":"n/a","Horas de Frío (&lt; 7,2 °C · Weinberger)")}
+    ${bar(pPor,okPor,SCN.chillPor,c.chillPor||"n/a","Porciones de Frío (modelo Dynamic)")}
+    <div class="note">${okHF?`Requerimiento de frío <b>cumplido</b> → las yemas ya rompieron dormancia y por eso <b>quedan expuestas a la helada</b> de esta madrugada.`:`Aún <b>faltan horas de frío</b> para completar el requerimiento de ${esc(c.name)}.`}</div>
+  </div>`;
+}
+function gddCard(){
+  const c=CROPS[CROP];
+  const cold=tempNow()<8;
+  const risk = c.pest==="—" ? {lvl:"green",txt:"Sin modelo de plaga por grados-día para este cultivo."}
+    : cold ? {lvl:"green",txt:`Actividad de <b>${esc(c.pest)}</b> inhibida por el frío. Reactivar monitoreo al subir la temperatura.`}
+           : {lvl:"amber",txt:`Vigilar <b>${esc(c.pest)}</b>: acumulación de grados-día en curso.`};
+  return `<div class="card">
+    <h3 class="ct">🐛 Grados-día y riesgo de plaga · ${esc(c.name)}</h3>
+    <div class="sub">Modelo de grados-día base ${c.gddBase} °C</div>
+    <div class="row" style="justify-content:space-between;align-items:flex-end;margin-top:8px">
+      <div><div class="kpi"><div class="v">${SCN.gdd}<small> °D</small></div><div class="d">acumulados temporada</div></div></div>
+      <span class="sem ${risk.lvl}" style="font-size:12px"><span class="dot" style="color:${frostColor(risk.lvl)}"></span>${risk.lvl==='green'?'Riesgo bajo':'Riesgo medio'}</span>
+    </div>
+    <div class="note">Plaga objetivo: <b>${esc(c.pest)}</b>. ${risk.txt}</div>
+  </div>`;
+}
+function et0Card(){
+  const dem=(SCN.et0*SCN.kc).toFixed(1);
+  return `<div class="card">
+    <h3 class="ct">🌱 Evapotranspiración y balance hídrico</h3>
+    <div class="sub">ET₀ Penman-Monteith (FAO-56) · demanda del cultivo = ET₀ × Kc</div>
+    <div class="grid g3" style="margin-top:6px">
+      <div class="kpi"><div class="l">ET₀ referencia</div><div class="v">${SCN.et0}<small> mm/d</small></div></div>
+      <div class="kpi"><div class="l">Demanda cultivo (Kc ${SCN.kc})</div><div class="v">${dem}<small> mm/d</small></div></div>
+      <div class="kpi"><div class="l">Balance (lluvia − demanda)</div><div class="v" style="color:var(--warn)">${(SCN.rainDay-dem).toFixed(1)}<small> mm/d</small></div></div>
+    </div>
+    <div class="note">Demanda hídrica <b>baja</b> (temporada fría, poca radiación). El balance no exige riego hoy: la prioridad es la <b>helada</b>.</div>
+  </div>`;
+}
+function windRain(){
+  // rosa de vientos (frecuencia por sector) — noche calma dominante SE/S
+  const dirs=[["N",348,10],["NE",30,6],["E",65,8],["SE",135,26],["S",190,22],["SO",225,12],["O",270,8],["NO",315,8]];
+  const cx=90,cy=90,R=72; const max=26;
+  const petals=dirs.map(([lab,deg,fr])=>{
+    const a=(deg-90)*Math.PI/180, len=18+ (fr/max)*(R-18);
+    const x=cx+Math.cos(a)*len, y=cy+Math.sin(a)*len;
+    const x2=cx+Math.cos(a)*18, y2=cy+Math.sin(a)*18;
+    const col=fr>=22?"var(--sky)":fr>=12?"#5eb0d6":"#3a6b82";
+    return `<line x1="${x2.toFixed(1)}" y1="${y2.toFixed(1)}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${col}" stroke-width="10" stroke-linecap="round"/>
+      <text x="${(cx+Math.cos(a)*(R+9)).toFixed(1)}" y="${(cy+Math.sin(a)*(R+9)+3).toFixed(1)}" fill="var(--muted)" font-size="10" text-anchor="middle">${lab}</text>`;
+  }).join("");
+  return `<div class="card">
+    <h3 class="ct">🌬️ Viento y lluvia</h3>
+    <div class="sub">Viento calmo del ${SCN.windDir} → condición típica de helada radiativa</div>
+    <div class="row" style="gap:20px;align-items:center;margin-top:6px">
+      <svg viewBox="0 0 180 180" width="180" height="180" aria-label="Rosa de vientos">
+        <circle cx="90" cy="90" r="72" fill="none" stroke="var(--line)"/><circle cx="90" cy="90" r="45" fill="none" stroke="var(--line)"/>
+        ${petals}
+        <circle cx="90" cy="90" r="4" fill="var(--muted)"/>
+      </svg>
+      <div style="flex:1;min-width:150px">
+        <div class="kpi" style="margin-bottom:12px"><div class="l">Velocidad actual</div><div class="v">${SCN.wind}<small> km/h</small> <span class="muted" style="font-size:14px">${SCN.windDir}</span></div></div>
+        <div class="kpi" style="margin-bottom:12px"><div class="l">Lluvia acumulada — hoy</div><div class="v">${SCN.rainDay}<small> mm</small></div></div>
+        <div class="kpi"><div class="l">Lluvia — temporada</div><div class="v">${SCN.rainSeason}<small> mm</small></div></div>
+      </div>
+    </div>
+  </div>`;
+}
+function recsCard(){
+  const c=CROPS[CROP], t=tempNow(), lvl=frostLevel(t);
+  const recs=[];
+  if(lvl==="red") recs.push(["❄️","red","alta","Control de helada activo",`Activa <b>riego por aspersión sobre copa</b> para ${esc(c.name)} (${esc(c.stage)}). Mantén el sistema hasta el deshielo post-amanecer.`]);
+  else if(lvl==="amber") recs.push(["❄️","amber","media","Prepara el control de helada",`Temperatura acercándose a ${c.frostCrit} °C. Ten listos aspersión/calefactores.`]);
+  recs.push(["💧","sky","baja","Riego en pausa",`Humedad de suelo adecuada en profundidad. Reponer recién cuando el estrato de 15 cm baje del 50% de agua aprovechable.`]);
+  if(SCN.chillHF>=c.chillHF) recs.push(["🌸","amber","media","Yemas vulnerables",`Frío invernal cumplido: brotación en curso, extrema la vigilancia de heladas los próximos días.`]);
+  recs.push(["🐛","baja"==="baja"?"":"","baja","Plaga bajo control",`${c.pest==="—"?"Sin modelo de plaga por grados-día.":`Actividad de <b>${esc(c.pest)}</b> baja por el frío; reactivar monitoreo al subir la temperatura.`}`]);
+  return `<div class="card">
+    <h3 class="ct">🌱 Recomendaciones agronómicas · ${esc(c.name)}</h3>
+    <div class="sub">Generadas automáticamente a partir de las lecturas y del cultivo seleccionado</div>
+    ${recs.map(r=>`<div class="rec"><div class="ic ${r[1]}">${r[0]}</div><div style="flex:1"><h4>${r[3]}</h4><p>${r[4]}</p></div><span class="pri ${r[2]}">${r[2]}</span></div>`).join("")}
+  </div>`;
+}
+function coldStorage(){
+  return `<details class="collapse">
+    <summary>🧊 Atmósfera controlada / cámara de guarda <span class="tagm">Módulo secundario</span></summary>
+    <div class="inner">
+      <div class="sub">Monitoreo de guarda de fruta en frío (postcosecha). Aquí sí aplican CO₂ y calidad de aire de la cámara.</div>
+      <div class="grid g3">
+        <div class="card kpi"><div class="l">🌡️ Temp. cámara</div><div class="v">${SCN.caTemp}<small> °C</small></div><div class="d">setpoint 0,0 °C</div></div>
+        <div class="card kpi"><div class="l">💨 CO₂ atmósfera</div><div class="v">${SCN.caCO2}<small> ppm</small></div><div class="d">atmósfera controlada</div></div>
+        <div class="card kpi"><div class="l">💧 Humedad cámara</div><div class="v">${SCN.caHR}<small> %</small></div><div class="d">evita deshidratación</div></div>
+      </div>
+      <div class="note">Reutiliza el sensor de CO₂/COV del equipo original, ahora aplicado a <b>postcosecha</b> (no a clima de campo).</div>
+    </div>
+  </details>`;
+}
+/* ---- vistas por tab ---- */
+function viewVivo(){
+  return frostHero()
+    + `<div class="sec-t">Condiciones actuales</div>` + kpiRow()
+    + `<div class="sec-t">Suelo y riego</div>` + soilCard()
+    + `<div class="sec-t">Modelos agroclimáticos</div>` + `<div class="grid g3">${chillCard()}${gddCard()}${et0Card()}</div>`
+    + `<div class="sec-t">Viento, lluvia y recomendaciones</div>` + `<div class="grid g2">${windRain()}${recsCard()}</div>`
+    + `<div class="sec-t">Postcosecha</div>` + coldStorage();
+}
+function viewHist(){
+  const W=900,H=240, curve=SCN.nightCurve;
+  const xs=m=>40+(m/900)*(W-60), ys=v=>{const lo=-4,hi=10;return H-30-((v-lo)/(hi-lo))*(H-50);};
+  const pts=curve.map(([m,v])=>`${xs(m).toFixed(0)},${ys(v).toFixed(0)}`).join(" ");
+  const grid=[10,6,2,-2].map(v=>`<line x1="40" y1="${ys(v)}" x2="${W-20}" y2="${ys(v)}" stroke="var(--line)"/><text x="6" y="${ys(v)+4}" fill="var(--muted)" font-size="11">${v}°</text>`).join("");
+  const xlab=[["18:00",0],["22:00",240],["02:00",480],["06:00",720],["09:00",900]].map(([l,m])=>`<text x="${xs(m)}" y="${H-8}" fill="var(--muted)" font-size="11" text-anchor="middle">${l}</text>`).join("");
+  return `<h3 class="ct">Temperatura del aire — última noche</h3><div class="sub">Se observa el descenso continuo bajo 0 °C entre las 03:00 y el amanecer (evento de helada).</div>
+    <div class="card"><svg viewBox="0 0 ${W} ${H}" width="100%">${grid}<line x1="40" y1="${ys(0)}" x2="${W-20}" y2="${ys(0)}" stroke="#3a5a44" stroke-dasharray="4 4"/><line x1="40" y1="${ys(CROPS[CROP].frostCrit)}" x2="${W-20}" y2="${ys(CROPS[CROP].frostCrit)}" stroke="rgba(251,113,133,.6)" stroke-dasharray="4 4"/><polyline points="${pts}" fill="none" stroke="var(--frost)" stroke-width="2.5"/>${xlab}</svg></div>
+    <div class="grid g3" style="margin-top:14px">
+      <div class="card kpi"><div class="l">Mínima de la noche</div><div class="v">${SCN.minTemp}<small> °C</small></div><div class="d">a las ${minToClock(SCN.minAtMin)}</div></div>
+      <div class="card kpi"><div class="l">Horas bajo 0 °C</div><div class="v">4,3<small> h</small></div><div class="d">02:50 – 07:10 aprox.</div></div>
+      <div class="card kpi"><div class="l">Horas Frío acumuladas</div><div class="v">${SCN.chillHF}<small> h</small></div><div class="d">temporada</div></div>
+    </div>
+    <div class="note">Exportación a CSV/Excel/PDF disponible en la versión desplegada (omitido en esta demo).</div>`;
+}
+function viewCuarteles(){
+  const q=[
+    ["Cuartel 1 · Cerezo Santina","6 ha",-2.5,"risk","Helada crítica"],
+    ["Cuartel 2 · Cerezo Lapins","5 ha",-1.9,"risk","Helada crítica"],
+    ["Cuartel 3 · Cerezo Regina","4 ha",-0.8,"warn","Alerta"],
+    ["Cuartel 4 · Palto Hass","8 ha",-1.2,"risk","Helada crítica"],
+    ["Cuartel 5 · Ciruelo","3 ha",0.6,"good","Normal"],
+    ["Cuartel 6 · Uva de mesa","7 ha",1.4,"good","Normal"],
+  ];
+  return `<h3 class="ct">Estado por cuartel</h3><div class="sub">Temperatura mínima estimada esta madrugada por sector. En terreno se ubican sobre Google Maps (versión desplegada).</div>
+  <div class="grid g3">${q.map(c=>`<div class="quarter ${c[3]==='risk'?'risk':''}">
+    <div class="row" style="justify-content:space-between"><b style="font-size:13.5px">${c[0]}</b><span class="badge b-${c[3]}">${c[4]}</span></div>
+    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12px">${c[1]}</span><span style="font-size:22px;font-weight:800;color:${c[2]<=-1?'var(--bad)':c[2]<=0?'var(--warn)':'var(--good)'}">${c[2].toFixed(1)} °C</span></div>
+  </div>`).join("")}</div>
+  <div class="note">🗺️ El mapa de cuarteles con geolocalización (Google Maps) está en la versión desplegada; en esta demo se resume por tarjetas para no requerir clave de API.</div>`;
+}
+function viewAlarmas(){
+  const rows=[
+    ["Hoy 04:55","Cuartel 1","Helada","−2,1 °C","Activa","bad"],
+    ["Hoy 04:10","Cuartel 4 (Palto)","Helada","−1,2 °C","Activa","bad"],
+    ["Hoy 03:20","Estación","Temp. bajo umbral","0,0 °C","Notificada","warn"],
+    ["Ayer 19:40","Cuartel 3","Descenso brusco","−3 °C/h","Atendida","good"],
+  ];
+  return `<h3 class="ct">Alarmas</h3><div class="sub">Umbral alto/bajo, descenso brusco, helada y caída de señal — con aviso visual, sonoro y push.</div>
+  <div class="card"><table><thead><tr><th>Hora</th><th>Origen</th><th>Tipo</th><th>Valor</th><th>Estado</th></tr></thead>
+  <tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td><span class="badge b-${r[5]}">${r[4]}</span></td></tr>`).join("")}</tbody></table></div>
+  <div class="note">Las alarmas de helada se disparan de forma <b>anticipada</b> según la proyección de la mínima, no solo al cruzar el umbral.</div>`;
+}
+function viewConfig(){
+  const c=CROPS[CROP];
+  return `<h3 class="ct">Configuración de la estación</h3><div class="sub">Parámetros del nodo agroclimático y del cultivo (demo).</div>
+  <div class="grid g2">
+    <div class="card"><h4 style="margin-bottom:8px">Estación</h4>
+      <table><tbody>
+      <tr><td class="muted">Nodo</td><td>ESP32-S3 + 4G LTE CAT1</td></tr>
+      <tr><td class="muted">Energía</td><td>LiPo + panel solar · autonomía ≥ 7 días sin sol</td></tr>
+      <tr><td class="muted">Conectividad</td><td>4G con buffer local si cae la señal</td></tr>
+      <tr><td class="muted">Sensores</td><td>Suelo 15/30/60 cm · aire T/HR · pluviómetro · anemómetro · piranómetro · mojado foliar</td></tr>
+      </tbody></table>
+    </div>
+    <div class="card"><h4 style="margin-bottom:8px">Cultivo · ${esc(c.name)}</h4>
+      <table><tbody>
+      <tr><td class="muted">Estado fenológico</td><td>${esc(c.stage)}</td></tr>
+      <tr><td class="muted">Umbral de daño por helada</td><td>${c.frostCrit} °C</td></tr>
+      <tr><td class="muted">Meta de frío</td><td>${c.chillHF?c.chillHF+" h · "+c.chillPor+" porciones":"cultivo de bajo requerimiento"}</td></tr>
+      <tr><td class="muted">Grados-día base</td><td>${c.gddBase} °C</td></tr>
+      <tr><td class="muted">Plaga objetivo</td><td>${esc(c.pest)}</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="note">🧪 Umbrales editables por cultivo y estado fenológico en la versión desplegada. Datos de esta pantalla: <b>simulados (demo)</b>.</div>`;
+}
+const VIEWS={vivo:viewVivo,hist:viewHist,cuarteles:viewCuarteles,alarmas:viewAlarmas,config:viewConfig};
+let TAB="vivo";
+function render(){ $("view").innerHTML=VIEWS[TAB](); }
 
-/* -------- Exportadores -------- */
-const EXP_HEAD=["Fecha/hora","Temp °C","Humedad %rH","eCO2 ppm","TVOC ppb","Luz lux","Batería V","CSQ"];
-const expRows=hist=>hist.map(r=>[new Date(r.t).toLocaleString("es-ES",{hour12:false}),r.temp,r.hum,r.eco2,r.tvoc,r.lux,r.bat,r.csq]);
-function dl(name,content,mime){const blob=new Blob([content],{type:mime});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);toast("Descargado "+name);}
-function exportCSV(st,hist){
-  const rows=expRows(hist);
-  const csv=[EXP_HEAD.map(csvCell).join(","),...rows.map(r=>r.map(csvCell).join(","))].join("\n");
-  dl(`${st.id}_historico.csv`,"﻿"+csv,"text/csv;charset=utf-8");
-}
-function exportExcel(st,hist){
-  const rows=expRows(hist);
-  let x='<?xml version="1.0"?>\n<?mso-application progid="Excel.Sheet"?>\n';
-  x+='<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
-  x+='<Worksheet ss:Name="'+xmlEsc(st.name).slice(0,28)+'"><Table>\n';
-  x+='<Row>'+EXP_HEAD.map(h=>`<Cell ss:StyleID="h"><Data ss:Type="String">${xmlEsc(h)}</Data></Cell>`).join("")+'</Row>\n';
-  rows.forEach(r=>{x+='<Row>'+r.map(c=>{const num=typeof c==="number";return `<Cell><Data ss:Type="${num?"Number":"String"}">${num?c:xmlEsc(c)}</Data></Cell>`;}).join("")+'</Row>\n';});
-  x+='</Table></Worksheet>\n<Styles><Style ss:ID="h"><Font ss:Bold="1"/></Style></Styles>\n</Workbook>';
-  dl(`${st.id}_historico.xls`,x,"application/vnd.ms-excel");
-}
-// ---- PDF mínimo (texto) ----
-function ascii(s){return String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/°/g," deg").replace(/²/g,"2").replace(/[–—]/g,"-").replace(/[^\x20-\x7e]/g,"");}
-function pdfEsc(s){return s.replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)");}
-function buildPDF(pages){
-  const W=595.28,H=841.89,F1=3,F2=4,obj={};
-  obj[F1]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>";
-  obj[F2]="<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>";
-  const kids=[];
-  pages.forEach((lines,i)=>{
-    const pg=5+2*i,co=6+2*i;kids.push(pg);
-    let st="BT\n";
-    lines.forEach(l=>{st+=`/${l.font==="mono"?"F2":"F1"} ${l.size||10} Tf\n1 0 0 1 ${l.x||40} ${(H-l.y).toFixed(1)} Tm\n(${pdfEsc(ascii(l.text))}) Tj\n`;});
-    st+="ET";
-    obj[co]=`<< /Length ${st.length} >>\nstream\n${st}\nendstream`;
-    obj[pg]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${W} ${H}] /Resources << /Font << /F1 ${F1} 0 R /F2 ${F2} 0 R >> >> /Contents ${co} 0 R >>`;
-  });
-  obj[1]="<< /Type /Catalog /Pages 2 0 R >>";
-  obj[2]=`<< /Type /Pages /Kids [${kids.map(k=>k+" 0 R").join(" ")}] /Count ${kids.length} >>`;
-  const max=4+2*pages.length;let pdf="%PDF-1.4\n";const off=[];
-  for(let n=1;n<=max;n++){off[n]=pdf.length;pdf+=`${n} 0 obj\n${obj[n]}\nendobj\n`;}
-  const xp=pdf.length;pdf+=`xref\n0 ${max+1}\n0000000000 65535 f \n`;
-  for(let n=1;n<=max;n++)pdf+=String(off[n]).padStart(10,"0")+" 00000 n \n";
-  pdf+=`trailer\n<< /Size ${max+1} /Root 1 0 R >>\nstartxref\n${xp}\n%%EOF`;
-  return pdf;
-}
-function exportPDF(st,hist){
-  const pages=[];let page=[],y=54;const bottom=800;
-  const push=(text,size=10,font="normal",x=40)=>{page.push({x,y,text,size,font});y+=size*1.5;if(y>bottom){pages.push(page);page=[];y=54;}};
-  const r=hist.at(-1),vals=hist.map(h=>h.temp);
-  const mn=Math.min(...vals),mx=Math.max(...vals),avg=vals.reduce((a,b)=>a+b,0)/vals.length;
-  push("Air Monitor — Reporte de estacion",17);
-  push(`${st.name}  (${st.id})`,12);
-  push(`Coordenadas: ${(+st.lat).toFixed(5)}, ${(+st.lng).toFixed(5)}`,10);
-  push(`Generado: ${new Date().toLocaleString("es-ES")}`,10);y+=6;
-  push("Lecturas actuales",12);
-  push(`Temp ${r.temp.toFixed(1)} C   Humedad ${r.hum.toFixed(0)}%   eCO2 ${r.eco2.toFixed(0)} ppm   TVOC ${r.tvoc.toFixed(0)} ppb   Luz ${r.lux.toFixed(0)} lux`,10,"mono");
-  push(`Temperatura 24h:  min ${mn.toFixed(1)}   max ${mx.toFixed(1)}   media ${avg.toFixed(1)} C`,10,"mono");y+=6;
-  push(`Historico (ultimas 40 muestras de ${hist.length})`,12);
-  push("fecha/hora            Temp   Hum   eCO2  TVOC  Lux   Bat",9,"mono");
-  hist.slice(-40).reverse().forEach(h=>{
-    const f=new Date(h.t).toLocaleString("es-ES",{hour12:false}).padEnd(20," ");
-    push(`${f}  ${h.temp.toFixed(1).padStart(4)}  ${String(h.hum.toFixed(0)).padStart(4)}  ${String(h.eco2).padStart(5)}  ${String(h.tvoc).padStart(4)}  ${String(h.lux).padStart(4)}  ${h.bat.toFixed(2)}`,9,"mono");
-  });
-  pages.push(page);
-  dl(`${st.id}_reporte.pdf`,buildPDF(pages),"application/pdf");
-}
-// estilo oscuro de Google Maps
-const DARK_MAP_STYLE=[{elementType:"geometry",stylers:[{color:"#1b2440"}]},{elementType:"labels.text.fill",stylers:[{color:"#8a96b3"}]},
-  {elementType:"labels.text.stroke",stylers:[{color:"#0b1020"}]},{featureType:"water",elementType:"geometry",stylers:[{color:"#0d2137"}]},
-  {featureType:"road",elementType:"geometry",stylers:[{color:"#27314f"}]},{featureType:"poi",elementType:"geometry",stylers:[{color:"#1f2a47"}]}];
+/* ---- eventos ---- */
+$("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;
+  TAB=b.dataset.tab; [...$("tabs").children].forEach(x=>x.classList.toggle("on",x===b)); render();
+  window.scrollTo({top:0,behavior:"smooth"});});
+$("crop").addEventListener("change",e=>{CROP=e.target.value; render();});
 
-/* ============================================================
-   PWA · service worker, instalación y navegación por teclado
-   ============================================================ */
-if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(e=>console.warn("SW:",e)));
+/* ---- "vivo": avanza el reloj del escenario y actualiza ---- */
+function tick(){
+  tmin=Math.min(700, tmin+6);   // avanza ~6 min de escenario por tick hasta pasada la mínima
+  $("clock").textContent="🕔 "+minToClock(tmin);
+  if(TAB==="vivo") render();
 }
-let deferredPrompt=null;
-window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").style.display="";});
-document.getElementById("installBtn").onclick=async()=>{
-  if(!deferredPrompt)return;
-  deferredPrompt.prompt();
-  const {outcome}=await deferredPrompt.userChoice;
-  if(outcome==="accepted")toast("Instalando app…");
-  deferredPrompt=null;document.getElementById("installBtn").style.display="none";
-};
-window.addEventListener("appinstalled",()=>{document.getElementById("installBtn").style.display="none";toast("App instalada");});
-// Flechas izquierda/derecha entre pestañas
-document.querySelector("nav.tabs").addEventListener("keydown",e=>{
-  if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;
-  const btns=[...document.querySelectorAll("nav.tabs button")];
-  const i=btns.indexOf(document.activeElement);if(i<0)return;
-  const n=e.key==="ArrowRight"?(i+1)%btns.length:(i-1+btns.length)%btns.length;
-  btns[n].focus();switchTab(btns[n].dataset.tab);e.preventDefault();
-});
+render();
+$("clock").textContent="🕔 "+minToClock(tmin);
+timer=setInterval(tick,3500);
+
+/* ---- PWA ---- */
+if("serviceWorker" in navigator){ window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
 </script>
 </body>
 </html>
