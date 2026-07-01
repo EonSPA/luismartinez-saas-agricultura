@@ -545,7 +545,7 @@ routes.productos=()=>`
         <div class="row" style="margin-top:auto">
           ${p.buyUrl
             ? `<span class="p">${fmtCLP(p.price)}</span><a class="btn primary sm" href="${p.buyUrl}" target="_blank" rel="noopener">Comprar</a>`
-            : `<span style="font-size:13px;font-weight:700;color:var(--brand);background:rgba(61,220,132,.13);padding:5px 11px;border-radius:999px">Próximamente</span><a class="btn ghost sm" href="#/contacto">Consultar</a>`}
+            : `<span style="font-size:13px;font-weight:700;color:var(--brand);background:rgba(61,220,132,.13);padding:5px 11px;border-radius:999px">Próximamente</span><a class="btn primary sm" href="#/contacto" data-quote="${esc(p.name)}">Cotizar</a>`}
         </div></div>`).join("")}
     </div>
     <div class="card" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
@@ -741,10 +741,13 @@ routes.recursos=()=>`
   </div></section>`;
 
 /* ---------- contacto / ventas (lead) ---------- */
-routes.contacto=()=>`
+routes.contacto=()=>{
+  let qp="";try{qp=sessionStorage.getItem("mk.quote")||"";}catch(e){}
+  const co_q=qp?esc("Quiero cotizar: "+qp):"";
+  return `
   <section class="block"><div class="wrap" style="max-width:720px">
-    <div class="tag">${t("contact_sales")}</div><h1 class="h2">Hablemos de tu operación</h1>
-    <p class="sub">Cuéntanos tu cultivo y superficie y te armamos una propuesta (estaciones + plan). Respondemos en horario hábil.</p>
+    <div class="tag">${t("contact_sales")}</div><h1 class="h2">${qp?"Cotiza tu equipo":"Hablemos de tu operación"}</h1>
+    <p class="sub">${qp?`Solicita la cotización de <b>${esc(qp)}</b>. `:""}Cuéntanos tu cultivo y superficie y te armamos una propuesta (equipos + plan). Respondemos en horario hábil.</p>
     <form id="contactForm" class="card">
       <div class="grid g2"><div class="field"><label for="co_name">Nombre</label><input id="co_name" required placeholder="María Pérez"></div>
       <div class="field"><label for="co_company">Empresa</label><input id="co_company" placeholder="AgroDemo SpA"></div></div>
@@ -752,11 +755,12 @@ routes.contacto=()=>`
       <div class="field"><label for="co_phone">Teléfono</label><input id="co_phone" placeholder="+56 9 ..."></div></div>
       <div class="grid g2"><div class="field"><label for="co_crop">Cultivo</label><select id="co_crop"><option>Frutales</option><option>Vid</option><option>Hortalizas</option><option>Cereales</option><option>Otro</option></select></div>
       <div class="field"><label for="co_ha">Hectáreas (aprox.)</label><input id="co_ha" inputmode="numeric" placeholder="50"></div></div>
-      <div class="field"><label for="co_msg">Mensaje</label><input id="co_msg" placeholder="¿Qué necesitas monitorear?"></div>
+      <div class="field"><label for="co_msg">Mensaje</label><input id="co_msg" value="${co_q}" placeholder="¿Qué necesitas monitorear?"></div>
       <button class="btn primary block" type="submit">Enviar solicitud</button>
       <p class="muted center" style="font-size:12px;margin-top:10px">También puedes escribirnos a <a href="mailto:ventas@ejemplo.cl" style="color:var(--brand)">ventas@ejemplo.cl</a></p>
     </form>
   </div></section>`;
+};
 
 /* ====================================================================
    Plataforma con RBAC
@@ -931,6 +935,7 @@ function appPage(sess,page){
 function bindCommon(){
   updateCartCount();
   document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{const p=PRODUCTS.find(x=>x.id===b.dataset.add);addToCart({id:p.id,name:p.name,price:p.price});});
+  document.querySelectorAll("[data-quote]").forEach(b=>b.onclick=()=>{try{sessionStorage.setItem("mk.quote",b.dataset.quote);}catch(e){}});
   document.querySelectorAll("[data-bill]").forEach(b=>b.onclick=()=>{store.billing=b.dataset.bill;router();});
   document.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{const p=PLANS.find(x=>x.id===b.dataset.plan);
     if(p.m===0&&p.y===0){go("#/registro");return;}  // Starter: crear cuenta de verdad
