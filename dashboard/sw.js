@@ -1,7 +1,7 @@
 /* Service Worker — Air Monitor PWA
    App-shell cache-first para uso offline. Las llamadas a APIs externas
    (ThingSpeak, Google Maps) van siempre a la red. */
-const CACHE = "airmon-v1";
+const CACHE = "agroclima-v2";
 const ASSETS = [
   "./",
   "./index.html",
