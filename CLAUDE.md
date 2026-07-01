@@ -3,14 +3,18 @@
 > Memoria persistente para sesiones de Claude Code. Léela al inicio de cada sesión.
 
 ## Qué es este proyecto
-Aunque el repo se llama `comparador-planos`, el producto es una **plataforma de
-monitoreo agrícola IoT**: estaciones **4G LTE** + sensores que miden clima,
+El repo se renombra de `comparador-planos` a **`luismartinez-saas-agricultura`**
+(hazlo en GitHub → Settings → Rename; git y Pages siguen funcionando por
+redirección automática). La carpeta local del autor es `C:\proyectos code\LM-SaaSAgricultura`
+(antes `LM-SaaSLecturaLTE`) — el nombre de la carpeta local es independiente del repo.
+El producto es una **plataforma de monitoreo agrícola IoT (SaaS)**: estaciones
+**4G LTE** + sensores que miden clima,
 humedad y calidad del aire por parcela, con una **plataforma SaaS** (web +
 dashboard + app Android) para tiempo real, históricos, alarmas, mapa,
 recomendaciones y reportes.
 
-- Repo GitHub: `eonspa/comparador-planos`
-- Sitio/dashboard públicos: https://eonspa.github.io/comparador-planos/
+- Repo GitHub: `eonspa/luismartinez-saas-agricultura` (antes `comparador-planos`)
+- Sitio/dashboard públicos (tras el rename): https://eonspa.github.io/luismartinez-saas-agricultura/
 - Idioma del producto y de la comunicación: **español (Chile)** — precios en **CLP**, teléfonos `+56`.
 
 ## Marca
