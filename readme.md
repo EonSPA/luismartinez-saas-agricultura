@@ -1,193 +1,71 @@
-# 4G-LTE-CAT1-Air-Monitor
+# SaaS Agricultura — Monitoreo agrícola inteligente
 
-```
-/* 
-    Version:      V1.0
-    Author:       Vincent
-    Create Date:  2023/8/22
-*/
-```
+Plataforma **IoT + SaaS** para monitorear el ambiente de los cultivos en tiempo
+real. Estaciones **4G LTE** con sensores de clima, humedad y calidad del aire, y
+una plataforma web + app móvil con **alarmas, históricos, mapa, recomendaciones
+automáticas y reportes**.
 
-# Makerfabs
+> 🔗 **Sitio:** https://eonspa.github.io/luismartinez-saas-agricultura/
+> 🔗 **Plataforma (dashboard):** https://eonspa.github.io/luismartinez-saas-agricultura/dashboard/
+> 📱 **App Android (APK):** ver [Releases](../../releases)
 
-[Makerfabs home page](https://www.makerfabs.com/)
+*Nota: la marca comercial está por definir; en el material se usa el placeholder `[Marca]`.*
 
-[Makerfabs Wiki](https://wiki.makerfabs.com/)
+---
 
-## Intruduce
+## ¿Qué hace?
 
-Product Link:[]()
+- **Tiempo real** — lecturas de cada sensor al instante (temperatura, humedad, eCO₂, TVOC, luz, batería, señal 4G).
+- **Históricos** — series por rango con exportación a **CSV, Excel y PDF**.
+- **Alarmas** — umbral alto/bajo, cambio brusco y caída de señal, con aviso visual, sonoro y push.
+- **Mapa** — estaciones geolocalizadas (Google Maps) con ficha, histórico y exportación por sensor.
+- **Recomendaciones automáticas** — sugerencias según las lecturas (ventilar, regar, proteger de heladas, cargar batería…).
+- **Reportes** — informes por estación y periodo en PDF/Excel.
+- **Índice de calidad del aire (AQI)** estimado a partir de eCO₂ y TVOC.
+- **Roles multiempresa** — Super Admin, Admin de Cuenta, Supervisor de Campo, Agrónomo/Analista, Técnico/Operador y Visor.
 
-Wiki Link : []()
+## Casos de uso
 
+Fruticultura · Viñas · Invernaderos · Hortalizas y campo abierto — protección de
+heladas, riego de precisión y control de calidad del aire.
 
-## Features
+## Estructura del repo
 
-- Controller: ESP32-S3
-- Wireless: WiFi& Bluetooth 5.0
-- Arduino support
-- MicroPython support
-- Operation temperature: -40℃ to +85℃
-- 3.7V Lipo battery
+| Carpeta | Contenido |
+|---|---|
+| `web/` | Sitio de marketing (se publica en GitHub Pages). |
+| `dashboard/` | Plataforma SaaS como PWA (manifest + service worker). |
+| `app/` | App Android (Capacitor) que empaqueta el dashboard. CI en `.github/workflows/android.yml`. |
+| `mobile/` | Mockups de la app móvil. |
+| `hardware/` | Planos y [referencia de firmware/AT](hardware/README.md) del nodo. |
+| `brochure/` | Brochure comercial en PDF (`brochure.html` → `Brochure-Marca.pdf`). |
+| `example/` | Ejemplos de firmware del nodo. |
 
+## Hardware
 
+Estación basada en **ESP32-S3** + módem **4G LTE CAT1** (A76XX / SIM7670), batería
+LiPo y panel solar opcional. Sensores: **AHT10** (temp/humedad), **SGP30**
+(eCO₂/TVOC), **BH1750** (luz), **PCF8563** (RTC). Reporte por HTTP / MQTT(S) / API.
+Detalle en [`hardware/README.md`](hardware/README.md).
 
-# Usage
+## Despliegue
 
-All supporting information, such as the AT instructions and other official documents are in the A76XX Manual.zip.
+- **Web + dashboard:** GitHub Pages, publicado automáticamente desde `main`
+  vía `.github/workflows/pages.yml`.
+- **App Android:** el APK se compila con `.github/workflows/android.yml` y se
+  publica en los Releases del repo.
 
-## Complier Option
+## Planes
 
-- Use Makerfabs USB2UART connect board to PC.
-- Select "ESP32-S3 DEV Module"
+| Plan | Para | Estaciones | Usuarios | Históricos | Precio* |
+|---|---|---|---|---|---|
+| **Starter** | Piloto / 1 campo | Hasta 2 | 1 | 7 días | Gratis |
+| **Pro** | Productores / fundos | Hasta 15 | Hasta 10 | 1 año | $29.000/mes |
+| **Empresa** | Multi-campo / agroindustria | Ilimitadas | Ilimitados | Ilimitado | A medida |
 
-## Example
+\* Precios de referencia (CLP). Plan anual con ~17% de descuento. Hardware se cotiza por separado.
 
-fw_test.ino
+---
 
-After starting up, the sensor is read cyclically and printed in the serial port.
-Press the WiFi button to initialize the 4G module.
-Can be used to test AT Commands.
-
-## AT Commands
-
-### AT+CSQ
-
-Query signal quality
-
-```
-AT+CSQ
-+CSQ: 28,99
-
-OK
-
-```
-
-### AT+SIMCOMATI
-
-Example Query module information
-
-
-```
-AT+SIMCOMATI
-Manufacturer: INCORPORATED
-Model: A7670SA-FASE
-Revision: A011B04A7670M7_F
-A7670M7_B04V02_220927
-QCN:
-IMEI: 869731059057646
-MEID:
-+GCAP: +CGSM,+FCLASS,+DS
-DeviceInfo:
-
-OK
-
-```
-
-### AT+COPS
-
-Operator selection
-
-```
-AT+COPS?
-+COPS: 0,2,"46000",7
-
-OK
-
-```
-
-### AT+CICCID
-
-Read ICCID from SIM card
-
-```
-AT+CICCID
-+ICCID: 898607E0102250030751
-
-OK
-
-```
-
-### AT+CBC
-
-Read the voltage value of the power supply
-
-```
-AT+CBC
-+CBC: 4.167V
-
-OK
-
-```
-
-## TTS Test
-
-```
-AT+CTTSPARAM=? 
-AT+CTTSPARAM=1,3,0,1,1 
-AT+CTTSPARAM?
-AT+CTTS=1,"6B228FCE4F7F75288BED97F3540862107CFB7EDF" 
-AT+CTTS=2,"Hi, Makerfabs"
-
-```
-
-## LBS Test
-
-```
-AT+CLBS=? 
-AT+SIMCOMATI
-AT+SIMEI=xxxxx 
-AT+CLBS=2 
-AT+CLBS=1
-```
-
-## Make a call
-
-```
-ATD<phone_number>;
-AT+COUTGAIN=?
-AT+COUTGAIN=5
-AT+CHUP 
-```
-## TCP test
-
-```
-AT+CIPMODE=1
-AT+NETOPEN
-AT+CIPOPEN=0,"TCP","122.114.122.174",39348
-Hi,Makerfabs
-AT+CIPCLOSE=0
-AT+NETCLOSE
-```
-## LBS Test
-
-```
-AT+CLBS=? 
-AT+SIMCOMATI
-AT+SIMEI=xxxxx 
-AT+CLBS=2 
-AT+CLBS=1
-```
-## HTTP Test
-
-```
-AT+HTTPINIT
-AT+HTTPPARA="URL","http:www.makerfabs.com"
-AT+HTTPACTION=0
-AT+HTTPHEAD
-AT+HTTPREAD=0,500
-AT+HTTPTERM
-```
-
-## MQTT Test
-
-```
-AT+CMQTTSTART
-AT+CMQTTACCQ=0,"client test0"
-AT+CMQTTWILLTOPIC=0,10
-AT+CMQTTWILLMSG=0,6,1
-AT+CMQTTCONNECT=0,"tcp://test.mosquitto.org:1883",60,1
-AT+CMQTTSUB=0,9,1
-AT+CMQTTTOPIC=0,9
-AT+CMQTTPAYLOAD=0,60
-```
+<sub>Escalable de una parcela a toda la agroindustria: agrega estaciones, campos,
+usuarios e integraciones (ThingSpeak, MQTT, Datacake, API) sin cambiar de herramienta.</sub>
