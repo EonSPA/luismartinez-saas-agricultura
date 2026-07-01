@@ -67,9 +67,27 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   screenshots** (Playwright/Chromium en `/opt/pw-browsers/chromium`) antes de entregar.
 - PDFs del brochure se generan con Chromium `page.pdf({format:'A4', printBackground:true, preferCSSPageSize:true})`.
 
+## Contexto de sesión (actualizado 2026-07-01)
+- El usuario continuará el trabajo desde **Chat (claude.ai) o Cowork**. Antes de pedir
+  nuevas modificaciones va a **analizar la parte comercial**: marca, modelo de negocio
+  y posicionamiento. Las próximas solicitudes de cambios saldrán de ese análisis.
+- El sitio se sirve en GitHub Pages; **la URL raíz redirige a `/web/`** (hay `index.html`
+  + `.nojekyll` en la raíz del repo). El dashboard de monitoreo está **montado dentro**
+  del área privada (login con cuentas demo `@demo.cl`, primer ítem "Monitoreo en vivo").
+- Flujo de publicación vigente: rama → **PR → merge a `main`** vía GitHub MCP
+  (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
+
+## Pendientes técnicos abiertos
+- **Mapeo de campos ThingSpeak** (dashboard): el lector usa `field3=eCO₂,4=TVOC,5=Lux,6=Bat`
+  pero el firmware/generador emite `field3=TVOC,4=eCO₂,7=Luz,8=Bat` (CSQ no se envía).
+  Alinear lector + texto del modal al orden real del firmware.
+- **About del repo** (descripción + web + topics): pendiente; probablemente manual
+  (no hay tool MCP para editar metadatos del repo). Valores sugeridos ya redactados.
+
 ## Pendientes / ideas abiertas
 - Definir marca real y reemplazar `[Marca]` + contactos (regenerar brochure).
 - Recomendaciones por estación dentro del **Mapa**; umbrales **configurables**.
 - Versión del brochure **en inglés** y variante **clara para imprimir**.
 - Subir versión del caché del service worker (`v1`→`v2`) al publicar cambios.
 - Checkout con Stripe real / traducir plataforma interna al inglés.
+- Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).
