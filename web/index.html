@@ -505,6 +505,17 @@ routes.home=()=>`
     </div>
   </div></section>
 
+  <section class="block" id="cuartel"><div class="wrap">
+    <div class="tag">Resolución</div><h2 class="h2">Al nivel del cuartel, no del valle</h2>
+    <p class="sub">La estación agroclimática <b>por cuartel</b> para fruta de exportación: no solo te avisa de la helada — <b>la anticipa por cultivo</b> y te dice si regar, cuánto frío llevas y cuánto reponer, en una sola pantalla.</p>
+    <div class="grid g4">
+      <div class="card"><div class="ico">📍</div><h3>Una estación por cuartel</h3><p>La helada radiativa es intensamente local: un sector puede helar y el de al lado no. Mides donde decides, no a kilómetros.</p></div>
+      <div class="card"><div class="ico">🍒</div><h3>Umbral por cultivo y variedad</h3><p>Cerezo, palto, kiwi, arándano, uva y nogal tienen distinto umbral de daño y acumulación de frío. Cada cuartel se configura por su especie y fenología.</p></div>
+      <div class="card"><div class="ico">🎯</div><h3>Dato del sitio, no interpolación</h3><p>El microclima real del cuartel, medido en terreno — no un promedio regional que suaviza justo lo que te importa.</p></div>
+      <div class="card"><div class="ico">🗺️</div><h3>Prioriza qué proteger</h3><p>El mapa de cuarteles ordena qué sector está más expuesto esta madrugada, para actuar primero donde más riesgo hay.</p></div>
+    </div>
+  </div></section>
+
   <section class="block"><div class="wrap">
     <div class="tag">ROI</div><h2 class="h2">¿Cuánto vale evitar una helada?</h2>
     <p class="sub">Ejemplo ilustrativo para dimensionar el valor. <b>No es un caso real ni una cifra medida</b>: son supuestos que puedes reemplazar por los tuyos.</p>
@@ -528,6 +539,18 @@ routes.home=()=>`
         <span class="tag" style="margin-top:12px">Pendiente — maqueta</span>
       </div>
     </div>
+  </div></section>
+
+  <section class="block" id="estado"><div class="wrap">
+    <div class="tag">Franqueza</div><h2 class="h2">¿Por qué pagar si el Estado avisa gratis?</h2>
+    <p class="sub">Es la pregunta correcta. La red pública <b>(agromet.cl)</b> envía alertas de helada gratis por SMS y correo, y conviene tenerla. Pero avisa a nivel <b>zonal</b>, con estaciones dispersas. Lo que pagas es <b>resolución y acción</b>, no la alerta a secas.</p>
+    <div class="grid g4">
+      <div class="card"><div class="ico">📍</div><h3>Densidad en tu predio</h3><p>Una estación en tu cuartel, no la pública más cercana a varios kilómetros. La helada de tu campo la mide tu campo.</p></div>
+      <div class="card"><div class="ico">🎯</div><h3>El dato de tu sitio</h3><p>Microclima real del cuartel frente a la interpolación regional. En helada radiativa, esos grados de diferencia deciden.</p></div>
+      <div class="card"><div class="ico">⚙️</div><h3>Acción, no solo aviso</h3><p>El Estado alerta. Aquí, además, tienes riego por humedad de suelo, horas-frío, ET₀ y recomendación por cultivo en la misma vista.</p></div>
+      <div class="card"><div class="ico">⏱️</div><h3>Anticipada y por cuartel</h3><p>Proyección de la mínima y su hora, por sector, para saber qué proteger primero y con cuánto margen cuentas.</p></div>
+    </div>
+    <p class="note" style="margin-top:16px;font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:11px">Recomendamos mantener la alerta pública (agromet.cl) como respaldo. Nuestra propuesta es complementaria: más densidad, dato del sitio y acción integrada.</p>
   </div></section>
 
   <section class="block" id="roles"><div class="wrap">
@@ -589,7 +612,7 @@ routes.planes=()=>{
     <div class="center"><div class="tag">${t("nav_plans")}</div><h1 class="h2">Precios simples, escala cuando quieras</h1>
     <p class="sub" style="margin:0 auto 14px">Cambia de plan en cualquier momento. Sin permanencia.</p>
     <div class="toggle" role="group" aria-label="Periodo de facturación"><button data-bill="m" class="${y?"":"on"}" aria-pressed="${y?"false":"true"}">Mensual</button><button data-bill="y" class="${y?"on":""}" aria-pressed="${y?"true":"false"}">Anual <span style="color:var(--brand)">−17%</span></button></div>
-    <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin tarjeta · ✓ 14 días de prueba · ✓ Cancela cuando quieras · ✓ Soporte en español</p></div>
+    <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin permanencia · ✓ Precios en CLP · ✓ Cancela cuando quieras · ✓ Soporte en español (Chile)</p></div>
     <div class="grid g3" style="margin-top:24px">
       ${PLANS.map(p=>{
         const price = p.custom?null:(y?p.y:p.m);
@@ -617,7 +640,8 @@ routes.planes=()=>{
 const PLAN_FEATURES=["Estaciones incluidas","Tiempo real y alarmas","Retención de históricos","Usuarios","Mapa de sensores","Reportes PDF/Excel","Roles y equipo","Soporte"];
 const PLAN_FAQ=[
   ["¿Qué cuenta como una estación?","Cada nodo 4G con sus sensores en una parcela. Puedes mover una estación entre campos sin costo."],
-  ["¿Necesito tarjeta para la prueba?","No. El plan Starter es gratis y la prueba de Pro dura 14 días sin tarjeta."],
+  ["¿Cómo pruebo la plataforma antes de contratar?","Con el plan Piloto: 1 campo, 1 estación y 1 temporada, dirigido y a medida. No hay plan gratis permanente, pero sí una evaluación acotada con tus propios cuarteles."],
+  ["¿Por qué pagar si el Estado avisa gratis?","La alerta pública (agromet.cl) es zonal y conviene tenerla. Aquí pagas resolución por cuartel, el dato de tu sitio y acción integrada (riego, horas-frío, ET₀), no solo el aviso."],
   ["¿Puedo cambiar o cancelar el plan?","Sí, en cualquier momento desde Facturación. Sin permanencia ni multas."],
   ["¿Cómo se factura el plan anual?","Un solo cobro al año con ~17% de descuento frente al mensual. El precio mostrado es el equivalente por mes."],
   ["¿Qué incluye el plan Empresa?","Estaciones y usuarios ilimitados, API, jerarquía de roles completa y soporte 24/7 con SLA. Se cotiza según tu operación."],
