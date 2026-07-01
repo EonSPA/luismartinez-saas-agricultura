@@ -289,11 +289,30 @@ function mark(size=32){return `<svg class="mark" width="${size}" height="${size}
 </svg>`;}
 
 /* ---------- catálogo, planes, datos demo ---------- */
+/* Catálogo de hardware AgroSense / Makerfabs (proveedor).
+   Sin precio por ahora → se muestra "Próximamente". Para habilitar la venta,
+   basta con añadir a cada producto: price:<CLP> y buyUrl:"<enlace MercadoLibre>". */
 const PRODUCTS = [
-  {id:"station", name:"Estación 4G LTE CAT1", emoji:"📡", price:189000, desc:"Nodo ESP32-S3 con módem 4G, batería LiPo y carcasa intemperie."},
-  {id:"sensors", name:"Kit de sensores ambientales", emoji:"🌡️", price:64000, desc:"Temp/Humedad (AHT10), gases (SGP30) y luz (BH1750)."},
-  {id:"solar",   name:"Panel solar + soporte", emoji:"🔆", price:42000, desc:"Autonomía energética para despliegue permanente en campo."},
-  {id:"gateway", name:"Gateway de campo", emoji:"🛰️", price:120000, desc:"Concentra múltiples estaciones y reenvía por 4G."},
+  {id:"gateway", cat:"Gateway", emoji:"🛰️", name:"SenseLoRa 4G Gateway",
+   desc:"Concentrador ESP32-S3 con LoRa + 4G LTE Cat-1, WiFi y cargador solar. Recibe los sensores del campo y sube los datos a la nube."},
+  {id:"airmon", cat:"Estación", emoji:"📡", name:"Estación 4G LTE Air Monitor",
+   desc:"Nodo todo-en-uno ESP32-S3 con 4G: temperatura, humedad, luz, CO₂ y TVOC. Batería 18650 y panel solar."},
+  {id:"s_th", cat:"Sensor", emoji:"🌡️", name:"AgroSense Temp/Humedad de aire",
+   desc:"Sensor LoRaWAN de temperatura y humedad del aire (SHT31). Carcasa IP68, batería hasta 1 año."},
+  {id:"s_soil", cat:"Sensor", emoji:"💧", name:"AgroSense Humedad de suelo",
+   desc:"Sensor capacitivo de humedad de suelo LoRaWAN, sumergible IP68 para instalación permanente."},
+  {id:"s_light", cat:"Sensor", emoji:"💡", name:"AgroSense Intensidad de luz",
+   desc:"Sensor LoRaWAN de luz (BH1750), rango 1–65.535 lx, para radiación y fotoperiodo."},
+  {id:"s_co2", cat:"Sensor", emoji:"💨", name:"AgroSense CO₂",
+   desc:"Sensor LoRaWAN de dióxido de carbono para invernaderos y calidad del aire."},
+  {id:"s_baro", cat:"Sensor", emoji:"🧭", name:"AgroSense Presión barométrica",
+   desc:"Sensor LoRaWAN de presión atmosférica, apoyo al pronóstico local."},
+  {id:"s_ecth", cat:"Sensor Pro", emoji:"🧪", name:"AgroSense Suelo & Aire EC-TH Pro",
+   desc:"Sensor pro LoRaWAN: conductividad eléctrica (EC) + temperatura y humedad de suelo y aire."},
+  {id:"a_relay", cat:"Actuador", emoji:"🔌", name:"AgroSense Relé 4 canales",
+   desc:"Actuador LoRaWAN de 4 relés (Class C) para automatizar riego, válvulas y bombas."},
+  {id:"a_adc", cat:"Expansión", emoji:"🎚️", name:"AgroSense ADC 4 canales 12-bit",
+   desc:"Entrada LoRaWAN de 4 canales ADC 12-bit para conectar sensores analógicos de terceros."},
 ];
 const PLANS = [
   {id:"starter", name:"Starter", m:0, y:0, tagline:"Para probar en un campo",
@@ -517,12 +536,17 @@ function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=
 routes.productos=()=>`
   <section class="block"><div class="wrap">
     <div class="tag">${t("nav_hw")}</div><h1 class="h2">Equipos para el campo</h1>
-    <p class="sub">Estaciones y accesorios listos para desplegar. Combínalos con cualquier plan del software.</p>
+    <p class="sub">Hardware AgroSense (Makerfabs) listo para desplegar: <b>gateway 4G</b>, <b>estación todo-en-uno</b> y <b>sensores LoRaWAN</b> (IP68, batería hasta 1 año, alcance hasta 5 km). Los sensores del campo transmiten al gateway y este sube los datos a la plataforma por 4G. <b>La venta online estará disponible próximamente.</b></p>
     <div class="grid g4">
-      ${PRODUCTS.map(p=>`<div class="card prod"><div class="prodimg">${p.emoji}</div>
-        <h3>${p.name}</h3><p>${p.desc}</p>
-        <div class="row"><span class="p">${fmtCLP(p.price)}</span>
-        <button class="btn primary sm" data-add="${p.id}">Añadir</button></div></div>`).join("")}
+      ${PRODUCTS.map(p=>`<div class="card prod" style="display:flex;flex-direction:column">
+        <div class="prodimg">${p.emoji}</div>
+        <span class="tag" style="margin:12px 0 6px;align-self:flex-start">${esc(p.cat)}</span>
+        <h3>${esc(p.name)}</h3><p>${esc(p.desc)}</p>
+        <div class="row" style="margin-top:auto">
+          ${p.buyUrl
+            ? `<span class="p">${fmtCLP(p.price)}</span><a class="btn primary sm" href="${p.buyUrl}" target="_blank" rel="noopener">Comprar</a>`
+            : `<span style="font-size:13px;font-weight:700;color:var(--brand);background:rgba(61,220,132,.13);padding:5px 11px;border-radius:999px">Próximamente</span><a class="btn ghost sm" href="#/contacto">Consultar</a>`}
+        </div></div>`).join("")}
     </div>
     <div class="card" style="margin-top:22px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px">
       <div><h3>¿No sabes qué necesitas?</h3><p class="muted">Cuéntanos tu cultivo y superficie y armamos el kit.</p></div>
