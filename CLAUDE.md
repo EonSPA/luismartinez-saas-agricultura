@@ -117,8 +117,22 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      productos, ayuda, recursos, login (botones demo), nav (carrito), y el **área demo
      RBAC** (sidebar + badge de rol + recomendaciones). **Regla dura:** se quitó un
      **caso falso** en Recursos ("Caso: 18% menos agua… un cliente") por cero invención.
-     Verificado con screenshots (desktop+móvil), sin errores de consola. Falta darle el
-     mismo trato al **dashboard** y **brochure** para coherencia visual.
+     Verificado con screenshots (desktop+móvil), sin errores de consola. (El trato de
+     íconos/layout "anti-IA" del **dashboard standalone** y el **brochure** sigue pendiente.)
+  6. ✅ **HECHO — mapa de dispositivos por campo** (dashboard, PR #15): pestaña **"Mapa"**
+     con **Leaflet + OpenStreetMap/CARTO** auto-alojado en `dashboard/vendor/` (sin clave),
+     selector de campo (`CAMPOS`), marcadores por estado de helada y popups. CSP abierta
+     solo para `img-src` de tiles. Coordenadas DEMO cerca de Curicó. (Ver Pendientes técnicos.)
+  7. ✅ **HECHO — limpieza de specs implausibles** (PR #14): fuera el rango de componente
+     "−40…85 °C" del hero (absurdo para un huerto); autonomía del dashboard "≥7 días sin
+     sol" → "(a validar en piloto)". Regla de cero invención.
+  8. ✅ **HECHO — paleta "verde medio"** (PR #16, a pedido "los colores son muy oscuros"):
+     recolor de `:root` en web/dashboard/brochure + nav armonizada + PDF del brochure
+     regenerado. (Ver "Identidad visual".)
+- **Pendientes vivos tras esta sesión** (PRs #13–#16 ya en `main`): (a) **brochure + dashboard
+  standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
+  — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) **marca** (bloqueante)
+  — definir nombre real y reemplazar `[Marca]` + contactos.
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
