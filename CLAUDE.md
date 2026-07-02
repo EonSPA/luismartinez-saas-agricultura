@@ -37,10 +37,14 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
   tech). **Lección: los nombres comunes/cortos en IoT chileno están todos tomados; ganó un acuñado.**
 - Contactos comerciales siguen **placeholders** (`ventas@ejemplo.cl`, `+56 9 0000 0000`) → reemplazar
   con los reales cuando el usuario los aporte (ej. `ventas@sembu.cl`).
-- ⚠️ **Logo/mark PENDIENTE de rediseño:** el mark actual es de "estratos" (3 líneas diagonales, corte
-  geológico) — se diseñó para *Estrato* (capas) y **ya no calza con Sembu** (siembra/semilla). Rediseñar
-  a concepto de **siembra/semilla/brote**. Por ahora el mark abstracto sigue en web/dashboard/brochure +
-  `dashboard/icon.svg` + los 5 PNG (favicon/192/512/maskable/apple-touch).
+- ✅ **Logo/mark REDISEÑADO para Sembu (2026-07-02):** concepto **«S» tallo** — la inicial de Sembu
+  trazada como un tallo continuo que remata en una **hoja/brote** (tema siembra/germinación). Reemplazó
+  al viejo mark de "estratos" (corte geológico, atado a *Estrato*). Mismo tile verde→lima (gradient
+  `#3ddc84`→`#a3e635`, viewBox 48, rx 12, trazo `#04121e`). Aplicado en `web/` (`mark()`), `dashboard/`
+  (header + `icon.svg`), `brochure/` (2 marks) y **regenerados los 5 PNG** (favicon 96 / 192 / 512 /
+  maskable-512 full-bleed a 0.72 / apple-touch 180) vía Playwright. Verificado con screenshots. El path
+  del mark (48-box): `M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5
+  20 39 16.5 35.5` (trazo, la «S») + hoja `M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z` (relleno).
 
 ## Identidad visual (paleta agrícola)
 > **Aclarada el 2026-07-01** (a pedido: "los colores son muy oscuros" → se eligió la variante
@@ -126,7 +130,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      Pessl/Metos, Sencrop, CropX) y el **pricing de Instacrops**.
   3. ✅ **HECHO — marca definida: `Sembu`** (reemplazado `[Marca]`→`Estrato`→`Sembu` en todo el
      material). Dominio `sembu.cl` **disponible** e INAPI **sin colisión** (verificado 2026-07-02).
-     Falta solo **contactos reales** y **rediseñar el logo** (el mark de "estratos" no calza con Sembu). (Ver sección "Marca".)
+     Falta solo **contactos reales**; ✅ **logo rediseñado** a Sembu (mark «S» tallo). (Ver sección "Marca".)
   4. Falta replicar el énfasis "por cuartel/variedad" y el argumento vs. Estado en el
      **dashboard** y el **brochure** (hoy solo en la web de marketing).
   5. ✅ **HECHO — rediseño "anti-IA" de `web/index.html`** (a pedido: "que no parezca
@@ -158,7 +162,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
   — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) ✅ **marca definida:
   `Sembu`** (reemplazada en todo el material; dominio + INAPI verificados 2026-07-02) — falta solo
-  **contactos reales** y **rediseñar el logo**; (d) **README** desactualizado (describe el producto viejo de "calidad del
+  **contactos reales** (✅ logo «S» tallo ya rediseñado); (d) **README** desactualizado (describe el producto viejo de "calidad del
   aire", planes "Starter gratis", 4G, ThingSpeak) → alinear con el posicionamiento actual;
   (e) **conectividad NB-IoT/LTE-M** + `docs/sensores-vs-datos.md` ya en `main` (PR #18).
 
@@ -197,9 +201,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - ✅ **MARCA — RESUELTA: `Sembu`** (reemplazado `[Marca]`→`Estrato`→`Sembu` en todo el material;
   dominio `sembu.cl` disponible + INAPI sin colisión, verificado 2026-07-02). Quedan solo
   **contactos reales** y que el usuario **registre `sembu.cl` + la marca en INAPI**.
-- ⚠️ **Logo/mark PENDIENTE de rediseño**: el mark de "estratos" (corte geológico) se diseñó para
-  *Estrato* (capas) y **ya no calza con Sembu** (siembra/semilla/brote). Sigue puesto en todo el
-  material como placeholder hasta rediseñarlo con tema de siembra/germinación.
+- ✅ **Logo/mark REDISEÑADO (2026-07-02)**: mark **«S» tallo** (inicial de Sembu como tallo que remata
+  en hoja/brote; tema siembra/germinación) reemplazó al de "estratos". Aplicado en web/dashboard/brochure
+  + `icon.svg` + los 5 PNG. (Ver sección "Marca" para el path exacto.)
 - **Hardware físico real** con sensores agro (suelo multiprofundidad, piranómetro, mojado foliar) y su firmware.
 - **Datos de campo reales** (hoy todo DEMO): estación real → casos/ROI verificables.
 - Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).
