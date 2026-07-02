@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="Plataforma SaaS de monitoreo agrícola inteligente: estaciones celulares, sensores, alarmas y analítica de campo.">
-<title>[Marca] — Monitoreo agrícola inteligente</title>
+<title>Estrato — Monitoreo agrícola inteligente</title>
 <style>
   :root{
     --bg:#1a2c26;--bg2:#213730;--panel:#284139;--panel2:#304d44;--line:#446056;
@@ -271,10 +271,10 @@
 <script>
 "use strict";
 /* ====================================================================
-   [Marca] — sitio SaaS (landing + tienda + checkout + login + plataforma RBAC)
+   Estrato — sitio SaaS (landing + tienda + checkout + login + plataforma RBAC)
    Marca placeholder: cambia BRAND en un solo lugar.
    ==================================================================== */
-const BRAND = "[Marca]";
+const BRAND = "Estrato";
 const DASHBOARD_URL = "../dashboard/index.html";  // la plataforma de monitoreo ya construida
 const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const fmtCLP = n => "$"+Math.round(n).toLocaleString("es-CL");
@@ -401,7 +401,7 @@ const MODULES = [
 const TT = o => lang==="en" ? o.te : o.t;
 const TD = o => lang==="en" ? o.de : o.d;
 const DEMO_USERS = {
-  "super@demo.cl":{role:"superadmin", name:"Diego (Plataforma)", org:"[Marca]"},
+  "super@demo.cl":{role:"superadmin", name:"Diego (Plataforma)", org:"Estrato"},
   "admin@demo.cl":{role:"account_admin", name:"María (AgroDemo)", org:"AgroDemo SpA"},
   "campo@demo.cl":{role:"field_supervisor", name:"Pedro (Fundo Sur)", org:"AgroDemo SpA"},
   "agro@demo.cl":{role:"agronomo", name:"Carla (Agronomía)", org:"AgroDemo SpA"},
