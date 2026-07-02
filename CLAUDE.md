@@ -33,8 +33,9 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
   *Estrato* sin colisión evidente en agtech/software.
 - Contactos comerciales siguen **placeholders** (`ventas@ejemplo.cl`, `+56 9 0000 0000`) →
   reemplazar cuando el usuario aporte correo/teléfono/dominio reales.
-- El **logo/mark** sigue siendo el de ondas (verde→lima); un mark de "capas/estratos" calzaría
-  mejor con el nombre (opcional, pendiente).
+- ✅ **Logo/mark: "estratos"** (3 líneas diagonales, tipo corte geológico; tile verde→lima) —
+  reemplazó las ondas en web/dashboard/brochure + `dashboard/icon.svg` y los 5 PNG regenerados
+  (favicon/192/512/maskable/apple-touch). El `icon.svg` viejo era azul/morado (era "calidad de aire").
 
 ## Identidad visual (paleta agrícola)
 > **Aclarada el 2026-07-01** (a pedido: "los colores son muy oscuros" → se eligió la variante
@@ -189,7 +190,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 ## Pendientes / ideas abiertas — BLOQUEANTES primero
 - ✅ **MARCA — RESUELTA: `Estrato`** (reemplazado `[Marca]` en todo el material). Quedan solo
   **contactos reales** y **verificar dominio `.cl`/`.com` + INAPI** antes de imprimir/registrar.
-- **Logo/mark**: un mark de "capas/estratos" calzaría mejor con el nombre (el actual es de ondas).
+- ✅ **Logo/mark**: hecho — mark de "estratos" (corte geológico) en todo el material y en los íconos PWA/favicon.
 - **Hardware físico real** con sensores agro (suelo multiprofundidad, piranómetro, mojado foliar) y su firmware.
 - **Datos de campo reales** (hoy todo DEMO): estación real → casos/ROI verificables.
 - Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).
