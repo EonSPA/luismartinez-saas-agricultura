@@ -993,18 +993,18 @@ function appPage(sess,page){
         ["AME-01","Fundo Sur","Alarma helada",bdg("Alta","bad")]])}`;
     if(R==="visor") return `<div class="kpis">
       ${kpi("Campos","6","solo lectura","")}${kpi("Estaciones","15","14 en línea","")}
-      ${kpi("Alarmas activas","1","","")}${kpi("Temp media","6.8 °C","","")}</div>
+      ${kpi("Alarmas activas","1","","")}${kpi("Temp media","6,8 °C","","")}</div>
       ${tableCard("Estaciones",["Estación","Campo","Temp","Estado"],[
-        ["AME-01","Fundo Sur","2.1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C",bdg("Normal","good")],
-        ["AME-07","Cuartel A","8.0 °C",bdg("Normal","good")]])}`;
+        ["AME-01","Fundo Sur","2,1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6,4 °C",bdg("Normal","good")],
+        ["AME-07","Cuartel A","8,0 °C",bdg("Normal","good")]])}`;
     return `<div class="kpis">
       ${kpi("Mis campos","2","","")}${kpi("Estaciones","9","9 en línea","")}
       ${kpi("Alarmas activas","1","helada","")}${kpi("Batería media","82%","","up")}</div>
       ${tableCard("Mis estaciones",["Estación","Campo","Temp","Estado"],[
-        ["AME-01","Fundo Sur","2.1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C",bdg("Normal","good")],
-        ["AME-07","Cuartel A","8.0 °C",bdg("Normal","good")]])}`;
+        ["AME-01","Fundo Sur","2,1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6,4 °C",bdg("Normal","good")],
+        ["AME-07","Cuartel A","8,0 °C",bdg("Normal","good")]])}`;
   }
-  if(page==="analitica") return `<div class="kpis">${kpi("Grados-día acum.","1.245","temporada")}${kpi("Estrés hídrico","Medio","índice 0.42")}${kpi("Horas-frío","320","")}${kpi("Predicción helada","72%","próx. 24 h","down")}</div>
+  if(page==="analitica") return `<div class="kpis">${kpi("Grados-día acum.","1.245","temporada")}${kpi("Estrés hídrico","Medio","índice 0,42")}${kpi("Horas-frío","320","")}${kpi("Predicción helada","72%","próx. 24 h","down")}</div>
     <div class="panelcard" style="margin-top:18px"><h3>Tendencia de temperatura (14 días)</h3><div style="padding:16px">${miniChart(true)}</div></div>`;
   if(page==="recomendaciones") return `<div class="grid g2">
     ${[["frost","Protección de heladas","Fundo Sur bajo 2 °C esta madrugada: activa riego por aspersión a las 03:00."],
@@ -1018,7 +1018,7 @@ function appPage(sess,page){
   if(page==="empresas") return tableCard("Empresas (tenants)",["Empresa","Plan","Usuarios","Dispositivos","MRR","Estado"],[
     ["AgroDemo SpA","Producción","8","15","$290.000",bdg("Activa","good")],["Viñas del Maule","Empresa","34","82","$1.560.000",bdg("Activa","good")],
     ["Frutícola Norte","Producción","5","9","$37.500",bdg("Pendiente","warn")],["Cerezos del Maule","Piloto","1","1","a medida",bdg("Piloto","muted")]]);
-  if(page==="planes") return `<div class="kpis">${kpi("MRR","$3.480.000","+12%","up")}${kpi("ARR","$41.760.000","","")}${kpi("Suscripciones","22","","")}${kpi("Churn","1.8%","−0.3","down")}</div>
+  if(page==="planes") return `<div class="kpis">${kpi("MRR","$3.480.000","+12%","up")}${kpi("ARR","$41.760.000","","")}${kpi("Suscripciones","22","","")}${kpi("Churn","1,8%","−0,3","down")}</div>
     ${tableCard("Suscripciones por plan",["Plan","Empresas","Ingreso mensual","Tendencia"],[
       ["Piloto","9","a medida","+2"],["Producción","11","$412.500","+1"],["Empresa","4","$3.161.000","="]])}`;
   if(page==="usuarios"){
@@ -1039,10 +1039,10 @@ function appPage(sess,page){
       ["Fundo Sur","42","6","Cerezo",bdg("Atención","warn")],["Parcela Río","30","4","Uva",bdg("Normal","good")],
       ["Cuartel A","20","3","Kiwi",bdg("Normal","good")],["Nogales Alto","6","2","Nogal",bdg("Normal","good")]])}`;
   if(page==="estaciones") return tableCard("Estaciones",["Estación","Campo","Temp","Humedad","Batería","Estado"],[
-    ["AME-01","Fundo Sur","2.1 °C","88%","81%",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C","72%","76%",bdg("Normal","good")],
-    ["AME-07","Cuartel A","8.0 °C","60%","42%",bdg("Batería baja","warn")]]);
+    ["AME-01","Fundo Sur","2,1 °C","88%","81%",bdg("Helada","bad")],["AME-02","Fundo Sur","6,4 °C","72%","76%",bdg("Normal","good")],
+    ["AME-07","Cuartel A","8,0 °C","60%","42%",bdg("Batería baja","warn")]]);
   if(page==="alarmas") return tableCard("Alarmas",["Fecha","Estación","Tipo","Valor","Estado"],[
-    ["Hoy 04:12","AME-01","Helada","2.1 °C",bdg("Activa","bad")],["Ayer 16:40","AME-07","Batería baja","3.4 V",bdg("Atendida","good")],
+    ["Hoy 04:12","AME-01","Helada","2,1 °C",bdg("Activa","bad")],["Ayer 16:40","AME-07","Batería baja","3,4 V",bdg("Atendida","good")],
     ["Ayer 10:05","AME-02","Humedad de suelo baja","18%",bdg("Repuesta","good")]]);
   if(page==="reportes") return `<div class="grid g2">
     ${["Resumen semanal · Fundo Sur","Heladas del mes","Horas-frío · Cuartel A","Consumo y batería"].map(t=>`<div class="card"><h3>${t}</h3><p class="muted">Informe generado a partir de los históricos.</p><div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm" data-rep>PDF</button><button class="btn sm" data-rep>Excel</button></div></div>`).join("")}</div>`;

@@ -206,6 +206,8 @@ const SCN = {
   gdd:52,                                // grados-día acumulados temporada (desde 1-ago)
   et0:1.9, kc:0.45, caTemp:0.4, caCO2:1180, caHR:92
 };
+/* Formato chileno: coma decimal para valores de display (no para coordenadas SVG). */
+const dec = v => (''+v).replace('.', ',');
 /* Requerimientos y modelos por cultivo (metas de frío, base GDD, plaga por grados-día, umbral de daño por helada) */
 const CROPS = {
   cerezo:  {emoji:"🍒", name:"Cerezo",       chillHF:1100, chillPor:65, gddBase:10, pest:"Drosophila suzukii", frostCrit:-1.1, stage:"Brotación / inicio floración"},
@@ -295,14 +297,14 @@ function frostHero(){
     </div>
     <div class="hrow" style="margin-top:12px">
       <div>
-        <div class="big" style="color:${lvl==='red'?'#fecdd3':'var(--txt)'}">${t.toFixed(1)}<small> °C</small></div>
+        <div class="big" style="color:${lvl==='red'?'#fecdd3':'var(--txt)'}">${dec(t.toFixed(1))}<small> °C</small></div>
         <div class="meta">
-          <div><div class="k">Mínima estimada</div><div class="val" style="color:${frostColor(lvl)}">${SCN.minTemp.toFixed(1)} °C</div></div>
+          <div><div class="k">Mínima estimada</div><div class="val" style="color:${frostColor(lvl)}">${dec(SCN.minTemp.toFixed(1))} °C</div></div>
           <div><div class="k">Hora de la mínima</div><div class="val">${eta}</div></div>
-          <div><div class="k">Umbral de daño (${esc(c.name)})</div><div class="val">${c.frostCrit.toFixed(1)} °C</div></div>
+          <div><div class="k">Umbral de daño (${esc(c.name)})</div><div class="val">${dec(c.frostCrit.toFixed(1))} °C</div></div>
           ${hw().has.wind
-            ? `<div><div class="k">Viento · rocío</div><div class="val">${SCN.wind} km/h · ${SCN.dew} °C</div></div>`
-            : `<div><div class="k">Punto de rocío</div><div class="val">${SCN.dew} °C</div></div>`}
+            ? `<div><div class="k">Viento · rocío</div><div class="val">${dec(SCN.wind)} km/h · ${dec(SCN.dew)} °C</div></div>`
+            : `<div><div class="k">Punto de rocío</div><div class="val">${dec(SCN.dew)} °C</div></div>`}
         </div>
       </div>
       <svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;flex:1;min-width:260px" preserveAspectRatio="none" aria-hidden="true">
@@ -324,11 +326,11 @@ function frostHero(){
 function kpiRow(){
   const t=tempNow(), H=hw().has;
   const cards=[
-    ["🌡️","Temp. aire",`${t.toFixed(1)}<small> °C</small>`,"mín. hoy "+SCN.minTemp+" °C"],
-    ["💧","Humedad rel.",`${SCN.hr}<small> %</small>`,"punto de rocío "+SCN.dew+" °C"],
-    ["🧊","Punto de rocío",`${SCN.dew}<small> °C</small>`,"aire seco → enfría más"],
+    ["🌡️","Temp. aire",`${dec(t.toFixed(1))}<small> °C</small>`,"mín. hoy "+dec(SCN.minTemp)+" °C"],
+    ["💧","Humedad rel.",`${SCN.hr}<small> %</small>`,"punto de rocío "+dec(SCN.dew)+" °C"],
+    ["🧊","Punto de rocío",`${dec(SCN.dew)}<small> °C</small>`,"aire seco → enfría más"],
   ];
-  if(H.wind) cards.push(["🌬️","Viento",`${SCN.wind}<small> km/h</small>`,SCN.windDir+" · calmo (helada radiativa)"]);
+  if(H.wind) cards.push(["🌬️","Viento",`${dec(SCN.wind)}<small> km/h</small>`,SCN.windDir+" · calmo (helada radiativa)"]);
   if(H.rain) cards.push(["🌧️","Lluvia",`${SCN.rainDay}<small> mm</small>`,"temporada "+SCN.rainSeason+" mm"]);
   if(H.rad)  cards.push(["☀️","Radiación",`${SCN.radiation}<small> W/m²</small>`,"noche · máx. día "+SCN.radPeak]);
   const g=cards.length>=6?"g6":cards.length===3?"g3":"g4";
@@ -341,7 +343,7 @@ function soilCard(){
     const col=avail<25?"var(--bad)":avail<45?"var(--warn)":"var(--brand)";
     const wp=x=>clamp(x/45*100,0,100); // escala visual 0..45% vol
     return `<div class="soilrow">
-      <div class="lab"><b>${s.d}</b>${s.t.toFixed(1)} °C suelo</div>
+      <div class="lab"><b>${s.d}</b>${dec(s.t.toFixed(1))} °C suelo</div>
       <div class="track">
         <div class="fill" style="width:${wp(s.m)}%;background:linear-gradient(90deg,#7a5636,var(--soil))"></div>
         <div class="mk" style="left:${wp(pmp)}%;background:var(--bad)"></div>
@@ -395,9 +397,9 @@ function et0Card(){
     <h3 class="ct">🌱 Evapotranspiración y balance hídrico</h3>
     <div class="sub">ET₀ Penman-Monteith (FAO-56) · demanda del cultivo = ET₀ × Kc</div>
     <div class="grid g3" style="margin-top:6px">
-      <div class="kpi"><div class="l">ET₀ referencia</div><div class="v">${SCN.et0}<small> mm/d</small></div></div>
-      <div class="kpi"><div class="l">Demanda cultivo (Kc ${SCN.kc})</div><div class="v">${dem}<small> mm/d</small></div></div>
-      <div class="kpi"><div class="l">Balance (lluvia − demanda)</div><div class="v" style="color:var(--warn)">${(SCN.rainDay-dem).toFixed(1)}<small> mm/d</small></div></div>
+      <div class="kpi"><div class="l">ET₀ referencia</div><div class="v">${dec(SCN.et0)}<small> mm/d</small></div></div>
+      <div class="kpi"><div class="l">Demanda cultivo (Kc ${dec(SCN.kc)})</div><div class="v">${dec(dem)}<small> mm/d</small></div></div>
+      <div class="kpi"><div class="l">Balance (lluvia − demanda)</div><div class="v" style="color:var(--warn)">${dec((SCN.rainDay-dem).toFixed(1))}<small> mm/d</small></div></div>
     </div>
     <div class="note">Demanda hídrica <b>baja</b> (temporada fría, poca radiación). El balance no exige riego hoy: la prioridad es la <b>helada</b>.</div>
   </div>`;
@@ -424,7 +426,7 @@ function windRain(){
         <circle cx="90" cy="90" r="4" fill="var(--muted)"/>
       </svg>
       <div style="flex:1;min-width:150px">
-        <div class="kpi" style="margin-bottom:12px"><div class="l">Velocidad actual</div><div class="v">${SCN.wind}<small> km/h</small> <span class="muted" style="font-size:14px">${SCN.windDir}</span></div></div>
+        <div class="kpi" style="margin-bottom:12px"><div class="l">Velocidad actual</div><div class="v">${dec(SCN.wind)}<small> km/h</small> <span class="muted" style="font-size:14px">${SCN.windDir}</span></div></div>
         <div class="kpi" style="margin-bottom:12px"><div class="l">Lluvia acumulada — hoy</div><div class="v">${SCN.rainDay}<small> mm</small></div></div>
         <div class="kpi"><div class="l">Lluvia — temporada</div><div class="v">${SCN.rainSeason}<small> mm</small></div></div>
       </div>
@@ -451,7 +453,7 @@ function coldStorage(){
     <div class="inner">
       <div class="sub">Monitoreo de guarda de fruta en frío (postcosecha). Aquí sí aplican CO₂ y calidad de aire de la cámara.</div>
       <div class="grid g3">
-        <div class="card kpi"><div class="l">🌡️ Temp. cámara</div><div class="v">${SCN.caTemp}<small> °C</small></div><div class="d">setpoint 0,0 °C</div></div>
+        <div class="card kpi"><div class="l">🌡️ Temp. cámara</div><div class="v">${dec(SCN.caTemp)}<small> °C</small></div><div class="d">setpoint 0,0 °C</div></div>
         <div class="card kpi"><div class="l">💨 CO₂ atmósfera</div><div class="v">${SCN.caCO2}<small> ppm</small></div><div class="d">atmósfera controlada</div></div>
         <div class="card kpi"><div class="l">💧 Humedad cámara</div><div class="v">${SCN.caHR}<small> %</small></div><div class="d">evita deshidratación</div></div>
       </div>
@@ -484,7 +486,7 @@ function viewHist(){
   return `<h3 class="ct">Temperatura del aire — última noche</h3><div class="sub">Se observa el descenso continuo bajo 0 °C entre las 03:00 y el amanecer (evento de helada).</div>
     <div class="card"><svg viewBox="0 0 ${W} ${H}" width="100%">${grid}<line x1="40" y1="${ys(0)}" x2="${W-20}" y2="${ys(0)}" stroke="#3a5a44" stroke-dasharray="4 4"/><line x1="40" y1="${ys(CROPS[CROP].frostCrit)}" x2="${W-20}" y2="${ys(CROPS[CROP].frostCrit)}" stroke="rgba(251,113,133,.6)" stroke-dasharray="4 4"/><polyline points="${pts}" fill="none" stroke="var(--frost)" stroke-width="2.5"/>${xlab}</svg></div>
     <div class="grid g3" style="margin-top:14px">
-      <div class="card kpi"><div class="l">Mínima de la noche</div><div class="v">${SCN.minTemp}<small> °C</small></div><div class="d">a las ${minToClock(SCN.minAtMin)}</div></div>
+      <div class="card kpi"><div class="l">Mínima de la noche</div><div class="v">${dec(SCN.minTemp)}<small> °C</small></div><div class="d">a las ${minToClock(SCN.minAtMin)}</div></div>
       <div class="card kpi"><div class="l">Horas bajo 0 °C</div><div class="v">4,3<small> h</small></div><div class="d">02:50 – 07:10 aprox.</div></div>
       <div class="card kpi"><div class="l">Horas Frío acumuladas</div><div class="v">${SCN.chillHF}<small> h</small></div><div class="d">temporada</div></div>
     </div>
@@ -496,7 +498,7 @@ function viewCuarteles(){
   const n=campo.cuarteles.reduce((a,q)=>(a[q.st]++,a),{risk:0,warn:0,good:0});
   const list=campo.cuarteles.map(q=>`<div class="quarter ${q.st==='risk'?'risk':''}">
     <div class="row" style="justify-content:space-between"><b style="font-size:13px">${esc(q.n)}</b><span class="badge b-${QSTATUS[q.st][2]}">${QSTATUS[q.st][0]}</span></div>
-    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12px">${q.ha} ha · 📍 ${esc(q.dev)}</span><span style="font-size:19px;font-weight:800;color:${tempColor(q.temp)}">${q.temp.toFixed(1)} °C</span></div>
+    <div class="row" style="justify-content:space-between;margin-top:8px"><span class="muted" style="font-size:12px">${q.ha} ha · 📍 ${esc(q.dev)}</span><span style="font-size:19px;font-weight:800;color:${tempColor(q.temp)}">${dec(q.temp.toFixed(1))} °C</span></div>
   </div>`).join("");
   return `<h3 class="ct">Mapa de dispositivos por campo</h3>
   <div class="sub">Ubicación de cada estación sobre el mapa. Elige el campo para ver sus cuarteles y el estado de helada de esta madrugada.</div>
@@ -526,7 +528,7 @@ function initCuartelesMap(){
     L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#0a140d',fillColor:col[q.st],fillOpacity:.95})
       .addTo(CMAP)
       .bindTooltip(esc(q.n),{direction:'top',offset:[0,-6]})
-      .bindPopup(`<b>${esc(q.n)}</b><br>${esc(q.crop)} · ${q.ha} ha<br>Mín. estimada: <b style="color:${col[q.st]}">${q.temp.toFixed(1)} °C</b><br>Dispositivo <b>${esc(q.dev)}</b> · ● en línea<br><span style="opacity:.65">Demo · coordenadas simuladas</span>`);
+      .bindPopup(`<b>${esc(q.n)}</b><br>${esc(q.crop)} · ${q.ha} ha<br>Mín. estimada: <b style="color:${col[q.st]}">${dec(q.temp.toFixed(1))} °C</b><br>Dispositivo <b>${esc(q.dev)}</b> · ● en línea<br><span style="opacity:.65">Demo · coordenadas simuladas</span>`);
   });
   if(pts.length) CMAP.fitBounds(pts,{padding:[38,38],maxZoom:16});
   setTimeout(()=>{ try{ CMAP&&CMAP.invalidateSize(); }catch(e){} },80);
