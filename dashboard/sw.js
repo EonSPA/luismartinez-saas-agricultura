@@ -1,6 +1,6 @@
-/* Service Worker — Air Monitor PWA
-   App-shell cache-first para uso offline. Las llamadas a APIs externas
-   (ThingSpeak, Google Maps) van siempre a la red. */
+/* Service Worker — Sembu PWA
+   App-shell cache-first para uso offline. Los tiles del mapa (CARTO / OSM)
+   van siempre a la red. */
 const CACHE = "agroclima-v2";
 const ASSETS = [
   "./",

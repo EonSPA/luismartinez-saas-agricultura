@@ -1,9 +1,10 @@
-# SaaS Agricultura — Monitoreo agrícola inteligente
+# Sembu — Plataforma agroclimática IoT
 
-Plataforma **IoT + SaaS** para monitorear el ambiente de los cultivos en tiempo
-real. Estaciones **4G LTE** con sensores de clima, humedad y calidad del aire, y
-una plataforma web + app móvil con **alarmas, históricos, mapa, recomendaciones
-automáticas y reportes**.
+Plataforma **IoT + SaaS** para **fruta de exportación** (cerezo, palto, kiwi,
+arándano, uva, nogal). Estación **celular (LTE-M / NB-IoT)** con sensores de
+**suelo y clima**, y una plataforma web + dashboard + app Android con **alerta de
+helada anticipada, riego por humedad de suelo, horas-frío, grados-día, ET₀,
+históricos, alarmas, mapa de cuarteles y reportes**.
 
 > 🔗 **Sitio:** https://eonspa.github.io/luismartinez-saas-agricultura/
 > 🔗 **Plataforma (dashboard):** https://eonspa.github.io/luismartinez-saas-agricultura/dashboard/
@@ -11,23 +12,29 @@ automáticas y reportes**.
 
 *Marca comercial: **Sembu** (adoptada 2026-07-02; dominio `sembu.cl` disponible e INAPI sin colisión, pendiente registrar).*
 
+> **Nota:** el dashboard publicado usa **datos DEMO simulados** (cerezos en Curicó,
+> madrugada de helada) para ilustrar el producto. El backend real de ingesta +
+> base time-series + motor de alertas está **en desarrollo**. Regla del proyecto:
+> **cero invención** (sin clientes, casos ni cifras falsas).
+
 ---
 
 ## ¿Qué hace?
 
-- **Tiempo real** — lecturas de cada sensor al instante (temperatura, humedad, eCO₂, TVOC, luz, batería, señal 4G).
-- **Históricos** — series por rango con exportación a **CSV, Excel y PDF**.
-- **Alarmas** — umbral alto/bajo, cambio brusco y caída de señal, con aviso visual, sonoro y push.
-- **Mapa** — estaciones geolocalizadas (Google Maps) con ficha, histórico y exportación por sensor.
-- **Recomendaciones automáticas** — sugerencias según las lecturas (ventilar, regar, proteger de heladas, cargar batería…).
-- **Reportes** — informes por estación y periodo en PDF/Excel.
-- **Índice de calidad del aire (AQI)** estimado a partir de eCO₂ y TVOC.
+- **Alerta de helada anticipada** — proyección de la mínima, hora estimada y umbral de daño **por cultivo y variedad**, para activar aspersión o calefacción a tiempo.
+- **Riego por humedad de suelo** — sondas a **15/30/60 cm** y agua aprovechable para regar por dato real, no por calendario.
+- **Horas-Frío (<7,2 °C) y Porciones de Frío** — acumulación de frío para anticipar brotación y floración.
+- **Grados-día + plaga por especie** — Lobesia (uva), Drosophila (cereza/arándano), carpocapsa (nogal).
+- **ET₀ (Penman-Monteith) y balance hídrico** — evapotranspiración a partir de T, HR, viento y radiación.
+- **Rosa de vientos y lluvia · Mapa de cuarteles** — estado por sector y ficha de cada estación.
+- **Recomendaciones, históricos y reportes** — informes en PDF/Excel y alarmas con push.
+- **Atmósfera controlada (postcosecha)** — módulo secundario para cámara de guarda (CO₂/COV).
 - **Roles multiempresa** — Super Admin, Admin de Cuenta, Supervisor de Campo, Agrónomo/Analista, Técnico/Operador y Visor.
 
-## Casos de uso
+## Cultivos
 
-Fruticultura · Viñas · Invernaderos · Hortalizas y campo abierto — protección de
-heladas, riego de precisión y control de calidad del aire.
+Cerezo · Palto · Kiwi · Arándano · Uva · Nogal — con umbrales de helada y
+acumulación de frío distintos por especie y fenología, configurables por cuartel.
 
 ## Estructura del repo
 
@@ -37,35 +44,47 @@ heladas, riego de precisión y control de calidad del aire.
 | `dashboard/` | Plataforma SaaS como PWA (manifest + service worker). |
 | `app/` | App Android (Capacitor) que empaqueta el dashboard. CI en `.github/workflows/android.yml`. |
 | `mobile/` | Mockups de la app móvil. |
-| `hardware/` | Planos y [referencia de firmware/AT](hardware/README.md) del nodo. |
+| `hardware/` | Planos y referencia de firmware del nodo. |
 | `brochure/` | Brochure comercial en PDF (`brochure.html` → `Brochure-Marca.pdf`). |
-| `example/` | Ejemplos de firmware del nodo. |
+| `example/` | Firmware del hardware base (Makerfabs) — referencia/legado. |
+| `docs/` | Estudio de mercado y mapeo sensor→dato. |
 
 ## Hardware
 
-Estación basada en **ESP32-S3** + módem **4G LTE CAT1** (A76XX / SIM7670), batería
-LiPo y panel solar opcional. Sensores: **AHT10** (temp/humedad), **SGP30**
-(eCO₂/TVOC), **BH1750** (luz), **PCF8563** (RTC). Reporte por HTTP / MQTT(S) / API.
-Detalle en [`hardware/README.md`](hardware/README.md).
+Se ofrecen **dos modelos** (el cliente elige uno por campo; el dashboard se
+adapta a sus sensores):
+
+- **Modelo A · Estación completa** — **ESP32-S3** + módem **LTE-M / NB-IoT**, batería LiPo + panel solar. Sensores: suelo multiprofundidad **15/30/60 cm** (T + humedad), T/HR de aire, pluviómetro, anemómetro, piranómetro y mojado foliar. Habilita helada, riego, horas-frío, grados-día, **ET₀** y rosa de vientos.
+- **Modelo B · Nodo rugerizado** — datalogger **STM32** IP67 (tipo NORVI), módem **LTE-M / NB-IoT**, batería de larga duración sin panel, entradas 4–20 mA + **RS-485/Modbus**. Sensores: T de aire y sonda de suelo 15/30/60 cm. Enfocado en helada y suelo por cuartel.
+
+El módulo **CO₂/COV** queda relegado a **postcosecha** (cámara de guarda), no al
+clima de campo. Reporte por HTTP / MQTT(S) / API.
+
+> **Estado del hardware:** la configuración de sensores agro es una **propuesta
+> técnica**, aún no un equipo físico terminado. El firmware de `example/` es el del
+> **hardware base Makerfabs** (referencia, no el nodo agro final).
+
+## Conectividad
+
+**100% nube, sin gateway ni WiFi:** cada estación celular reporta **directo a la
+nube**, con buffer local si cae la señal. SIM multioperador (Entel/Movistar/Claro).
 
 ## Despliegue
 
-- **Web + dashboard:** GitHub Pages, publicado automáticamente desde `main`
-  vía `.github/workflows/pages.yml`.
-- **App Android:** el APK se compila con `.github/workflows/android.yml` y se
-  publica en los Releases del repo.
+- **Web + dashboard:** GitHub Pages, publicado automáticamente desde `main` vía `.github/workflows/pages.yml`.
+- **App Android:** el APK se compila con `.github/workflows/android.yml` y se publica en los Releases del repo.
 
-## Planes
+## Planes (referencia, CLP) — sin plan gratis
 
-| Plan | Para | Estaciones | Usuarios | Históricos | Precio* |
-|---|---|---|---|---|---|
-| **Starter** | Piloto / 1 campo | Hasta 2 | 1 | 7 días | Gratis |
-| **Pro** | Productores / fundos | Hasta 15 | Hasta 10 | 1 año | $29.000/mes |
-| **Empresa** | Multi-campo / agroindustria | Ilimitadas | Ilimitados | Ilimitado | A medida |
+| Plan | Para | Alcance | Precio* |
+|---|---|---|---|
+| **Piloto** | Prueba dirigida | 1 campo · 1 estación · 1 temporada | A medida |
+| **Producción** | Campo en producción | Campos/estaciones ampliables, alertas ilimitadas, roles | $37.500/mes |
+| **Multicampo / Empresa** | Agroindustria | Ilimitado, API + integración a certificación (GlobalGAP) + SLA | A medida |
 
-\* Precios de referencia (CLP). Plan anual con ~17% de descuento. Hardware se cotiza por separado.
+\* Precios de referencia (CLP). Plan anual con descuento. Hardware se cotiza por separado.
 
 ---
 
 <sub>Escalable de una parcela a toda la agroindustria: agrega estaciones, campos,
-usuarios e integraciones (ThingSpeak, MQTT, Datacake, API) sin cambiar de herramienta.</sub>
+usuarios e integraciones sin cambiar de herramienta.</sub>
