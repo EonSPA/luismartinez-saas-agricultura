@@ -23,9 +23,18 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 - Idioma del producto y de la comunicación: **español (Chile)** — precios en **CLP**, teléfonos `+56`.
 
 ## Marca
-- Nombre **aún sin definir**: se usa el placeholder **`[Marca]`** en todo el material.
-- Candidato evaluado: *Sensagro* (no confirmado). No reemplazar `[Marca]` sin que el usuario lo pida.
-- Datos de contacto en material comercial son **placeholders** (`www/ventas@ejemplo.cl`, `+56 9 0000 0000`).
+- **Nombre definido: `Estrato`** (2026-07-01, elegido con el usuario). Se reemplazó `[Marca]`
+  → `Estrato` en todo el material (web, dashboard, brochure, manifest, workflow `pages.yml`).
+  Razón: *estrato* = nube **stratus** (clima) + **capas/estratos de suelo** 15/30/60 (agro) +
+  **estratos geológicos** (minería) → nombre neutro que estira a otros rubros (ej. minería),
+  no atado a "agro". (Se descartaron *Sensagro*/*Agroclima* por agro-encasillados.)
+- **Antes de imprimir/registrar:** verificar **dominio `.cl`/`.com`** e **INAPI** (marca registrada).
+  Sondeo web: *Nimbo* descartado (existe nimbo.earth, geoespacial) y *Cirro* saturado en tech;
+  *Estrato* sin colisión evidente en agtech/software.
+- Contactos comerciales siguen **placeholders** (`ventas@ejemplo.cl`, `+56 9 0000 0000`) →
+  reemplazar cuando el usuario aporte correo/teléfono/dominio reales.
+- El **logo/mark** sigue siendo el de ondas (verde→lima); un mark de "capas/estratos" calzaría
+  mejor con el nombre (opcional, pendiente).
 
 ## Identidad visual (paleta agrícola)
 > **Aclarada el 2026-07-01** (a pedido: "los colores son muy oscuros" → se eligió la variante
@@ -100,8 +109,8 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      la FAQ del plan "Starter/Pro gratis") para alinear con el "sin plan gratis".
   2. **Research dirigido** de los competidores que el proxy bloqueó (Wiseconn, Semios,
      Pessl/Metos, Sencrop, CropX) y el **pricing de Instacrops**.
-  3. Bloqueante #1: **definir la marca** → reemplazar `[Marca]` + contactos en web,
-     dashboard y brochure de una pasada.
+  3. ✅ **HECHO — marca definida: `Estrato`** (reemplazado `[Marca]` en todo el material).
+     Falta solo **contactos reales** y verificar **dominio/INAPI**. (Ver sección "Marca".)
   4. Falta replicar el énfasis "por cuartel/variedad" y el argumento vs. Estado en el
      **dashboard** y el **brochure** (hoy solo en la web de marketing).
   5. ✅ **HECHO — rediseño "anti-IA" de `web/index.html`** (a pedido: "que no parezca
@@ -111,7 +120,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      dependencias → sin copyright); **hero split** (copy editorial + panel de producto,
      sin chip ni stats); capacidades en **lista editorial 2-col** (no grilla); pasos con
      filete y numeración tabular; **cuartel** como split + **mini-mapa de cuarteles**; el
-     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `[Marca]`;
+     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `Estrato`;
      `.callout` en vez de borde-izquierdo; se **eliminaron 2 secciones redundantes**
      (Casos de uso + "Lo que sí medimos"). Emoji reemplazados por íconos también en
      productos, ayuda, recursos, login (botones demo), nav (carrito), y el **área demo
@@ -131,8 +140,11 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      regenerado. (Ver "Identidad visual".)
 - **Pendientes vivos tras esta sesión** (PRs #13–#16 ya en `main`): (a) **brochure + dashboard
   standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
-  — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) **marca** (bloqueante)
-  — definir nombre real y reemplazar `[Marca]` + contactos.
+  — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) ✅ **marca definida:
+  `Estrato`** (reemplazada en todo el material) — falta solo **contactos reales** y verificar
+  **dominio/INAPI**; (d) **README** desactualizado (describe el producto viejo de "calidad del
+  aire", planes "Starter gratis", 4G, ThingSpeak) → alinear con el posicionamiento actual;
+  (e) **conectividad NB-IoT/LTE-M** + `docs/sensores-vs-datos.md` ya en `main` (PR #18).
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
@@ -166,8 +178,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   Se descartó Google Maps por requerir clave con facturación expuesta en el sitio público (Pages).
 
 ## Pendientes / ideas abiertas — BLOQUEANTES primero
-- **MARCA (bloqueante #1)**: definir nombre real y reemplazar `[Marca]` + contactos
-  (el logo ya es componente/variable, entra sin rehacer). Candidato *Sensagro* (no confirmado).
+- ✅ **MARCA — RESUELTA: `Estrato`** (reemplazado `[Marca]` en todo el material). Quedan solo
+  **contactos reales** y **verificar dominio `.cl`/`.com` + INAPI** antes de imprimir/registrar.
+- **Logo/mark**: un mark de "capas/estratos" calzaría mejor con el nombre (el actual es de ondas).
 - **Hardware físico real** con sensores agro (suelo multiprofundidad, piranómetro, mojado foliar) y su firmware.
 - **Datos de campo reales** (hoy todo DEMO): estación real → casos/ROI verificables.
 - Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).

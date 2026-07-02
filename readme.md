@@ -9,7 +9,7 @@ automáticas y reportes**.
 > 🔗 **Plataforma (dashboard):** https://eonspa.github.io/luismartinez-saas-agricultura/dashboard/
 > 📱 **App Android (APK):** ver [Releases](../../releases)
 
-*Nota: la marca comercial está por definir; en el material se usa el placeholder `[Marca]`.*
+*Marca comercial: **Estrato** (adoptada 2026-07-01; pendiente verificar dominio y registro INAPI).*
 
 ---
 

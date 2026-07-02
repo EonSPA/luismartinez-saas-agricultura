@@ -37,7 +37,7 @@ jobs:
           cat > _site/index.html <<'HTML'
           <!doctype html>
           <html lang="es"><head><meta charset="utf-8">
-          <title>[Marca] — Monitoreo agrícola inteligente</title>
+          <title>Estrato — Monitoreo agrícola inteligente</title>
           <meta http-equiv="refresh" content="0; url=./web/">
           <style>body{font-family:system-ui;background:#0a0f1d;color:#eaf0fb;display:grid;place-items:center;height:100vh;margin:0}a{color:#52e3a4}</style>
           </head><body><p>Redirigiendo al sitio… <a href="./web/">entrar</a> · <a href="./dashboard/">dashboard</a></p></body></html>
