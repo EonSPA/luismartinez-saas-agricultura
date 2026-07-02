@@ -3,40 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Air Monitor — Mockup Android</title>
+<title>Sembu — Mockup Android</title>
 <style>
   :root{
-    --bg:#0b1020;--panel:#151d33;--panel2:#1b2440;--line:#2a3553;--txt:#e7ecf6;--muted:#8a96b3;
-    --accent:#3fa7ff;--good:#34d399;--warn:#fbbf24;--bad:#fb7185;--info:#a78bfa;
+    --bg:#0f1d18;--panel:#1a2c26;--panel2:#213730;--line:#33463f;--txt:#f0f7f2;--muted:#9fb4ab;
+    --brand:#4fe0a2;--lima:#a3e635;--accent:#38bdf8;--good:#4fe0a2;--warn:#f59e0b;--bad:#fb7185;--info:#38bdf8;
   }
   *{box-sizing:border-box;margin:0;padding:0;font-family:'Roboto',system-ui,Segoe UI,Arial,sans-serif}
-  body{background:radial-gradient(1000px 500px at 50% -5%,#1a2750 0,#070b16 60%);color:var(--txt);
+  body{background:radial-gradient(1000px 500px at 50% -5%,#1c3329 0,#0a140f 60%);color:var(--txt);
     min-height:100vh;padding:34px 20px 50px}
-  .head{text-align:center;margin-bottom:30px}
+  .head{text-align:center;margin-bottom:28px}
   .head h1{font-size:24px;font-weight:700;letter-spacing:.3px}
   .head p{color:var(--muted);font-size:14px;margin-top:6px}
+  .demo{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;color:var(--warn);
+    background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);border-radius:999px;padding:4px 12px}
   .stage{display:flex;gap:30px;flex-wrap:wrap;justify-content:center;align-items:flex-start;max-width:1500px;margin:0 auto}
-  .ph{position:relative;width:300px;height:640px;background:#05080f;border:11px solid #0a0e1a;border-radius:40px;
-    box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 1px #1d2740;overflow:hidden;flex:0 0 auto}
+  .ph{position:relative;width:300px;height:640px;background:#05080f;border:11px solid #0a120e;border-radius:40px;
+    box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 0 0 1px #1a2b24;overflow:hidden;flex:0 0 auto}
   .ph .cam{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;
-    background:#05080f;box-shadow:inset 0 0 0 2px #11203b;z-index:30}
+    background:#05080f;box-shadow:inset 0 0 0 2px #1a3a2c;z-index:30}
   .screen{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column}
   .caption{text-align:center;color:var(--muted);font-size:13px;margin-top:12px;font-weight:500}
   /* status bar android */
-  .sbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 16px;font-size:12px;font-weight:600;color:#dfe6f5}
+  .sbar{height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 16px;font-size:12px;font-weight:600;color:#e7f0ea}
   .sbar .icons{display:flex;gap:6px;align-items:center}
   .sbar svg{display:block}
   /* app bar */
   .abar{padding:10px 16px 12px;display:flex;align-items:center;gap:10px}
-  .abar .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--info));
-    display:grid;place-items:center;font-weight:800;color:#06122b;font-size:13px}
+  .abar .logo{width:34px;height:34px;flex:0 0 auto}
+  .abar .logo svg{display:block;border-radius:10px}
   .abar h2{font-size:16px;font-weight:600}
   .abar .sub{font-size:11px;color:var(--muted)}
   .chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:999px;display:inline-flex;align-items:center;gap:4px}
-  .c-good{background:rgba(52,211,153,.16);color:var(--good)}
+  .c-good{background:rgba(79,224,162,.16);color:var(--good)}
   .c-bad{background:rgba(251,113,133,.16);color:var(--bad)}
-  .c-warn{background:rgba(251,191,36,.16);color:var(--warn)}
-  .c-info{background:rgba(63,167,255,.16);color:var(--accent)}
+  .c-warn{background:rgba(245,158,11,.16);color:var(--warn)}
+  .c-info{background:rgba(56,189,248,.16);color:var(--accent)}
   .body{flex:1;overflow:hidden;padding:4px 14px 0}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:12px}
@@ -47,20 +49,16 @@
   .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
   .big .v{font-size:34px}
   .sectit{font-size:12px;color:var(--muted);font-weight:600;margin:14px 2px 8px;display:flex;justify-content:space-between;align-items:center}
-  .ring{position:relative;width:96px;height:96px;margin:2px auto}
-  .ring .n{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
-  .ring .n b{font-size:26px;display:block;line-height:1}
-  .ring .n small{font-size:9px;color:var(--muted)}
   /* bottom nav */
-  .bnav{height:62px;background:#101728;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;padding:0 6px}
+  .bnav{height:62px;background:#0c1712;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-around;padding:0 6px}
   .bnav a{display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10px;text-decoration:none;flex:1;padding-top:6px}
   .bnav a .ic{width:46px;height:26px;border-radius:999px;display:grid;place-items:center;transition:.2s}
   .bnav a.active{color:var(--txt)}
-  .bnav a.active .ic{background:rgba(63,167,255,.18)}
+  .bnav a.active .ic{background:rgba(79,224,162,.18)}
   .bnav svg{display:block}
   .seg{display:flex;gap:6px;margin:2px 0 10px;flex-wrap:wrap}
   .seg span{font-size:11px;padding:5px 11px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--muted)}
-  .seg span.on{background:rgba(63,167,255,.18);color:var(--txt);border-color:transparent}
+  .seg span.on{background:rgba(79,224,162,.18);color:var(--txt);border-color:transparent}
   .stat{display:flex;justify-content:space-between;margin-top:10px}
   .stat div{text-align:center}
   .stat small{font-size:10px;color:var(--muted);display:block}
@@ -70,40 +68,50 @@
   .row .ti{font-size:13px;font-weight:500}
   .row .de{font-size:11px;color:var(--muted)}
   .row .rt{margin-left:auto;text-align:right;font-size:11px;color:var(--muted)}
-  .sw{width:38px;height:22px;border-radius:999px;background:var(--accent);position:relative;flex:0 0 auto}
+  .sw{width:38px;height:22px;border-radius:999px;background:var(--brand);position:relative;flex:0 0 auto}
   .sw:after{content:"";position:absolute;width:17px;height:17px;border-radius:50%;background:#fff;top:2.5px;right:2.5px}
-  .sw.off{background:#39435f}.sw.off:after{right:auto;left:2.5px}
+  .sw.off{background:#3a4a43}.sw.off:after{right:auto;left:2.5px}
   .ic-cir{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;font-size:16px}
   .banner{background:rgba(251,113,133,.12);border:1px solid var(--bad);border-radius:14px;padding:11px 12px;margin-bottom:6px}
   .banner .t{color:var(--bad);font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px}
   .banner .d{font-size:11px;color:#f4c4cc;margin-top:4px}
+  .soilrow{display:flex;align-items:center;gap:8px;padding:7px 0}
+  .soilrow .d{font-size:11px;width:40px;color:var(--muted)}
+  .soilrow .track{flex:1;height:8px;border-radius:999px;background:#2a3a33;position:relative;overflow:hidden}
+  .soilrow .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#7a5636,#b98a52);border-radius:999px}
+  .soilrow .pc{font-size:12px;font-weight:700;width:34px;text-align:right}
   .lvl{font-size:9px;font-weight:700;padding:2px 7px;border-radius:6px;margin-left:auto}
   .lvl.a{background:rgba(251,113,133,.18);color:var(--bad)}
-  .lvl.c{background:rgba(52,211,153,.18);color:var(--good)}
-  .fab{position:absolute;right:16px;bottom:78px;width:52px;height:52px;border-radius:18px;
-    background:linear-gradient(135deg,var(--accent),var(--info));display:grid;place-items:center;box-shadow:0 10px 24px rgba(63,167,255,.4);z-index:20}
+  .lvl.c{background:rgba(79,224,162,.18);color:var(--good)}
   /* lockscreen / notif */
-  .lock{background:linear-gradient(180deg,#0c1530 0,#1a1233 100%)}
+  .lock{background:linear-gradient(180deg,#0c1c15 0,#122b1f 100%)}
   .lock .clock{text-align:center;margin-top:46px}
   .lock .clock .h{font-size:62px;font-weight:300;letter-spacing:1px}
-  .lock .clock .d{color:#c3cbe0;font-size:14px;margin-top:-4px}
-  .notif{margin:24px 12px 0;background:rgba(20,27,46,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
+  .lock .clock .d{color:#c6d6cd;font-size:14px;margin-top:-4px}
+  .notif{margin:24px 12px 0;background:rgba(26,44,38,.92);backdrop-filter:blur(8px);border:1px solid var(--line);
     border-radius:18px;padding:12px 13px}
   .notif .h{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
-  .notif .h .ai{width:18px;height:18px;border-radius:5px;background:linear-gradient(135deg,var(--accent),var(--info));display:grid;place-items:center;font-size:9px;font-weight:800;color:#06122b}
+  .notif .h .ai{width:18px;height:18px;flex:0 0 auto}
+  .notif .h .ai svg{display:block;border-radius:5px}
   .notif .ti{font-weight:700;font-size:13px;margin-top:7px;color:#fff;display:flex;align-items:center;gap:6px}
-  .notif .bd{font-size:12px;color:#d4dbec;margin-top:3px}
+  .notif .bd{font-size:12px;color:#dbe6df;margin-top:3px}
   .notif .ac{display:flex;gap:18px;margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
-  .notif .ac span{font-size:12px;font-weight:600;color:var(--accent)}
+  .notif .ac span{font-size:12px;font-weight:600;color:var(--brand)}
   .legendrow{display:flex;gap:12px;font-size:10px;color:var(--muted);margin-top:6px}
   .legendrow b{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px;vertical-align:middle}
-  .splash{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,transparent,rgba(11,16,32,.9))}
+  .splash{position:absolute;left:0;right:0;bottom:0;height:120px;background:linear-gradient(180deg,transparent,rgba(10,20,15,.9))}
 </style>
 </head>
 <body>
+<!-- gradiente del logo «S» tallo, compartido por todas las instancias -->
+<svg style="position:absolute;width:0;height:0" aria-hidden="true"><defs>
+  <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient>
+</defs></svg>
+
 <div class="head">
-  <h1>Air Monitor — App Android</h1>
+  <h1>Sembu — App Android</h1>
   <p>Mockup de interfaz · Material Design · misma base que el dashboard web (PWA / Capacitor)</p>
+  <span class="demo">✎ DEMO — datos simulados: cerezos en Curicó, madrugada con helada</span>
 </div>
 
 <div class="stage">
@@ -111,80 +119,82 @@
   <!-- ============ PANTALLA 1: TIEMPO REAL ============ -->
   <div>
   <div class="ph"><div class="cam"></div><div class="screen">
-    <div class="sbar"><span>9:41</span><span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#dfe6f5"/></svg>
-      <svg width="15" height="11" viewBox="0 0 15 11"><path d="M7.5 2.5c2 0 3.8.8 5.1 2L14 5.1A9 9 0 0 0 1 5.1L2.4 4.5A7.2 7.2 0 0 1 7.5 2.5zM7.5 6c1 0 2 .4 2.7 1.1l-2.7 2.8-2.7-2.8A3.8 3.8 0 0 1 7.5 6z" fill="#dfe6f5"/></svg>
-      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#dfe6f5"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#34d399"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#dfe6f5"/></svg>
+    <div class="sbar"><span>3:20</span><span class="icons">
+      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#e7f0ea"/></svg>
+      <svg width="15" height="11" viewBox="0 0 15 11"><path d="M7.5 2.5c2 0 3.8.8 5.1 2L14 5.1A9 9 0 0 0 1 5.1L2.4 4.5A7.2 7.2 0 0 1 7.5 2.5zM7.5 6c1 0 2 .4 2.7 1.1l-2.7 2.8-2.7-2.8A3.8 3.8 0 0 1 7.5 6z" fill="#e7f0ea"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#e7f0ea"/><rect x="2.5" y="2.5" width="15" height="6" rx="1" fill="#4fe0a2"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#e7f0ea"/></svg>
     </span></div>
     <div class="abar">
-      <div class="logo">AM</div>
-      <div style="flex:1"><h2>Air Monitor</h2><div class="sub">Sala · AirM01</div></div>
-      <span class="chip c-good"><span class="dot" style="background:var(--good)"></span>En línea</span>
+      <div class="logo"><svg viewBox="0 0 48 48" width="34" height="34"><rect width="48" height="48" rx="12" fill="url(#lg)"/><g fill="none" stroke="#04121e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/></svg></div>
+      <div style="flex:1"><h2>Cuartel 1 · Cerezo</h2><div class="sub">Fundo demo · Curicó</div></div>
+      <span class="chip c-bad"><span class="dot" style="background:var(--bad)"></span>Helada</span>
     </div>
     <div class="body">
+      <div class="card bad" style="margin-bottom:10px">
+        <div class="lab" style="font-size:11px;color:var(--bad);font-weight:700;display:flex;align-items:center;gap:6px">❄️ HELADA — riesgo de daño</div>
+        <div class="v" style="font-size:34px;font-weight:700;color:#fecdd3;margin-top:2px">−1,4<small style="font-size:12px;color:var(--muted);font-weight:500"> °C</small></div>
+        <div style="display:flex;gap:14px;margin-top:6px">
+          <div><div style="font-size:10px;color:var(--muted)">Mínima estimada</div><div style="font-size:13px;font-weight:700;color:var(--bad)">−2,5 °C · 05:20</div></div>
+          <div><div style="font-size:10px;color:var(--muted)">Umbral (Cerezo)</div><div style="font-size:13px;font-weight:700">−1,1 °C</div></div>
+        </div>
+      </div>
       <div class="grid2">
-        <div class="card kpi big"><div class="lab">🌡️ Temperatura <span class="dot" style="background:var(--good)"></span></div><div class="v">23.4<small> °C</small></div></div>
-        <div class="card kpi big"><div class="lab">💧 Humedad <span class="dot" style="background:var(--good)"></span></div><div class="v">48<small> %rH</small></div></div>
+        <div class="card kpi"><div class="lab">🌡️ Temp. aire <span class="dot" style="background:var(--bad)"></span></div><div class="v" style="font-size:22px">−1,4<small> °C</small></div></div>
+        <div class="card kpi"><div class="lab">💧 Humedad <span class="dot" style="background:var(--good)"></span></div><div class="v" style="font-size:22px">78<small> %</small></div></div>
       </div>
-      <div class="grid2" style="margin-top:10px">
-        <div class="card kpi"><div class="lab">💨 eCO₂ <span class="dot" style="background:var(--warn)"></span></div><div class="v" style="font-size:22px">1180<small> ppm</small></div></div>
-        <div class="card kpi"><div class="lab">🧪 TVOC <span class="dot" style="background:var(--good)"></span></div><div class="v" style="font-size:22px">96<small> ppb</small></div></div>
-      </div>
-      <div class="sectit">Tendencia (1 h)</div>
-      <div class="card" style="padding:10px 10px 6px">
-        <svg width="100%" height="70" viewBox="0 0 250 70" preserveAspectRatio="none">
-          <polyline fill="none" stroke="#3fa7ff" stroke-width="2.5" points="0,46 20,40 40,44 60,32 80,38 100,26 120,30 140,22 160,28 180,18 200,24 220,16 250,20"/>
-          <polyline fill="none" stroke="#34d399" stroke-width="2.5" points="0,52 20,55 40,50 60,54 80,48 100,52 120,46 140,50 160,45 180,49 200,44 220,48 250,43"/>
-        </svg>
-        <div class="legendrow"><span><b style="background:#3fa7ff"></b>Temp</span><span><b style="background:#34d399"></b>Humedad</span></div>
+      <div class="sectit">Humedad de suelo <span style="color:var(--muted)">15 / 30 / 60 cm</span></div>
+      <div class="card" style="padding:8px 12px">
+        <div class="soilrow"><span class="d">15 cm</span><div class="track"><div class="fill" style="width:22%"></div></div><span class="pc">22%</span></div>
+        <div class="soilrow"><span class="d">30 cm</span><div class="track"><div class="fill" style="width:28%"></div></div><span class="pc">28%</span></div>
+        <div class="soilrow"><span class="d">60 cm</span><div class="track"><div class="fill" style="width:31%"></div></div><span class="pc">31%</span></div>
       </div>
     </div>
     <div class="bnav">
       <a class="active"><span class="ic">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v8h12v-8" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#8a96b3" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v8h12v-8" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#9fb4ab" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
     </div>
   </div></div>
-  <div class="caption">Tiempo real</div>
+  <div class="caption">Tiempo real · alerta de helada</div>
   </div>
 
   <!-- ============ PANTALLA 2: HISTÓRICOS ============ -->
   <div>
   <div class="ph"><div class="cam"></div><div class="screen">
-    <div class="sbar"><span>9:41</span><span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#dfe6f5"/></svg>
-      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#dfe6f5"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#34d399"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#dfe6f5"/></svg>
+    <div class="sbar"><span>3:20</span><span class="icons">
+      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#e7f0ea"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#e7f0ea"/><rect x="2.5" y="2.5" width="15" height="6" rx="1" fill="#4fe0a2"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#e7f0ea"/></svg>
     </span></div>
-    <div class="abar"><div style="flex:1"><h2>Históricos</h2><div class="sub">Temperatura · últimas 24 h</div></div>
+    <div class="abar"><div style="flex:1"><h2>Históricos</h2><div class="sub">Temp. aire · la noche</div></div>
       <span class="chip c-info">Temp ▾</span></div>
     <div class="body">
-      <div class="seg"><span>1 h</span><span>6 h</span><span class="on">24 h</span><span>7 d</span><span>Todo</span></div>
+      <div class="seg"><span>6 h</span><span class="on">Noche</span><span>7 d</span><span>Temporada</span></div>
       <div class="card" style="padding:12px 8px 8px">
         <svg width="100%" height="150" viewBox="0 0 250 150" preserveAspectRatio="none">
-          <line x1="0" y1="30" x2="250" y2="30" stroke="#2a3553"/><line x1="0" y1="70" x2="250" y2="70" stroke="#2a3553"/><line x1="0" y1="110" x2="250" y2="110" stroke="#2a3553"/>
-          <polyline fill="none" stroke="#3fa7ff" stroke-width="2.5" points="0,60 15,66 30,72 45,80 60,92 75,100 90,104 105,98 120,86 135,70 150,54 165,40 180,30 195,26 210,32 225,40 250,48"/>
-          <path fill="url(#g)" opacity=".25" d="M0,60 15,66 30,72 45,80 60,92 75,100 90,104 105,98 120,86 135,70 150,54 165,40 180,30 195,26 210,32 225,40 250,48 L250,150 0,150Z"/>
-          <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fa7ff"/><stop offset="1" stop-color="#3fa7ff" stop-opacity="0"/></linearGradient></defs>
+          <line x1="0" y1="40" x2="250" y2="40" stroke="#2f4238"/><line x1="0" y1="80" x2="250" y2="80" stroke="#2f4238"/>
+          <line x1="0" y1="95" x2="250" y2="95" stroke="rgba(251,113,133,.5)" stroke-dasharray="4 4"/>
+          <polyline fill="none" stroke="#38bdf8" stroke-width="2.5" points="0,40 15,52 30,66 45,80 60,92 75,104 90,112 105,120 120,124 135,120 150,112 165,96 180,70 195,44 210,26 225,20 250,18"/>
+          <text x="4" y="92" fill="rgba(251,113,133,.9)" font-size="8">0 °C</text>
         </svg>
       </div>
       <div class="card stat" style="margin-top:10px">
-        <div><small>Mín</small><b>17.4°</b></div><div><small>Máx</small><b>26.6°</b></div>
-        <div><small>Media</small><b>22.0°</b></div><div><small>Actual</small><b>23.4°</b></div>
+        <div><small>Mín</small><b>−2,5°</b></div><div><small>Máx</small><b>9,0°</b></div>
+        <div><small>Media</small><b>3,2°</b></div><div><small>Actual</small><b>−1,4°</b></div>
       </div>
-      <div class="sectit">Muestras <span style="color:var(--muted)">1441</span></div>
+      <div class="sectit">Lecturas <span style="color:var(--muted)">cada 10 min</span></div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div><div class="ti">16:06</div></div><div class="rt">23.4 °C</div></div>
-        <div class="row"><div><div class="ti">16:05</div></div><div class="rt">24.1 °C</div></div>
-        <div class="row"><div><div class="ti">16:04</div></div><div class="rt">24.5 °C</div></div>
+        <div class="row"><div><div class="ti">03:20</div></div><div class="rt">−1,4 °C</div></div>
+        <div class="row"><div><div class="ti">03:10</div></div><div class="rt">−1,2 °C</div></div>
+        <div class="row"><div><div class="ti">03:00</div></div><div class="rt">−0,9 °C</div></div>
       </div>
     </div>
     <div class="bnav">
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
-      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#8a96b3" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#9fb4ab" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
     </div>
   </div></div>
   <div class="caption">Históricos</div>
@@ -193,36 +203,36 @@
   <!-- ============ PANTALLA 3: ALARMAS ============ -->
   <div>
   <div class="ph"><div class="cam"></div><div class="screen">
-    <div class="sbar"><span>9:41</span><span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#dfe6f5"/></svg>
-      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#dfe6f5"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#34d399"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#dfe6f5"/></svg>
+    <div class="sbar"><span>3:20</span><span class="icons">
+      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#e7f0ea"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#e7f0ea"/><rect x="2.5" y="2.5" width="15" height="6" rx="1" fill="#4fe0a2"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#e7f0ea"/></svg>
     </span></div>
     <div class="abar"><div style="flex:1"><h2>Alarmas</h2><div class="sub">1 activa</div></div>
       <span class="chip c-bad"><span class="dot" style="background:var(--bad)"></span>1</span></div>
     <div class="body">
       <div class="banner">
-        <div class="t">⚠️ eCO₂ alto</div>
-        <div class="d">1612 ppm (umbral &gt; 1500) · hace 2 min</div>
+        <div class="t">❄️ Riesgo de helada</div>
+        <div class="d">Mínima proyectada −2,5 °C a las 05:20 · umbral Cerezo −1,1 °C · hace 2 min</div>
       </div>
       <div class="sectit">Reglas</div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div class="ic-cir" style="background:rgba(63,167,255,.14)">🌡️</div><div><div class="ti">Temperatura</div><div class="de">5 – 32 °C · Δ5°/5min</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(167,139,250,.14)">💨</div><div><div class="ti">eCO₂</div><div class="de">máx 1500 ppm · Δ600</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(251,191,36,.14)">🧪</div><div><div class="ti">TVOC</div><div class="de">máx 660 ppb</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(244,114,182,.14)">🔋</div><div><div class="ti">Batería baja</div><div class="de">mín 3.5 V</div></div><div class="sw off"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(56,189,248,.14)">❄️</div><div><div class="ti">Helada</div><div class="de">umbral por cultivo · anticipada</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(79,224,162,.14)">💧</div><div><div class="ti">Humedad de suelo baja</div><div class="de">15 cm &lt; 50% agua aprov.</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(245,158,11,.14)">📶</div><div><div class="ti">Sin señal / sin datos</div><div class="de">&gt; 2 h sin reporte</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(251,113,133,.14)">🔋</div><div><div class="ti">Batería baja</div><div class="de">mín 20%</div></div><div class="sw off"></div></div>
       </div>
       <div class="sectit">Historial</div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div><div class="ti">eCO₂ alto</div><div class="de">10:06 · 1612 ppm</div></div><span class="lvl a">DISPARO</span></div>
-        <div class="row"><div><div class="ti">eCO₂ normalizado</div><div class="de">10:11 · 980 ppm</div></div><span class="lvl c">REPUESTO</span></div>
-        <div class="row"><div><div class="ti">Temp cambio brusco</div><div class="de">14:06 · Δ6.1 °C</div></div><span class="lvl a">DISPARO</span></div>
+        <div class="row"><div><div class="ti">Riesgo de helada</div><div class="de">03:05 · mín. proyectada −2,5 °C</div></div><span class="lvl a">DISPARO</span></div>
+        <div class="row"><div><div class="ti">Riego repuesto</div><div class="de">Ayer 18:40 · suelo 15 cm 52%</div></div><span class="lvl c">REPUESTO</span></div>
+        <div class="row"><div><div class="ti">Señal baja</div><div class="de">Ayer 16:12 · AME-07 CSQ 8</div></div><span class="lvl a">AVISO</span></div>
       </div>
     </div>
     <div class="bnav">
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
-      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#8a96b3" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
+      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#9fb4ab" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
     </div>
   </div></div>
   <div class="caption">Alarmas</div>
@@ -231,35 +241,37 @@
   <!-- ============ PANTALLA 4: AJUSTES / CONFIG ============ -->
   <div>
   <div class="ph"><div class="cam"></div><div class="screen">
-    <div class="sbar"><span>9:41</span><span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#dfe6f5"/></svg>
-      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#dfe6f5"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#34d399"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#dfe6f5"/></svg>
+    <div class="sbar"><span>3:20</span><span class="icons">
+      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#e7f0ea"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#e7f0ea"/><rect x="2.5" y="2.5" width="15" height="6" rx="1" fill="#4fe0a2"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#e7f0ea"/></svg>
     </span></div>
-    <div class="abar"><div style="flex:1"><h2>Configuración</h2><div class="sub">Dispositivo y periféricos</div></div></div>
+    <div class="abar"><div style="flex:1"><h2>Configuración</h2><div class="sub">Estación y sensores</div></div></div>
     <div class="body">
-      <div class="sectit">Dispositivo</div>
+      <div class="sectit">Estación</div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div><div class="ti">ID del sensor</div><div class="de">Identidad</div></div><div class="rt" style="color:var(--txt)">AirM01</div></div>
-        <div class="row"><div><div class="ti">Conexión 4G · APN</div><div class="de">A7670 · señal CSQ 24</div></div><div class="rt"><span class="chip c-good">OK</span></div></div>
+        <div class="row"><div><div class="ti">ID de estación</div><div class="de">Cuartel 1 · Cerezo</div></div><div class="rt" style="color:var(--txt)">AME-01</div></div>
+        <div class="row"><div><div class="ti">Conexión LTE-M / NB-IoT</div><div class="de">APN multioperador · CSQ 21</div></div><div class="rt"><span class="chip c-good">OK</span></div></div>
+        <div class="row"><div><div class="ti">Energía</div><div class="de">LiPo + panel solar</div></div><div class="rt" style="color:var(--txt)">82%</div></div>
       </div>
-      <div class="sectit">Sensores (I²C)</div>
+      <div class="sectit">Sensores</div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div class="ic-cir" style="background:rgba(63,167,255,.14)">🌡️</div><div><div class="ti">AHT10</div><div class="de">Temp / Humedad · 0x38</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(167,139,250,.14)">💨</div><div><div class="ti">SGP30</div><div class="de">eCO₂ / TVOC · 0x58</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(34,211,238,.14)">💡</div><div><div class="ti">BH1750</div><div class="de">Luz · 0x23</div></div><div class="sw"></div></div>
-        <div class="row"><div class="ic-cir" style="background:rgba(52,211,153,.14)">🕐</div><div><div class="ti">PCF8563</div><div class="de">RTC · 0x51</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(121,86,54,.22)">🪵</div><div><div class="ti">Sonda de suelo 15/30/60</div><div class="de">T + humedad multiprofundidad</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(56,189,248,.14)">🌡️</div><div><div class="ti">T/HR de aire</div><div class="de">temperatura y humedad</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(79,224,162,.14)">🌬️</div><div><div class="ti">Anemómetro + veleta</div><div class="de">viento y dirección</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(163,230,53,.14)">🌧️</div><div><div class="ti">Pluviómetro · Piranómetro</div><div class="de">lluvia y radiación</div></div><div class="sw"></div></div>
+        <div class="row"><div class="ic-cir" style="background:rgba(245,158,11,.14)">🍃</div><div><div class="ti">Mojado foliar</div><div class="de">riesgo de botrytis</div></div><div class="sw"></div></div>
       </div>
       <div class="sectit">Reporte</div>
       <div class="card" style="padding:4px 12px">
-        <div class="row"><div><div class="ti">Destino de datos</div><div class="de">Plataforma en la nube</div></div><div class="rt" style="color:var(--txt)">ThingSpeak</div></div>
-        <div class="row"><div><div class="ti">Intervalo · Deep sleep</div><div class="de">Ahorro de energía</div></div><div class="rt" style="color:var(--txt)">3600 s</div></div>
+        <div class="row"><div><div class="ti">Destino de datos</div><div class="de">Plataforma en la nube</div></div><div class="rt" style="color:var(--txt)">Sembu</div></div>
+        <div class="row"><div><div class="ti">Intervalo de reporte</div><div class="de">telemetría periódica</div></div><div class="rt" style="color:var(--txt)">10 min</div></div>
       </div>
     </div>
     <div class="bnav">
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
-      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#8a96b3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#8a96b3" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
-      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#3fa7ff" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#3fa7ff" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 13l9-8 9 8M6 11v8h12v-8" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inicio</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Históricos</a>
+      <a><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6z" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19a2 2 0 004 0" stroke="#9fb4ab" stroke-width="2" stroke-linecap="round"/></svg></span>Alarmas</a>
+      <a class="active"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="#4fe0a2" stroke-width="2"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" stroke="#4fe0a2" stroke-width="2" stroke-linecap="round"/></svg></span>Ajustes</a>
     </div>
   </div></div>
   <div class="caption">Configuración</div>
@@ -268,25 +280,25 @@
   <!-- ============ PANTALLA 5: NOTIFICACIÓN PUSH ============ -->
   <div>
   <div class="ph"><div class="cam"></div><div class="screen lock">
-    <div class="sbar"><span>9:41</span><span class="icons">
-      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#dfe6f5"/></svg>
-      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#dfe6f5"/><rect x="2.5" y="2.5" width="12" height="6" rx="1" fill="#34d399"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#dfe6f5"/></svg>
+    <div class="sbar"><span>3:20</span><span class="icons">
+      <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8h2v3H1zM5 6h2v5H5zM9 3.5h2V11H9zM13 1h2v10h-2z" fill="#e7f0ea"/></svg>
+      <svg width="22" height="11" viewBox="0 0 22 11"><rect x="1" y="1" width="18" height="9" rx="2.5" fill="none" stroke="#e7f0ea"/><rect x="2.5" y="2.5" width="15" height="6" rx="1" fill="#4fe0a2"/><rect x="20" y="3.5" width="1.5" height="4" rx="1" fill="#e7f0ea"/></svg>
     </span></div>
-    <div class="clock"><div class="h">9:41</div><div class="d">lunes, 30 de junio</div></div>
+    <div class="clock"><div class="h">3:20</div><div class="d">martes, 30 de junio</div></div>
     <div class="notif">
-      <div class="h"><span class="ai">AM</span> Air Monitor · ahora</div>
-      <div class="ti">⚠️ Alarma: eCO₂ alto</div>
-      <div class="bd">AirM01 (Sala): eCO₂ 1612 ppm supera el umbral de 1500 ppm. Revisa la ventilación.</div>
-      <div class="ac"><span>VER</span><span>SILENCIAR</span></div>
+      <div class="h"><span class="ai"><svg viewBox="0 0 48 48" width="18" height="18"><rect width="48" height="48" rx="12" fill="url(#lg)"/><g fill="none" stroke="#04121e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/></svg></span> Sembu · ahora</div>
+      <div class="ti">❄️ Alerta de helada — Cuartel 1</div>
+      <div class="bd">AME-01 (Cerezo): mínima proyectada −2,5 °C a las 05:20, bajo el umbral de daño (−1,1 °C). Activa protección con anticipación.</div>
+      <div class="ac"><span>VER</span><span>POSPONER</span></div>
     </div>
     <div class="notif" style="margin-top:10px;opacity:.85">
-      <div class="h"><span class="ai">AM</span> Air Monitor · hace 5 min</div>
-      <div class="ti" style="color:#e7ecf6">🔋 Batería baja</div>
-      <div class="bd">El dispositivo está al 18%. Conéctalo para evitar pérdida de datos.</div>
+      <div class="h"><span class="ai"><svg viewBox="0 0 48 48" width="18" height="18"><rect width="48" height="48" rx="12" fill="url(#lg)"/><g fill="none" stroke="#04121e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/></svg></span> Sembu · hace 12 min</div>
+      <div class="ti" style="color:#f0f7f2">📶 Señal baja en AME-07</div>
+      <div class="bd">Cuartel 5 · CSQ 8. Revisa la antena si el nodo deja de reportar.</div>
     </div>
     <div class="splash"></div>
   </div></div>
-  <div class="caption">Notificación push</div>
+  <div class="caption">Notificación push · helada</div>
   </div>
 
 </div>
