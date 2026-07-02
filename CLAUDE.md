@@ -111,7 +111,20 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   screenshots** (Playwright/Chromium en `/opt/pw-browsers/chromium`) antes de entregar.
 - PDFs del brochure se generan con Chromium `page.pdf({format:'A4', printBackground:true, preferCSSPageSize:true})`.
 
-## Contexto de sesión (actualizado 2026-07-01)
+## Contexto de sesión (actualizado 2026-07-02)
+- **Sesión 2026-07-02 (rebrand + logo + auditoría, PRs #22–#26 ya en `main`):**
+  - **Sembu** aplicado en todo el material + **logo «S» tallo** rediseñado (ver "Marca").
+  - **Auditoría de consistencia** post-rebrand (4 agentes de solo lectura, una por superficie):
+    - **README** reescrito al producto agroclimático (era "calidad de aire/4G/Starter gratis/ThingSpeak").
+    - **Web:** fuera "14 días sin tarjeta" y CTA EN "Start free on the Starter plan"; precio Producción
+      **$37.500/mes** ref.; área demo sin planes Starter/Pro/$0/Trial ni fugas de aire (eCO₂/SGP30/"Calidad de aire").
+    - **Dashboard:** `manifest` "4G"→celular + colores de la paleta obsoleta `#0a140d`→vigente; `sw.js` "Air Monitor"→Sembu.
+    - **Brochure:** spec −40…85 °C y autonomía "≥7 días" acotadas; CSS muerto `.statband` fuera.
+    - **hardware/README.md + example/README.md:** enmarcados como **hardware base legado** (Makerfabs aire/4G), no el nodo agro.
+    - **Decimales unificados a coma chilena** (helper `dec()` en dashboard; strings en web).
+    - **Mockup Android** (`mobile/`) reescrito de "Air Monitor" al dominio agro (helada/suelo/LTE-M, logo «S» tallo, DEMO).
+  - **Único pendiente de la auditoría:** pase **"anti-IA" del brochure** (emoji→íconos de línea + layout);
+    opcional, el mismo trato para el **dashboard standalone** (también usa emoji).
 - **Reposicionamiento comercial EJECUTADO** (dashboard PR#7, web PR#8, brochure PR#9)
   hacia fruta de exportación con foco en **helada/riego/frío**. Benchmark previo de
   Wiseconn/Semios/Sencrop/CropX/Arable (vía WebSearch; el proxy bloquea el fetch directo).
@@ -162,9 +175,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
   — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) ✅ **marca definida:
   `Sembu`** (reemplazada en todo el material; dominio + INAPI verificados 2026-07-02) — falta solo
-  **contactos reales** (✅ logo «S» tallo ya rediseñado); (d) **README** desactualizado (describe el producto viejo de "calidad del
-  aire", planes "Starter gratis", 4G, ThingSpeak) → alinear con el posicionamiento actual;
-  (e) **conectividad NB-IoT/LTE-M** + `docs/sensores-vs-datos.md` ya en `main` (PR #18).
+  **contactos reales** (✅ logo «S» tallo ya rediseñado); (d) ✅ **README RESUELTO** (2026-07-02, PR #24):
+  reescrito al producto agroclimático Sembu (ver "Sesión 2026-07-02"); (e) **conectividad NB-IoT/LTE-M** +
+  `docs/sensores-vs-datos.md` ya en `main` (PR #18).
 
 ## Mercado / competencia (estudio 2026-07-01 → `docs/estudio-mercado.md`)
 - **Competidor #1 en Chile: Instacrops** (agtech chilena) — ya hace **helada anticipada**
@@ -186,7 +199,8 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   ingestión real; al restaurarlo alinear el mapeo (`field3=TVOC,4=eCO₂,7=Luz,8=Bat`).
 - **About del repo** (descripción + web + topics): pendiente; probablemente manual
   (no hay tool MCP para editarlo). Valores sugeridos ya redactados.
-- **Decimales**: unificar a coma chilena (hay mezcla `−1,4` vs `8.1`).
+- **Decimales**: ✅ **RESUELTO** (2026-07-02) — coma chilena en display (helper `dec()` en dashboard;
+  strings del área demo de la web). Los `toFixed` de coordenadas SVG (gráficos, rosa de vientos) siguen con punto a propósito.
 - **Planes**: ✅ resuelto en web — la franja ahora dice "Sin permanencia · Precios en CLP ·
   Cancela cuando quieras · Soporte en español (Chile)" y la FAQ ya no ofrece "Starter/Pro gratis".
   Revisar que dashboard/brochure no arrastren la misma franja obsoleta.
