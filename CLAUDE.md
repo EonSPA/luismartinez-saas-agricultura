@@ -23,19 +23,24 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 - Idioma del producto y de la comunicación: **español (Chile)** — precios en **CLP**, teléfonos `+56`.
 
 ## Marca
-- **Nombre definido: `Estrato`** (2026-07-01, elegido con el usuario). Se reemplazó `[Marca]`
-  → `Estrato` en todo el material (web, dashboard, brochure, manifest, workflow `pages.yml`).
-  Razón: *estrato* = nube **stratus** (clima) + **capas/estratos de suelo** 15/30/60 (agro) +
-  **estratos geológicos** (minería) → nombre neutro que estira a otros rubros (ej. minería),
-  no atado a "agro". (Se descartaron *Sensagro*/*Agroclima* por agro-encasillados.)
-- **Antes de imprimir/registrar:** verificar **dominio `.cl`/`.com`** e **INAPI** (marca registrada).
-  Sondeo web: *Nimbo* descartado (existe nimbo.earth, geoespacial) y *Cirro* saturado en tech;
-  *Estrato* sin colisión evidente en agtech/software.
-- Contactos comerciales siguen **placeholders** (`ventas@ejemplo.cl`, `+56 9 0000 0000`) →
-  reemplazar cuando el usuario aporte correo/teléfono/dominio reales.
-- ✅ **Logo/mark: "estratos"** (3 líneas diagonales, tipo corte geológico; tile verde→lima) —
-  reemplazó las ondas en web/dashboard/brochure + `dashboard/icon.svg` y los 5 PNG regenerados
-  (favicon/192/512/maskable/apple-touch). El `icon.svg` viejo era azul/morado (era "calidad de aire").
+- **Nombre definido: `Sembu`** (2026-07-02, elegido y verificado con el usuario). Ya reemplazado
+  `[Marca]`→`Estrato`→`Sembu` en todo el material (web, dashboard, brochure, manifest, workflow
+  `pages.yml`, readme). *Sembu* = de **siembra**; corto/brandable (tipo Toku), tira algo a agro.
+  **Ojo:** "estrato/estratos" en minúscula del dashboard = capas de **suelo**, NO la marca (no tocar).
+- **Verificado 2026-07-02:** ✅ **`sembu.cl` DISPONIBLE** · ✅ **INAPI sin resultados** (exacta y
+  contenga, todas las clases) → marca **libre para registrar** (clases **9** HW/SW, **42** TI/SaaS,
+  **44** agrícola). **Acción pendiente del usuario: registrar `sembu.cl` + la marca en INAPI.**
+- **Historial de naming (por qué Sembu):** se descartaron por colisión — *Estrato* (existe **Estrato SpA**,
+  empresa de software, con "Estrato Core" **en trámite clase 42** + dueña de estrato.cl) · *Nimbo*
+  (nimbo.earth, geoespacial) · *Cirro* (saturado en tech) · *Teru* (marca libre, pero teru.cl es una
+  empresa activa de mantención de casas) · *Sondia≈Sonda, Otea, Vantia, Wenu, Terrai…* (homónimos en
+  tech). **Lección: los nombres comunes/cortos en IoT chileno están todos tomados; ganó un acuñado.**
+- Contactos comerciales siguen **placeholders** (`ventas@ejemplo.cl`, `+56 9 0000 0000`) → reemplazar
+  con los reales cuando el usuario los aporte (ej. `ventas@sembu.cl`).
+- ⚠️ **Logo/mark PENDIENTE de rediseño:** el mark actual es de "estratos" (3 líneas diagonales, corte
+  geológico) — se diseñó para *Estrato* (capas) y **ya no calza con Sembu** (siembra/semilla). Rediseñar
+  a concepto de **siembra/semilla/brote**. Por ahora el mark abstracto sigue en web/dashboard/brochure +
+  `dashboard/icon.svg` + los 5 PNG (favicon/192/512/maskable/apple-touch).
 
 ## Identidad visual (paleta agrícola)
 > **Aclarada el 2026-07-01** (a pedido: "los colores son muy oscuros" → se eligió la variante
@@ -119,8 +124,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      la FAQ del plan "Starter/Pro gratis") para alinear con el "sin plan gratis".
   2. **Research dirigido** de los competidores que el proxy bloqueó (Wiseconn, Semios,
      Pessl/Metos, Sencrop, CropX) y el **pricing de Instacrops**.
-  3. ✅ **HECHO — marca definida: `Estrato`** (reemplazado `[Marca]` en todo el material).
-     Falta solo **contactos reales** y verificar **dominio/INAPI**. (Ver sección "Marca".)
+  3. ✅ **HECHO — marca definida: `Sembu`** (reemplazado `[Marca]`→`Estrato`→`Sembu` en todo el
+     material). Dominio `sembu.cl` **disponible** e INAPI **sin colisión** (verificado 2026-07-02).
+     Falta solo **contactos reales** y **rediseñar el logo** (el mark de "estratos" no calza con Sembu). (Ver sección "Marca".)
   4. Falta replicar el énfasis "por cuartel/variedad" y el argumento vs. Estado en el
      **dashboard** y el **brochure** (hoy solo en la web de marketing).
   5. ✅ **HECHO — rediseño "anti-IA" de `web/index.html`** (a pedido: "que no parezca
@@ -130,7 +136,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      dependencias → sin copyright); **hero split** (copy editorial + panel de producto,
      sin chip ni stats); capacidades en **lista editorial 2-col** (no grilla); pasos con
      filete y numeración tabular; **cuartel** como split + **mini-mapa de cuarteles**; el
-     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `Estrato`;
+     "¿por qué pagar si el Estado…?" como **tabla comparativa** pública vs `Sembu`;
      `.callout` en vez de borde-izquierdo; se **eliminaron 2 secciones redundantes**
      (Casos de uso + "Lo que sí medimos"). Emoji reemplazados por íconos también en
      productos, ayuda, recursos, login (botones demo), nav (carrito), y el **área demo
@@ -151,8 +157,8 @@ Agrónomo/Analista, Técnico/Operador, Visor.
 - **Pendientes vivos tras esta sesión** (PRs #13–#16 ya en `main`): (a) **brochure + dashboard
   standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
   — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) ✅ **marca definida:
-  `Estrato`** (reemplazada en todo el material) — falta solo **contactos reales** y verificar
-  **dominio/INAPI**; (d) **README** desactualizado (describe el producto viejo de "calidad del
+  `Sembu`** (reemplazada en todo el material; dominio + INAPI verificados 2026-07-02) — falta solo
+  **contactos reales** y **rediseñar el logo**; (d) **README** desactualizado (describe el producto viejo de "calidad del
   aire", planes "Starter gratis", 4G, ThingSpeak) → alinear con el posicionamiento actual;
   (e) **conectividad NB-IoT/LTE-M** + `docs/sensores-vs-datos.md` ya en `main` (PR #18).
 
@@ -188,9 +194,12 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   Se descartó Google Maps por requerir clave con facturación expuesta en el sitio público (Pages).
 
 ## Pendientes / ideas abiertas — BLOQUEANTES primero
-- ✅ **MARCA — RESUELTA: `Estrato`** (reemplazado `[Marca]` en todo el material). Quedan solo
-  **contactos reales** y **verificar dominio `.cl`/`.com` + INAPI** antes de imprimir/registrar.
-- ✅ **Logo/mark**: hecho — mark de "estratos" (corte geológico) en todo el material y en los íconos PWA/favicon.
+- ✅ **MARCA — RESUELTA: `Sembu`** (reemplazado `[Marca]`→`Estrato`→`Sembu` en todo el material;
+  dominio `sembu.cl` disponible + INAPI sin colisión, verificado 2026-07-02). Quedan solo
+  **contactos reales** y que el usuario **registre `sembu.cl` + la marca en INAPI**.
+- ⚠️ **Logo/mark PENDIENTE de rediseño**: el mark de "estratos" (corte geológico) se diseñó para
+  *Estrato* (capas) y **ya no calza con Sembu** (siembra/semilla/brote). Sigue puesto en todo el
+  material como placeholder hasta rediseñarlo con tema de siembra/germinación.
 - **Hardware físico real** con sensores agro (suelo multiprofundidad, piranómetro, mojado foliar) y su firmware.
 - **Datos de campo reales** (hoy todo DEMO): estación real → casos/ROI verificables.
 - Fotos reales del hardware (el proxy bloquea makerfabs.com; el usuario las aportará).
