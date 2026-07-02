@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob: https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
-<meta name="description" content="Estación agroclimática 4G: alerta de helada, humedad de suelo, horas-frío, grados-día y ET₀ para fruta de exportación. Demostración con datos simulados.">
+<meta name="description" content="Estación agroclimática celular: alerta de helada, humedad de suelo, horas-frío, grados-día y ET₀ para fruta de exportación. Demostración con datos simulados.">
 <meta name="theme-color" content="#0a140d">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -149,7 +149,7 @@
         <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
       [Marca]
     </span>
-    <span class="st"><span class="n" id="stName">Fundo demo · Curicó, Maule</span><span class="s" id="stSub">Estación agroclimática · ESP32-S3 + 4G LTE CAT1</span></span>
+    <span class="st"><span class="n" id="stName">Fundo demo · Curicó, Maule</span><span class="s" id="stSub">Estación agroclimática · ESP32-S3 + LTE-M / NB-IoT</span></span>
     <span class="chips">
       <span class="cropsel">Cultivo
         <select id="crop" aria-label="Cultivo">
@@ -163,7 +163,7 @@
         </select>
       </span>
       <span class="chip" id="clock">🕔 05:20</span>
-      <span class="chip">📶 <b>4G</b> · CSQ 21</span>
+      <span class="chip">📶 <b>LTE-M</b> · CSQ 21</span>
       <span class="chip">🔋 <b>82%</b> · solar</span>
     </span>
   </div>
@@ -520,9 +520,9 @@ function viewConfig(){
   <div class="grid g2">
     <div class="card"><h4 style="margin-bottom:8px">Estación</h4>
       <table><tbody>
-      <tr><td class="muted">Nodo</td><td>ESP32-S3 + 4G LTE CAT1</td></tr>
+      <tr><td class="muted">Nodo</td><td>ESP32-S3 + LTE-M / NB-IoT</td></tr>
       <tr><td class="muted">Energía</td><td>LiPo + panel solar (autonomía a validar en piloto)</td></tr>
-      <tr><td class="muted">Conectividad</td><td>4G con buffer local si cae la señal</td></tr>
+      <tr><td class="muted">Conectividad</td><td>Celular LTE-M/NB-IoT con buffer local si cae la señal</td></tr>
       <tr><td class="muted">Sensores</td><td>Suelo 15/30/60 cm · aire T/HR · pluviómetro · anemómetro · piranómetro · mojado foliar</td></tr>
       </tbody></table>
     </div>
