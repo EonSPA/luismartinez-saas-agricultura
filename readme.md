@@ -9,7 +9,7 @@ automáticas y reportes**.
 > 🔗 **Plataforma (dashboard):** https://eonspa.github.io/luismartinez-saas-agricultura/dashboard/
 > 📱 **App Android (APK):** ver [Releases](../../releases)
 
-*Marca comercial: **Estrato** (adoptada 2026-07-01; pendiente verificar dominio y registro INAPI).*
+*Marca comercial: **Sembu** (adoptada 2026-07-02; dominio `sembu.cl` disponible e INAPI sin colisión, pendiente registrar).*
 
 ---
 
