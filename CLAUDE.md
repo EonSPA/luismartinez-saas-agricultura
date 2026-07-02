@@ -126,7 +126,9 @@ Agrónomo/Analista, Técnico/Operador, Visor.
   - ✅ **Pase "anti-IA" del brochure HECHO** (PR #28): emoji→sistema de íconos de línea SVG (`<symbol>`/`<use>`,
     sin JS, seguro para PDF) en cajas/chips/tabla/contacto; punto de color en la tabla de cultivos; check en vez
     de "▲"; fix de gap en `.speclist`. PDF regenerado. **Backlog de la auditoría cerrado.**
-  - **Opcional restante:** el mismo trato "anti-IA" (emoji→íconos de línea) al **dashboard standalone** (aún usa emoji).
+  - ✅ **Dashboard standalone anti-IA HECHO** (PR #30): emoji→íconos de línea SVG (`<symbol>`/`<use>` + helper
+    `ic()`) en banner, chips, hero, KPIs, modelos, recomendaciones, mapa y config; `<option>` del selector sin
+    emoji + campo `emoji` de CROPS eliminado. **Lenguaje visual unificado web+dashboard+brochure (sin emoji).**
 - **Reposicionamiento comercial EJECUTADO** (dashboard PR#7, web PR#8, brochure PR#9)
   hacia fruta de exportación con foco en **helada/riego/frío**. Benchmark previo de
   Wiseconn/Semios/Sencrop/CropX/Arable (vía WebSearch; el proxy bloquea el fetch directo).
@@ -162,7 +164,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      RBAC** (sidebar + badge de rol + recomendaciones). **Regla dura:** se quitó un
      **caso falso** en Recursos ("Caso: 18% menos agua… un cliente") por cero invención.
      Verificado con screenshots (desktop+móvil), sin errores de consola. (El trato de
-     íconos/layout "anti-IA" del **brochure** ✅ se hizo (PR #28); el del **dashboard standalone** sigue pendiente.)
+     íconos/layout "anti-IA" del **brochure** ✅ (PR #28) y del **dashboard standalone** ✅ (PR #30) ya se hicieron.)
   6. ✅ **HECHO — mapa de dispositivos por campo** (dashboard, PR #15): pestaña **"Mapa"**
      con **Leaflet + OpenStreetMap/CARTO** auto-alojado en `dashboard/vendor/` (sin clave),
      selector de campo (`CAMPOS`), marcadores por estado de helada y popups. CSP abierta
@@ -174,7 +176,7 @@ Agrónomo/Analista, Técnico/Operador, Visor.
      recolor de `:root` en web/dashboard/brochure + nav armonizada + PDF del brochure
      regenerado. (Ver "Identidad visual".)
 - **Pendientes vivos tras esta sesión** (PRs #13–#16 ya en `main`): (a) ✅ **brochure anti-IA HECHO** (PR #28);
-  queda solo el **dashboard standalone** — trato "anti-IA" de íconos/layout (el recolor ya está hecho); (b) **productos**
+  y ✅ **dashboard standalone anti-IA HECHO** (PR #30) — todas las superficies con íconos de línea, sin emoji; (b) **productos**
   — decidir si se suavizan specs de proveedor ("hasta 1 año / 5 km"); (c) ✅ **marca definida:
   `Sembu`** (reemplazada en todo el material; dominio + INAPI verificados 2026-07-02) — falta solo
   **contactos reales** (✅ logo «S» tallo ya rediseñado); (d) ✅ **README RESUELTO** (2026-07-02, PR #24):
