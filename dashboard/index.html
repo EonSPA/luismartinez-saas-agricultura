@@ -151,6 +151,12 @@
     </span>
     <span class="st"><span class="n" id="stName">Fundo demo · Curicó, Maule</span><span class="s" id="stSub">Estación agroclimática · ESP32-S3 + LTE-M / NB-IoT</span></span>
     <span class="chips">
+      <span class="cropsel">Equipo
+        <select id="hw" aria-label="Modelo de equipo">
+          <option value="full">Modelo A · Estación completa</option>
+          <option value="node">Modelo B · Nodo a batería</option>
+        </select>
+      </span>
       <span class="cropsel">Cultivo
         <select id="crop" aria-label="Cultivo">
           <option value="cerezo">🍒 Cerezo</option>
@@ -164,7 +170,7 @@
       </span>
       <span class="chip" id="clock">🕔 05:20</span>
       <span class="chip">📶 <b>LTE-M</b> · CSQ 21</span>
-      <span class="chip">🔋 <b>82%</b> · solar</span>
+      <span class="chip" id="powChip">🔋 <b>82%</b> · solar</span>
     </span>
   </div>
   <div class="wrap"><div class="tabs" id="tabs">
@@ -211,6 +217,19 @@ const CROPS = {
   ciruelo: {emoji:"🟣", name:"Ciruelo",      chillHF:800,  chillPor:58, gddBase:10, pest:"Carpocapsa / grafolita", frostCrit:-1.3, stage:"Botón / floración"}
 };
 let CROP = "cerezo";
+/* ---- perfiles de hardware: el dashboard muestra solo los módulos que el equipo alimenta ---- */
+const HW = {
+  full:{ label:"Estación completa", node:"ESP32-S3 + LTE-M / NB-IoT",
+    energy:"LiPo + panel solar (autonomía a validar en piloto)",
+    sensors:"Suelo 15/30/60 cm · aire T/HR · pluviómetro · anemómetro · piranómetro · mojado foliar",
+    has:{wind:true,rain:true,rad:true,leafwet:true,et0:true} },
+  node:{ label:"Nodo rugerizado (batería)", node:"STM32 + LTE-M / NB-IoT · NORVI IP67",
+    energy:"Batería litio no recargable · 5–7 años (sin panel solar)",
+    sensors:"Suelo 15/30/60 cm (RS-485) · aire T/HR",
+    has:{wind:false,rain:false,rad:false,leafwet:false,et0:false} },
+};
+let HWSEL = "full";
+const hw = () => HW[HWSEL];
 let tmin = SCN.startMin;            // reloj del escenario (min desde 18:00), avanza "en vivo"
 let timer = null;
 
@@ -281,7 +300,9 @@ function frostHero(){
           <div><div class="k">Mínima estimada</div><div class="val" style="color:${frostColor(lvl)}">${SCN.minTemp.toFixed(1)} °C</div></div>
           <div><div class="k">Hora de la mínima</div><div class="val">${eta}</div></div>
           <div><div class="k">Umbral de daño (${esc(c.name)})</div><div class="val">${c.frostCrit.toFixed(1)} °C</div></div>
-          <div><div class="k">Viento · rocío</div><div class="val">${SCN.wind} km/h · ${SCN.dew} °C</div></div>
+          ${hw().has.wind
+            ? `<div><div class="k">Viento · rocío</div><div class="val">${SCN.wind} km/h · ${SCN.dew} °C</div></div>`
+            : `<div><div class="k">Punto de rocío</div><div class="val">${SCN.dew} °C</div></div>`}
         </div>
       </div>
       <svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:520px;flex:1;min-width:260px" preserveAspectRatio="none" aria-hidden="true">
@@ -301,16 +322,17 @@ function frostHero(){
   </div>`;
 }
 function kpiRow(){
-  const t=tempNow();
+  const t=tempNow(), H=hw().has;
   const cards=[
     ["🌡️","Temp. aire",`${t.toFixed(1)}<small> °C</small>`,"mín. hoy "+SCN.minTemp+" °C"],
     ["💧","Humedad rel.",`${SCN.hr}<small> %</small>`,"punto de rocío "+SCN.dew+" °C"],
     ["🧊","Punto de rocío",`${SCN.dew}<small> °C</small>`,"aire seco → enfría más"],
-    ["🌬️","Viento",`${SCN.wind}<small> km/h</small>`,SCN.windDir+" · calmo (helada radiativa)"],
-    ["🌧️","Lluvia",`${SCN.rainDay}<small> mm</small>`,"temporada "+SCN.rainSeason+" mm"],
-    ["☀️","Radiación",`${SCN.radiation}<small> W/m²</small>`,"noche · máx. día "+SCN.radPeak],
   ];
-  return `<div class="grid g6">${cards.map(c=>`<div class="card kpi"><div class="l">${c[0]} ${c[1]}</div><div class="v">${c[2]}</div><div class="d">${c[3]}</div></div>`).join("")}</div>`;
+  if(H.wind) cards.push(["🌬️","Viento",`${SCN.wind}<small> km/h</small>`,SCN.windDir+" · calmo (helada radiativa)"]);
+  if(H.rain) cards.push(["🌧️","Lluvia",`${SCN.rainDay}<small> mm</small>`,"temporada "+SCN.rainSeason+" mm"]);
+  if(H.rad)  cards.push(["☀️","Radiación",`${SCN.radiation}<small> W/m²</small>`,"noche · máx. día "+SCN.radPeak]);
+  const g=cards.length>=6?"g6":cards.length===3?"g3":"g4";
+  return `<div class="grid ${g}">${cards.map(c=>`<div class="card kpi"><div class="l">${c[0]} ${c[1]}</div><div class="v">${c[2]}</div><div class="d">${c[3]}</div></div>`).join("")}</div>`;
 }
 function soilCard(){
   const fc=SCN.soilFC,pmp=SCN.soilPMP;
@@ -439,11 +461,18 @@ function coldStorage(){
 }
 /* ---- vistas por tab ---- */
 function viewVivo(){
+  const H=hw().has;
+  const models = H.et0
+    ? `<div class="grid g3">${chillCard()}${gddCard()}${et0Card()}</div>`
+    : `<div class="grid g2">${chillCard()}${gddCard()}</div>`;
+  const windSec = (H.wind||H.rain)
+    ? `<div class="sec-t">Viento, lluvia y recomendaciones</div><div class="grid g2">${windRain()}${recsCard()}</div>`
+    : `<div class="sec-t">Recomendaciones</div>${recsCard()}`;
   return frostHero()
     + `<div class="sec-t">Condiciones actuales</div>` + kpiRow()
     + `<div class="sec-t">Suelo y riego</div>` + soilCard()
-    + `<div class="sec-t">Modelos agroclimáticos</div>` + `<div class="grid g3">${chillCard()}${gddCard()}${et0Card()}</div>`
-    + `<div class="sec-t">Viento, lluvia y recomendaciones</div>` + `<div class="grid g2">${windRain()}${recsCard()}</div>`
+    + `<div class="sec-t">Modelos agroclimáticos</div>` + models
+    + windSec
     + `<div class="sec-t">Postcosecha</div>` + coldStorage();
 }
 function viewHist(){
@@ -520,10 +549,11 @@ function viewConfig(){
   <div class="grid g2">
     <div class="card"><h4 style="margin-bottom:8px">Estación</h4>
       <table><tbody>
-      <tr><td class="muted">Nodo</td><td>ESP32-S3 + LTE-M / NB-IoT</td></tr>
-      <tr><td class="muted">Energía</td><td>LiPo + panel solar (autonomía a validar en piloto)</td></tr>
+      <tr><td class="muted">Modelo</td><td>${esc(hw().label)}</td></tr>
+      <tr><td class="muted">Nodo</td><td>${esc(hw().node)}</td></tr>
+      <tr><td class="muted">Energía</td><td>${esc(hw().energy)}</td></tr>
       <tr><td class="muted">Conectividad</td><td>Celular LTE-M/NB-IoT con buffer local si cae la señal</td></tr>
-      <tr><td class="muted">Sensores</td><td>Suelo 15/30/60 cm · aire T/HR · pluviómetro · anemómetro · piranómetro · mojado foliar</td></tr>
+      <tr><td class="muted">Sensores</td><td>${esc(hw().sensors)}</td></tr>
       </tbody></table>
     </div>
     <div class="card"><h4 style="margin-bottom:8px">Cultivo · ${esc(c.name)}</h4>
@@ -547,6 +577,11 @@ $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)re
   TAB=b.dataset.tab; [...$("tabs").children].forEach(x=>x.classList.toggle("on",x===b)); render();
   window.scrollTo({top:0,behavior:"smooth"});});
 $("crop").addEventListener("change",e=>{CROP=e.target.value; render();});
+$("hw").addEventListener("change",e=>{ HWSEL=e.target.value; syncHw(); render(); });
+function syncHw(){
+  $("stSub").textContent = "Estación agroclimática · "+hw().node;
+  const pc=$("powChip"); if(pc) pc.innerHTML = HWSEL==="node" ? "🔋 <b>batería</b> · 5–7 años" : "🔋 <b>82%</b> · solar";
+}
 
 /* ---- "vivo": avanza el reloj del escenario y actualiza ---- */
 function tick(){
