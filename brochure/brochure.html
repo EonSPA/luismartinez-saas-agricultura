@@ -7,7 +7,7 @@
   @page{ size:A4; margin:0; }
   :root{
     --bg:#1a2c26;--bg2:#213730;--panel:#284139;--panel2:#304d44;--line:#446056;
-    --txt:#f0f7f2;--muted:#bcd0c7;--brand:#4fe0a2;--brand2:#a3e635;--accent:#f59e0b;--sky:#38bdf8;--frost:#7dd3fc;--bad:#fb7185;
+    --txt:#f0f7f2;--muted:#bcd0c7;--brand:#4fe0a2;--brand2:#a3e635;--accent:#f59e0b;--sky:#38bdf8;--frost:#7dd3fc;--bad:#fb7185;--soil:#c08457;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{font-family:'Segoe UI',system-ui,Roboto,Helvetica,Arial,sans-serif;color:var(--txt);background:var(--bg)}
@@ -27,45 +27,72 @@
   .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:13px 14px}
   .card h3{font-size:12pt;margin-bottom:3px}
   .card p{font-size:9.5pt;color:var(--muted);line-height:1.45}
-  .ico{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-size:17pt;background:rgba(61,220,132,.16);margin-bottom:8px}
-  .ico.frost{background:rgba(125,211,252,.18)}.ico.amber{background:rgba(245,158,11,.2)}.ico.soil{background:rgba(192,132,87,.22)}.ico.red{background:rgba(251,113,133,.18)}
+  /* sistema de íconos de línea (SVG <use>), sin emoji */
+  .ic{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;display:inline-block;vertical-align:middle}
+  .ico{width:34px;height:34px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;background:rgba(61,220,132,.16);margin-bottom:8px;color:var(--brand)}
+  .ico .ic{width:19px;height:19px}
+  .ico.frost{background:rgba(125,211,252,.18);color:var(--frost)}
+  .ico.amber{background:rgba(245,158,11,.2);color:var(--accent)}
+  .ico.soil{background:rgba(192,132,87,.22);color:var(--soil)}
+  .ico.red{background:rgba(251,113,133,.18);color:var(--bad)}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{font-size:9pt;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;color:var(--muted)}
+  .chip{font-size:9pt;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+  .chip .ic{width:12.5px;height:12.5px;color:var(--brand)}
+  .chip.f .ic{color:var(--frost)}.chip.a .ic{color:var(--accent)}
   table{width:100%;border-collapse:collapse;font-size:9.5pt}
   th,td{text-align:left;padding:8px 9px;border-bottom:1px solid var(--line)}
   th{color:var(--muted);font-size:8.5pt;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+  td .cropdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--brand);margin-right:8px;vertical-align:middle}
   .li{display:flex;gap:9px;align-items:flex-start;font-size:10pt;padding:5px 0}
-  .li .b{color:var(--brand);font-weight:800}
-  .li .b.f{color:var(--frost)}
+  .li .ic{width:15px;height:15px;color:var(--brand);flex:0 0 auto;margin-top:2px}
+  .li .ic.f{color:var(--frost)}
   .hl{background:linear-gradient(180deg,rgba(61,220,132,.10),transparent);border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:12px;padding:13px 15px}
   .hl.frost{border-left-color:var(--frost);background:linear-gradient(180deg,rgba(125,211,252,.10),transparent)}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .speclist{font-size:9.5pt}
-  .speclist div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
-  .speclist span:first-child{color:var(--muted)}
+  .speclist div{display:flex;justify-content:space-between;gap:18px;padding:6px 0;border-bottom:1px solid var(--line)}
+  .speclist span:first-child{color:var(--muted);flex:0 0 auto}
+  .speclist span:last-child{text-align:right}
   .cover{background:radial-gradient(700px 420px at 85% 10%,rgba(125,211,252,.18),transparent 60%),radial-gradient(600px 380px at 8% 90%,rgba(245,158,11,.12),transparent 60%),var(--bg);display:flex;flex-direction:column}
   .cover .big{font-size:38pt;font-weight:800;line-height:1.05;margin:auto 0 0;letter-spacing:-1px}
   .cover .lead{font-size:13pt;color:var(--muted);max-width:54ch;margin-top:14px}
-  .cover .cta{margin-top:22px;display:flex;gap:18px;flex-wrap:wrap;font-size:10pt}
-  .cover .cta b{color:var(--brand)}
+  .cover .cta{margin-top:22px;display:flex;gap:20px;flex-wrap:wrap;font-size:10pt}
+  .cover .cta span{display:inline-flex;align-items:center;gap:7px}
+  .cover .cta .ic{width:15px;height:15px;color:var(--brand)}
   .flow{display:flex;align-items:stretch;gap:8px;margin-top:6px}
-  .flow .step{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:11px}
-  .flow .step b{font-size:10.5pt;display:block;margin-bottom:3px}
-  .flow .step p{font-size:8.5pt;color:var(--muted)}
-  .flow .arr{display:flex;align-items:center;color:var(--brand);font-weight:800;font-size:13pt}
   .ctabox{background:linear-gradient(135deg,rgba(61,220,132,.18),rgba(163,230,53,.12));border:1px solid var(--brand);border-radius:16px;padding:20px;text-align:center}
+  .ctabox .chips{justify-content:center}
   .frostbig{border:1px solid rgba(251,113,133,.5);border-radius:14px;padding:14px 16px;background:radial-gradient(400px 160px at 90% -30%,rgba(125,211,252,.16),transparent),linear-gradient(180deg,var(--panel),var(--panel2))}
   .frostbig .t{font-size:34pt;font-weight:800;color:#fecdd3;letter-spacing:-1px}
 </style>
 </head>
 <body>
 
+<!-- ===== Definiciones de íconos de línea (símbolos SVG reutilizables) ===== -->
+<svg style="display:none" aria-hidden="true"><defs>
+  <symbol id="i-frost" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M4.6 7.5l14.8 9"/><path d="M19.4 7.5l-14.8 9"/><path d="M9.6 4.3 12 3l2.4 1.3"/><path d="M9.6 19.7 12 21l2.4-1.3"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3.5c3.2 3.6 5.5 6.6 5.5 9.4a5.5 5.5 0 0 1-11 0c0-2.8 2.3-5.8 5.5-9.4z"/><path d="M9.6 14.2a2.6 2.6 0 0 0 2.4 2.3"/></symbol>
+  <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M14 14.5V5a2 2 0 0 0-4 0v9.5a4 4 0 1 0 4 0z"/><path d="M12 8.5v6.2"/></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19c9 1.5 15-4.5 15-13 0 0-11-1.5-14 4.5C4.4 13.4 5 19 5 19z"/><path d="M5 19c2.5-5.5 6.5-8 10.5-9"/></symbol>
+  <symbol id="i-sprout" viewBox="0 0 24 24"><path d="M12 21v-8.5"/><path d="M12 12.5C12 9 9.6 7 5.5 7 5.5 11 8 12.9 12 12.9z"/><path d="M12 11.4C12 8.4 14.2 6.5 18.5 6.5c0 3.6-2.4 5.4-6.5 5.4z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.4 4.4l1.7 1.7M17.9 17.9l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.4 19.6l1.7-1.7M17.9 6.1l1.7-1.7"/></symbol>
+  <symbol id="i-signal" viewBox="0 0 24 24"><path d="M5 20v-5M9.7 20v-8.5M14.3 20v-12M19 20v-4"/></symbol>
+  <symbol id="i-bug" viewBox="0 0 24 24"><path d="M9 8a3 3 0 0 1 6 0"/><ellipse cx="12" cy="13.5" rx="4" ry="5"/><path d="M12 8.6v9.9"/><path d="M8 11 4.9 9.6M8 14H4.4M8 17l-2.9 1.6M16 11l3.1-1.4M16 14h3.6M16 17l2.9 1.6"/></symbol>
+  <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8h11a2.5 2.5 0 1 0-2.5-2.5"/><path d="M3 12h15a2.6 2.6 0 1 1-2.6 2.6"/><path d="M3 16h9a2.3 2.3 0 1 1-2.3 2.3"/></symbol>
+  <symbol id="i-rain" viewBox="0 0 24 24"><path d="M7 15a4 4 0 0 1 .5-8 5 5 0 0 1 9.4 1.2A3.3 3.3 0 0 1 17 15z"/><path d="M8.5 17.5l-1 2.5M12 17.5l-1 2.5M15.5 17.5l-1 2.5"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4.2 4.2 0 0 1 .4-8.4 5.2 5.2 0 0 1 9.8 1.2A3.4 3.4 0 0 1 17 18z"/></symbol>
+  <symbol id="i-battery" viewBox="0 0 24 24"><rect x="3" y="8" width="15" height="8" rx="2"/><path d="M20.5 11v2"/><path d="M6 11v2M9 11v2M12 11v2"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.3 2.3 3.5 5.3 3.5 8.4S14.3 18.1 12 20.4C9.7 18.1 8.5 15.1 8.5 12S9.7 5.9 12 3.6z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="M4 7.2l8 5.8 8-5.8"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A15.5 15.5 0 0 1 4.5 5.7 2 2 0 0 1 6.5 3.5z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 6.5"/></symbol>
+</defs></svg>
+
 <!-- P1 COVER -->
 <section class="page cover">
   <div class="brandrow">
     <svg class="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="url(#g1)"/>
       <g fill="none" stroke="#04121e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/>
-      
       <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
     Sembu
   </div>
@@ -73,10 +100,10 @@
   <div class="big">No pierdas la<br>temporada por<br>una helada.</div>
   <p class="lead">Estación agroclimática celular con sensores de suelo y clima: alerta de helada anticipada, riego por humedad de suelo real y horas-frío por cultivo. Para cerezo, palto, kiwi, arándano, uva y nogal.</p>
   <div class="chips" style="margin-top:18px">
-    <span class="chip">❄️ Alerta de helada</span><span class="chip">💧 Riego por humedad de suelo</span><span class="chip">🌡️ Horas-frío por cultivo</span>
-    <span class="chip">📶 Celular sin WiFi</span><span class="chip">☀️ Solar</span>
+    <span class="chip f"><svg class="ic"><use href="#i-frost"/></svg>Alerta de helada</span><span class="chip"><svg class="ic"><use href="#i-drop"/></svg>Riego por humedad de suelo</span><span class="chip"><svg class="ic"><use href="#i-thermo"/></svg>Horas-frío por cultivo</span>
+    <span class="chip"><svg class="ic"><use href="#i-signal"/></svg>Celular sin WiFi</span><span class="chip a"><svg class="ic"><use href="#i-sun"/></svg>Solar</span>
   </div>
-  <div class="cta"><span><b>▲</b> Anticipa la helada</span><span><b>▲</b> Riega por dato, no por calendario</span><span><b>▲</b> Modelos por cultivo</span></div>
+  <div class="cta"><span><svg class="ic"><use href="#i-check"/></svg>Anticipa la helada</span><span><svg class="ic"><use href="#i-check"/></svg>Riega por dato, no por calendario</span><span><svg class="ic"><use href="#i-check"/></svg>Modelos por cultivo</span></div>
   <div class="pglabel"><span>Sembu · Brochure de producto</span><span>Estación agroclimática · ESP32-S3 + LTE-M / NB-IoT</span></div>
 </section>
 
@@ -86,10 +113,10 @@
   <div class="sec-h">Los problemas que te cuestan la temporada</div>
   <p class="sec-sub">Vigila el clima y el suelo de cada cuartel y reacciona a tiempo en lo que de verdad mueve tu resultado, en orden de impacto económico.</p>
   <div class="grid g2" style="margin-bottom:12px">
-    <div class="card"><div class="ico frost">❄️</div><h3>Helada en floración</h3><p>Una noche puede borrar la temporada en cerezo o palto. La alerta anticipada te da tiempo para actuar.</p></div>
-    <div class="card"><div class="ico soil">💧</div><h3>Riego</h3><p>Agua y energía son tus costos más altos. Riega por humedad de suelo real, no por calendario.</p></div>
-    <div class="card"><div class="ico">🌡️</div><h3>Horas-frío</h3><p>El frío invernal define la temporada de cerezo y kiwi. Mídelo y anticipa brotación y floración.</p></div>
-    <div class="card"><div class="ico amber">🐛</div><h3>Plaga y enfermedad</h3><p>Grados-día por especie (Lobesia, Drosophila, carpocapsa) y mojado foliar para riesgo de botrytis.</p></div>
+    <div class="card"><div class="ico frost"><svg class="ic"><use href="#i-frost"/></svg></div><h3>Helada en floración</h3><p>Una noche puede borrar la temporada en cerezo o palto. La alerta anticipada te da tiempo para actuar.</p></div>
+    <div class="card"><div class="ico soil"><svg class="ic"><use href="#i-drop"/></svg></div><h3>Riego</h3><p>Agua y energía son tus costos más altos. Riega por humedad de suelo real, no por calendario.</p></div>
+    <div class="card"><div class="ico"><svg class="ic"><use href="#i-thermo"/></svg></div><h3>Horas-frío</h3><p>El frío invernal define la temporada de cerezo y kiwi. Mídelo y anticipa brotación y floración.</p></div>
+    <div class="card"><div class="ico amber"><svg class="ic"><use href="#i-bug"/></svg></div><h3>Plaga y enfermedad</h3><p>Grados-día por especie (Lobesia, Drosophila, carpocapsa) y mojado foliar para riesgo de botrytis.</p></div>
   </div>
   <div class="hl frost">
     <h3 style="font-size:12pt;margin-bottom:4px">Trazabilidad para exportar</h3>
@@ -104,7 +131,7 @@
   <div class="sec-h">Alerta de helada anticipada</div>
   <p class="sec-sub">No solo te avisa cuando ya hace frío: proyecta la mínima de la madrugada y su hora estimada, con el umbral de daño propio de cada cultivo.</p>
   <div class="frostbig" style="margin-bottom:14px">
-    <div class="chips" style="margin-bottom:8px"><span class="chip">🍒 Cerezo · Fundo demo, Curicó</span><span class="chip" style="color:#fecdd3;border-color:rgba(251,113,133,.5)">● HELADA</span><span class="chip">Demo · datos simulados</span></div>
+    <div class="chips" style="margin-bottom:8px"><span class="chip">Cerezo · Fundo demo, Curicó</span><span class="chip" style="color:#fecdd3;border-color:rgba(251,113,133,.5)">● HELADA</span><span class="chip">Demo · datos simulados</span></div>
     <span class="t">−1,4 °C</span>
     <div class="grid g3" style="margin-top:10px">
       <div><div class="muted" style="font-size:8.5pt">Mínima estimada</div><div style="font-size:15pt;font-weight:800;color:var(--frost)">−2,5 °C</div></div>
@@ -115,10 +142,10 @@
   <div class="twocol">
     <div>
       <h3 style="font-size:12pt;margin-bottom:6px">Cómo ayuda</h3>
-      <div class="li"><span class="b f">▲</span><span>Semáforo por cultivo (verde / amarillo / rojo) según el umbral de daño.</span></div>
-      <div class="li"><span class="b f">▲</span><span>Proyección de la mínima y ventana de anticipación para actuar.</span></div>
-      <div class="li"><span class="b f">▲</span><span>Aviso visual, sonoro y push antes de cruzar el umbral.</span></div>
-      <div class="li"><span class="b f">▲</span><span>Estado por cuartel: sabes qué sector proteger primero.</span></div>
+      <div class="li"><svg class="ic f"><use href="#i-check"/></svg><span>Semáforo por cultivo (verde / amarillo / rojo) según el umbral de daño.</span></div>
+      <div class="li"><svg class="ic f"><use href="#i-check"/></svg><span>Proyección de la mínima y ventana de anticipación para actuar.</span></div>
+      <div class="li"><svg class="ic f"><use href="#i-check"/></svg><span>Aviso visual, sonoro y push antes de cruzar el umbral.</span></div>
+      <div class="li"><svg class="ic f"><use href="#i-check"/></svg><span>Estado por cuartel: sabes qué sector proteger primero.</span></div>
     </div>
     <div class="card">
       <h3>La ventana lo es todo</h3>
@@ -134,9 +161,9 @@
   <div class="sec-h">Riego por humedad de suelo real</div>
   <p class="sec-sub">Sondas capacitivas a varias profundidades y ET₀ para regar en el momento justo y la cantidad justa. Menos agua y energía, sin estresar la planta.</p>
   <div class="grid g3" style="margin-bottom:14px">
-    <div class="card"><div class="ico soil">🌱</div><h3>15 / 30 / 60 cm</h3><p>Humedad y temperatura de suelo por estrato para ver dónde está realmente el agua.</p></div>
-    <div class="card"><div class="ico">💧</div><h3>Agua aprovechable</h3><p>Entre punto de marchitez y capacidad de campo: recomendación de regar / no regar / cuánto.</p></div>
-    <div class="card"><div class="ico">🌤️</div><h3>ET₀ y balance</h3><p>Evapotranspiración (Penman-Monteith FAO-56) para reponer según la demanda real.</p></div>
+    <div class="card"><div class="ico soil"><svg class="ic"><use href="#i-sprout"/></svg></div><h3>15 / 30 / 60 cm</h3><p>Humedad y temperatura de suelo por estrato para ver dónde está realmente el agua.</p></div>
+    <div class="card"><div class="ico"><svg class="ic"><use href="#i-drop"/></svg></div><h3>Agua aprovechable</h3><p>Entre punto de marchitez y capacidad de campo: recomendación de regar / no regar / cuánto.</p></div>
+    <div class="card"><div class="ico"><svg class="ic"><use href="#i-cloud"/></svg></div><h3>ET₀ y balance</h3><p>Evapotranspiración (Penman-Monteith FAO-56) para reponer según la demanda real.</p></div>
   </div>
   <div class="hl">
     <h3 style="font-size:12pt;margin-bottom:4px">Regar por dato, no por calendario</h3>
@@ -152,12 +179,12 @@
   <p class="sec-sub">Modelos agroclimáticos por especie: sabes cuándo se cumple el frío y cuándo empieza el riesgo de plaga o enfermedad.</p>
   <div class="twocol" style="margin-bottom:14px">
     <div class="card">
-      <div class="ico frost">❄️</div>
+      <div class="ico frost"><svg class="ic"><use href="#i-frost"/></svg></div>
       <h3>Acumulación de frío</h3>
       <p><b style="color:var(--txt)">Horas de Frío (&lt; 7,2 °C)</b> y <b style="color:var(--txt)">Porciones de Frío</b> (modelo Dynamic) con meta por cultivo. Anticipa salida de dormancia, brotación y floración — y por lo tanto la vulnerabilidad a heladas.</p>
     </div>
     <div class="card">
-      <div class="ico amber">🐛</div>
+      <div class="ico amber"><svg class="ic"><use href="#i-bug"/></svg></div>
       <h3>Grados-día por especie</h3>
       <p>Riesgo de plaga con el modelo correcto para cada fruta: <b style="color:var(--txt)">Lobesia</b> en uva, <b style="color:var(--txt)">Drosophila</b> en cereza/arándano, <b style="color:var(--txt)">carpocapsa</b> en nogal/ciruelo. Más mojado foliar para riesgo de botrytis.</p>
     </div>
@@ -165,11 +192,11 @@
   <table>
     <thead><tr><th>Cultivo</th><th>Frío objetivo</th><th>Plaga por grados-día</th></tr></thead>
     <tbody>
-      <tr><td>🍒 Cerezo</td><td>~1.100 h · 65 porciones</td><td>Drosophila suzukii</td></tr>
-      <tr><td>🥝 Kiwi</td><td>~800 h</td><td>—</td></tr>
-      <tr><td>🫐 Arándano</td><td>~600 h</td><td>Drosophila suzukii</td></tr>
-      <tr><td>🍇 Uva de mesa</td><td>~300 h</td><td>Lobesia botrana</td></tr>
-      <tr><td>🌰 Nogal</td><td>~700 h</td><td>Carpocapsa (Cydia pomonella)</td></tr>
+      <tr><td><span class="cropdot"></span>Cerezo</td><td>~1.100 h · 65 porciones</td><td>Drosophila suzukii</td></tr>
+      <tr><td><span class="cropdot"></span>Kiwi</td><td>~800 h</td><td>—</td></tr>
+      <tr><td><span class="cropdot"></span>Arándano</td><td>~600 h</td><td>Drosophila suzukii</td></tr>
+      <tr><td><span class="cropdot"></span>Uva de mesa</td><td>~300 h</td><td>Lobesia botrana</td></tr>
+      <tr><td><span class="cropdot"></span>Nogal</td><td>~700 h</td><td>Carpocapsa (Cydia pomonella)</td></tr>
     </tbody>
   </table>
   <p class="muted" style="font-size:8pt;margin-top:6px">Umbrales de referencia, editables por variedad y estado fenológico.</p>
@@ -182,16 +209,16 @@
   <div class="sec-h">Estación agroclimática para el campo</div>
   <p class="sec-sub">Robusta, autónoma y conectada por red celular. Se instala en el cuartel en minutos y opera todo el año a la intemperie.</p>
   <div class="grid g3">
-    <div class="card"><div class="ico">📡</div><h3>Nodo celular LTE-M/NB-IoT</h3><p>ESP32-S3 con módem celular LTE-M / NB-IoT y buffer local si cae la señal.</p></div>
-    <div class="card"><div class="ico soil">🌱</div><h3>Suelo multiprofundidad</h3><p>Sonda capacitiva de humedad y temperatura a 15 / 30 / 60 cm.</p></div>
-    <div class="card"><div class="ico frost">🌡️</div><h3>Clima completo</h3><p>Temp/HR de aire, pluviómetro, anemómetro, piranómetro, punto de rocío y mojado foliar.</p></div>
+    <div class="card"><div class="ico"><svg class="ic"><use href="#i-signal"/></svg></div><h3>Nodo celular LTE-M/NB-IoT</h3><p>ESP32-S3 con módem celular LTE-M / NB-IoT y buffer local si cae la señal.</p></div>
+    <div class="card"><div class="ico soil"><svg class="ic"><use href="#i-sprout"/></svg></div><h3>Suelo multiprofundidad</h3><p>Sonda capacitiva de humedad y temperatura a 15 / 30 / 60 cm.</p></div>
+    <div class="card"><div class="ico frost"><svg class="ic"><use href="#i-thermo"/></svg></div><h3>Clima completo</h3><p>Temp/HR de aire, pluviómetro, anemómetro, piranómetro, punto de rocío y mojado foliar.</p></div>
   </div>
   <div class="twocol" style="margin-top:16px">
     <div>
       <h3 style="font-size:12pt;margin-bottom:6px">Qué mide</h3>
       <div class="chips">
-        <span class="chip">🌡️ Temp aire</span><span class="chip">💧 Humedad</span><span class="chip">🌱 Suelo 15/30/60</span><span class="chip">🌧️ Lluvia</span>
-        <span class="chip">🌬️ Viento</span><span class="chip">☀️ Radiación</span><span class="chip">🍃 Mojado foliar</span><span class="chip">🔋 Batería · señal</span>
+        <span class="chip"><svg class="ic"><use href="#i-thermo"/></svg>Temp aire</span><span class="chip"><svg class="ic"><use href="#i-drop"/></svg>Humedad</span><span class="chip"><svg class="ic"><use href="#i-sprout"/></svg>Suelo 15/30/60</span><span class="chip f"><svg class="ic"><use href="#i-rain"/></svg>Lluvia</span>
+        <span class="chip"><svg class="ic"><use href="#i-wind"/></svg>Viento</span><span class="chip a"><svg class="ic"><use href="#i-sun"/></svg>Radiación</span><span class="chip"><svg class="ic"><use href="#i-leaf"/></svg>Mojado foliar</span><span class="chip"><svg class="ic"><use href="#i-battery"/></svg>Batería · señal</span>
       </div>
     </div>
     <div>
@@ -223,9 +250,9 @@
   <p class="muted" style="font-size:8pt;margin:6px 0 16px">* Precios de referencia (CLP), editables. El hardware se cotiza por separado según sensores y número de estaciones.</p>
   <div class="sec-h" style="font-size:15pt">Para tu cultivo</div>
   <div class="grid g3">
-    <div class="card"><h3 style="font-size:11pt">🍒 Cerezo · 🥑 Palto</h3><p>Protección de heladas en floración, el mayor riesgo de la temporada.</p></div>
-    <div class="card"><h3 style="font-size:11pt">🥝 Kiwi · 🫐 Arándano</h3><p>Horas-frío y brotación + riego de precisión por humedad de suelo.</p></div>
-    <div class="card"><h3 style="font-size:11pt">🍇 Uva · 🌰 Nogal</h3><p>Grados-día para Lobesia y carpocapsa + clima por cuartel.</p></div>
+    <div class="card"><h3 style="font-size:11pt">Cerezo · Palto</h3><p>Protección de heladas en floración, el mayor riesgo de la temporada.</p></div>
+    <div class="card"><h3 style="font-size:11pt">Kiwi · Arándano</h3><p>Horas-frío y brotación + riego de precisión por humedad de suelo.</p></div>
+    <div class="card"><h3 style="font-size:11pt">Uva · Nogal</h3><p>Grados-día para Lobesia y carpocapsa + clima por cuartel.</p></div>
   </div>
   <div class="pglabel"><span>Sembu</span><span>07 · Planes</span></div>
 </section>
@@ -236,9 +263,9 @@
   <div class="sec-h">Módulo de postcosecha</div>
   <p class="sec-sub">El mismo sistema monitorea la guarda de fruta en frío: temperatura, humedad y atmósfera controlada de la cámara.</p>
   <div class="grid g3" style="margin-bottom:8px">
-    <div class="card"><div class="ico frost">🧊</div><h3>Temp. de cámara</h3><p>Control de la cadena de frío de la fruta almacenada.</p></div>
-    <div class="card"><div class="ico">💨</div><h3>CO₂ / atmósfera</h3><p>Atmósfera controlada para prolongar la vida de guarda.</p></div>
-    <div class="card"><div class="ico soil">💧</div><h3>Humedad de cámara</h3><p>Evita deshidratación y pérdida de peso de la fruta.</p></div>
+    <div class="card"><div class="ico frost"><svg class="ic"><use href="#i-frost"/></svg></div><h3>Temp. de cámara</h3><p>Control de la cadena de frío de la fruta almacenada.</p></div>
+    <div class="card"><div class="ico"><svg class="ic"><use href="#i-wind"/></svg></div><h3>CO₂ / atmósfera</h3><p>Atmósfera controlada para prolongar la vida de guarda.</p></div>
+    <div class="card"><div class="ico soil"><svg class="ic"><use href="#i-drop"/></svg></div><h3>Humedad de cámara</h3><p>Evita deshidratación y pérdida de peso de la fruta.</p></div>
   </div>
   <div class="hl" style="margin-bottom:18px"><p class="muted" style="font-size:10pt">Reutiliza el sensor de CO₂/COV del equipo, ahora aplicado a la <b style="color:var(--txt)">guarda de fruta</b> (no al clima de campo), donde sí es la variable que importa.</p></div>
 
@@ -246,14 +273,13 @@
     <div class="brandrow" style="justify-content:center;font-size:14pt">
       <svg class="mark" viewBox="0 0 48 48"><rect width="48" height="48" rx="12" fill="url(#g2)"/>
         <g fill="none" stroke="#04121e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/>
-        
         <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3ddc84"/><stop offset="1" stop-color="#a3e635"/></linearGradient></defs></svg>
       Sembu
     </div>
     <p style="font-size:13pt;font-weight:700;margin:12px 0 4px">Protege la próxima temporada</p>
     <p class="muted" style="font-size:10pt;max-width:52ch;margin:0 auto 14px">Agenda una demo guiada o parte con un piloto en tu campo antes de la temporada de heladas.</p>
-    <div class="chips" style="justify-content:center">
-      <span class="chip">🌐 www.ejemplo.cl</span><span class="chip">✉️ ventas@ejemplo.cl</span><span class="chip">📞 +56 9 0000 0000</span>
+    <div class="chips">
+      <span class="chip"><svg class="ic"><use href="#i-globe"/></svg>www.ejemplo.cl</span><span class="chip"><svg class="ic"><use href="#i-mail"/></svg>ventas@ejemplo.cl</span><span class="chip"><svg class="ic"><use href="#i-phone"/></svg>+56 9 0000 0000</span>
     </div>
   </div>
   <p class="muted" style="font-size:8pt;text-align:center;margin-top:14px">Documento de demostración. Marca, precios y datos de contacto referenciales · datos del panel simulados · Sembu © 2026</p>
