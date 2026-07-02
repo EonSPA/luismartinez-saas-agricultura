@@ -54,13 +54,22 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 
 ## Hardware
 - Nodo **ESP32-S3** + módem **celular LTE-M / NB-IoT** (elegido con el socio Luis Martínez: mejor cobertura rural que el 4G LTE Cat-1), batería LiPo + panel
-  solar (autonomía declarada ≥ 7 días sin sol), buffer local si cae la señal.
+  solar (autonomía a validar en piloto), buffer local si cae la señal.
 - Sensores (propuesta agroclimática): **suelo multiprofundidad 15/30/60 cm** (T + humedad),
   temp/HR aire, **pluviómetro**, **anemómetro**, **piranómetro** (radiación), punto de rocío,
   **mojado foliar**. Postcosecha: CO₂/COV (SGP30) para cámara (relegado).
 - Placa base real Makerfabs (repo original `4G-LTE-CAT1-Air-Monitor`; se migra al modelo **LTE-M/NB-IoT**). El HW con estos
   sensores agro es **propuesta técnica, no equipo físico existente** todavía.
 - Reporte por HTTP / MQTT(S) / API.
+- **Dos modelos ofrecidos — el cliente elige UNO por campo y el dashboard se adapta a sus sensores** (perfiles
+  `HW`/`hw()` + selector "Equipo" en `dashboard/index.html`; `PRODUCTS` con los 2 SKU en `web/`):
+  - **Modelo A · Estación completa** (ESP32-S3, solar, todos los sensores) → helada, riego, horas-frío, GD, **ET₀**, rosa de vientos, lluvia.
+  - **Modelo B · Nodo rugerizado** (STM32 **NORVI** IP67, batería no recargable **5–7 años** sin panel, celular LTE-M/NB-IoT/2G,
+    entradas 2×4–20 mA + **RS-485/Modbus**; solo T aire + suelo 15/30/60) → helada, riego, horas-frío, GD; **oculta ET₀/viento/lluvia/radiación/mojado foliar**.
+- **Conectividad = 100% nube, sin gateway ni WiFi**: cada estación celular va **directo a la nube** (el gateway LoRa quedó fuera).
+  Sin servidor local; solo buffer en el propio equipo. **OpEx SIM real (Luis):** multioperador (Entel/Movistar/Claro), ~**USD 1,39–2,39/mes**
+  (10–30 MB) o **USD 12/año** (240 MB); 15 MB basta → costo marginal ínfimo, margen SaaS alto.
+- **Backend real aún NO construido** (todo el dashboard es DEMO): falta ingesta + base time-series + motor de alertas.
 
 ## Funcionalidades de la plataforma
 **Alerta de helada** (proyección de mínima + hora + umbral por cultivo, anticipada) ·

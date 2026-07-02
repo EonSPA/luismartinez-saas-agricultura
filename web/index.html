@@ -355,26 +355,12 @@ function mark(size=32){return `<svg class="mark" width="${size}" height="${size}
    Sin precio por ahora → se muestra "Próximamente". Para habilitar la venta,
    basta con añadir a cada producto: price:<CLP> y buyUrl:"<enlace MercadoLibre>". */
 const PRODUCTS = [
-  {id:"gateway", cat:"Gateway", emoji:"🛰️", name:"SenseLoRa LTE-M/NB-IoT Gateway",
-   desc:"Concentrador ESP32-S3 con LoRa + celular LTE-M/NB-IoT, WiFi y cargador solar. Recibe los sensores del campo y sube los datos a la nube."},
-  {id:"airmon", cat:"Estación", emoji:"📡", name:"Estación agroclimática LTE-M/NB-IoT",
-   desc:"Nodo todo-en-uno ESP32-S3 con celular LTE-M/NB-IoT: temperatura, humedad, luz, CO₂ y TVOC. Batería 18650 y panel solar."},
-  {id:"s_th", cat:"Sensor", emoji:"🌡️", name:"AgroSense Temp/Humedad de aire",
-   desc:"Sensor LoRaWAN de temperatura y humedad del aire (SHT31). Carcasa IP68, batería hasta 1 año."},
-  {id:"s_soil", cat:"Sensor", emoji:"💧", name:"AgroSense Humedad de suelo",
-   desc:"Sensor capacitivo de humedad de suelo LoRaWAN, sumergible IP68 para instalación permanente."},
-  {id:"s_light", cat:"Sensor", emoji:"💡", name:"AgroSense Intensidad de luz",
-   desc:"Sensor LoRaWAN de luz (BH1750), rango 1–65.535 lx, para radiación y fotoperiodo."},
-  {id:"s_co2", cat:"Sensor", emoji:"💨", name:"AgroSense CO₂",
-   desc:"Sensor LoRaWAN de dióxido de carbono para invernaderos y calidad del aire."},
-  {id:"s_baro", cat:"Sensor", emoji:"🧭", name:"AgroSense Presión barométrica",
-   desc:"Sensor LoRaWAN de presión atmosférica, apoyo al pronóstico local."},
-  {id:"s_ecth", cat:"Sensor Pro", emoji:"🧪", name:"AgroSense Suelo & Aire EC-TH Pro",
-   desc:"Sensor pro LoRaWAN: conductividad eléctrica (EC) + temperatura y humedad de suelo y aire."},
-  {id:"a_relay", cat:"Actuador", emoji:"🔌", name:"AgroSense Relé 4 canales",
-   desc:"Actuador LoRaWAN de 4 relés (Class C) para automatizar riego, válvulas y bombas."},
-  {id:"a_adc", cat:"Expansión", emoji:"🎚️", name:"AgroSense ADC 4 canales 12-bit",
-   desc:"Entrada LoRaWAN de 4 canales ADC 12-bit para conectar sensores analógicos de terceros."},
+  {id:"modeloA", cat:"Modelo A", name:"Estación agroclimática completa",
+   desc:"Nodo ESP32-S3 celular (LTE-M/NB-IoT) con panel solar. Mide todo el clima y suelo del campo: suelo 15/30/60 cm, T/HR de aire, pluviómetro, anemómetro, piranómetro y mojado foliar. Habilita helada, riego, horas-frío, grados-día, ET₀ y rosa de vientos."},
+  {id:"modeloB", cat:"Modelo B", name:"Nodo rugerizado a batería",
+   desc:"Datalogger STM32 IP67 (tipo NORVI), celular (LTE-M/NB-IoT), batería de 5–7 años sin panel. Enfocado en helada y suelo por cuartel: T de aire y sonda de suelo 15/30/60 cm (RS-485). Instalar y olvidar."},
+  {id:"camara", cat:"Postcosecha", name:"Módulo atmósfera controlada",
+   desc:"Monitoreo de cámara de guarda (postcosecha): temperatura, humedad y CO₂. Módulo secundario, independiente de la estación de campo."},
 ];
 const PLANS = [
   {id:"piloto", name:"Piloto", m:0, y:0, custom:true, tagline:"1 campo · 1 estación · 1 temporada",
@@ -668,14 +654,14 @@ const ICONS = {
 function icon(name){return `<svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||""}</svg>`;}
 const MOD_ICONS=["frost","drop","thermo","leaf","grid","report"];
 const ROLE_ICONS={superadmin:"shield",account_admin:"building",field_supervisor:"sprout",agronomo:"flask",tecnico:"gear",visor:"eye"};
-const PROD_ICONS={gateway:"signal",airmon:"thermo",s_th:"thermo",s_soil:"drop",s_light:"sun",s_co2:"leaf",s_baro:"target",s_ecth:"flask",a_relay:"bolt",a_adc:"gear"};
+const PROD_ICONS={modeloA:"signal",modeloB:"shield",camara:"thermo"};
 const NAV_ICONS={monitoreo:"signal",resumen:"dash",empresas:"building",planes:"card",usuarios:"users",dispositivos:"signal",ajustes:"gear",campos:"sprout",facturacion:"card",estaciones:"signal",alarmas:"bell",reportes:"report",analitica:"trend",recomendaciones:"leaf",mantenimiento:"gear"};
 
 /* ---------- productos ---------- */
 routes.productos=()=>`
   <section class="block"><div class="wrap">
     <p class="eyebrow">${t("nav_hw")}</p><h1 class="h2">Equipos para el campo</h1>
-    <p class="sub">Hardware AgroSense (Makerfabs) listo para desplegar: <b>gateway celular</b>, <b>estación todo-en-uno</b> y <b>sensores LoRaWAN</b> (IP68, batería hasta 1 año, alcance hasta 5 km). Los sensores del campo transmiten al gateway y este sube los datos a la plataforma por red celular (LTE-M/NB-IoT). <b>La venta online estará disponible próximamente.</b></p>
+    <p class="sub">Dos modelos de estación, ambos <b>celulares</b> (LTE-M/NB-IoT, sin gateway ni WiFi): cada equipo va <b>directo a la nube</b>. Eliges <b>un modelo por campo</b> y el <b>dashboard se adapta</b> a los sensores de ese modelo. <b>La venta online estará disponible próximamente.</b></p>
     <div class="grid g4">
       ${PRODUCTS.map(p=>`<div class="card prod" style="display:flex;flex-direction:column">
         <div class="prodimg">${icon(PROD_ICONS[p.id]||"signal")}</div>
