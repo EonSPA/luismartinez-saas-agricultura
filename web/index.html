@@ -304,7 +304,7 @@ const I18N = {
     f_tagline:"Estación agroclimática celular para fruta de exportación: alerta de helada, riego inteligente y horas-frío.",
     f_product:"Producto",f_features:"Características",f_demo:"Demo en vivo",f_platform:"Plataforma",f_signin:"Iniciar sesión",f_create:"Crear cuenta",f_roles:"Roles",f_resources:"Recursos",f_support:"Soporte",f_docs:"Documentación",f_status:"Estado del sistema",f_rights:"Marca y precios de demostración.",
     signin:"Iniciar sesión",forgot:"¿Olvidaste tu contraseña?",demo_as:"o entra como (demo):",no_account:"¿No tienes cuenta?",create_one:"Crea una",
-    create_account:"Crear cuenta",full_name:"Nombre completo",password:"Contraseña",continue:"Continuar",company:"Empresa",country_region:"País / Región",crop:"Cultivo principal",choose_plan:"Elige un plan",trial_note:"14 días de prueba sin tarjeta. Cancela cuando quieras.",have_account:"¿Ya tienes cuenta?",
+    create_account:"Crear cuenta",full_name:"Nombre completo",password:"Contraseña",continue:"Continuar",company:"Empresa",country_region:"País / Región",crop:"Cultivo principal",choose_plan:"Elige un plan",trial_note:"Plan Piloto a medida para tu primer campo. Sin permanencia; cancela cuando quieras.",have_account:"¿Ya tienes cuenta?",
     reset_intro:"Te enviaremos un enlace para restablecer tu contraseña.",send_link:"Enviar enlace",back_login:"Volver a iniciar sesión",
     help:"Ayuda",help_title:"Centro de ayuda",help_sub:"Guías rápidas y preguntas frecuentes para sacar el máximo a la plataforma.",
     h_start:"Primeros pasos",h_start_d:"Instala tu estación y conéctala por red celular en minutos.",h_dev:"Dispositivos",h_dev_d:"Provisión, señal, batería y mantenimiento.",h_alarms:"Alarmas",h_alarms_d:"Configura umbrales y notificaciones.",
@@ -321,18 +321,18 @@ const I18N = {
     hero_tag:"AgTech · Export fruit",hero_h1:"Don't lose the season to a frost.",
     hero_lead:"Cellular agroclimatic station with soil and climate sensors: early frost alert, irrigation by real soil moisture and chill hours by crop. Built for cherry, avocado, kiwi, blueberry, grape and walnut.",
     hero_cta1:"Book a demo",hero_cta2:"See the live demo →",
-    mod_tag:"Platform",mod_title:"Everything you need to monitor",mod_sub:"A multi-tenant SaaS platform with roles and hierarchy, ready to scale from one field to the whole agribusiness.",
+    mod_tag:"Platform",mod_title:"From field data to decision",mod_sub:"Frost alert, soil-moisture irrigation and per-crop models (chill hours, degree-days, ET₀) in one platform for export fruit.",
     how_tag:"How it works",how_title:"Up and running in 3 steps",
-    how1_t:"Install the station",how1_d:"Place the cellular node with its sensors in the plot. Battery or solar powered.",
-    how2_t:"Connect over cellular",how2_d:"No WiFi: the station sends data over cellular. Guided provisioning in the app.",
-    how3_t:"Monitor and get alarms",how3_d:"Real time, history, map and alerts. Invite your team with roles.",
-    uc_tag:"Use cases",uc_title:"Built for agriculture",
+    how1_t:"Install the station",how1_d:"Place the cellular agroclimatic node with its soil and climate sensors in the block. Battery + solar.",
+    how2_t:"Connect over cellular",how2_d:"No WiFi: the station sends over cellular, with local buffering if the signal drops.",
+    how3_t:"Get the alert in time",how3_d:"Early frost alert, irrigation by real soil moisture and chill hours by crop. Invite your team with roles.",
+    uc_tag:"Use cases",uc_title:"Built for export fruit",
     roles_tag:"Multi-tenant",roles_title:"Roles with hierarchy",roles_sub:"Each profile sees and manages only what it should. End-to-end access control.",
-    cta_title:"Ready to take your fields to the next level?",cta_sub:"Start free on the Starter plan or book a guided demo.",cta_btn:"See pricing",
+    cta_title:"Protect your next season",cta_sub:"Book a guided demo or start with a pilot in your field.",cta_btn:"Book a demo",
     f_tagline:"Smart agricultural monitoring: cellular stations, sensors and field analytics.",
     f_product:"Product",f_features:"Features",f_demo:"Live demo",f_platform:"Platform",f_signin:"Sign in",f_create:"Create account",f_roles:"Roles",f_resources:"Resources",f_support:"Support",f_docs:"Documentation",f_status:"System status",f_rights:"Demo brand and prices.",
     signin:"Sign in",forgot:"Forgot your password?",demo_as:"or sign in as (demo):",no_account:"No account?",create_one:"Create one",
-    create_account:"Create account",full_name:"Full name",password:"Password",continue:"Continue",company:"Company",country_region:"Country / Region",crop:"Main crop",choose_plan:"Choose a plan",trial_note:"14-day trial, no card required. Cancel anytime.",have_account:"Already have an account?",
+    create_account:"Create account",full_name:"Full name",password:"Password",continue:"Continue",company:"Company",country_region:"Country / Region",crop:"Main crop",choose_plan:"Choose a plan",trial_note:"Custom Pilot plan for your first field. No lock-in; cancel anytime.",have_account:"Already have an account?",
     reset_intro:"We'll send you a link to reset your password.",send_link:"Send link",back_login:"Back to sign in",
     help:"Help",help_title:"Help center",help_sub:"Quick guides and FAQs to get the most out of the platform.",
     h_start:"Getting started",h_start_d:"Install your station and connect it over cellular in minutes.",h_dev:"Devices",h_dev_d:"Provisioning, signal, battery and maintenance.",h_alarms:"Alarms",h_alarms_d:"Set thresholds and notifications.",
@@ -365,7 +365,7 @@ const PRODUCTS = [
 const PLANS = [
   {id:"piloto", name:"Piloto", m:0, y:0, custom:true, tagline:"1 campo · 1 estación · 1 temporada",
    feats:[["1 campo · 1 estación",1],["Alerta de helada + suelo",1],["Históricos de la temporada",1],["1 usuario",1],["Reportes PDF/Excel",1],["App móvil",1],["Multicampo",0],["API / certificación",0]]},
-  {id:"produccion", name:"Producción", m:45000, y:450000, pop:true, tagline:"Por campo en producción",
+  {id:"produccion", name:"Producción", m:37500, y:373500, pop:true, tagline:"Por campo en producción",
    feats:[["Campos y estaciones ampliables",1],["Alertas ilimitadas (helada, riego, plaga)",1],["Históricos completos",1],["Equipo con roles",1],["Mapa de cuarteles",1],["Reportes y trazabilidad",1],["App móvil",1],["API / certificación",0]]},
   {id:"empresa", name:"Multicampo / Empresa", m:0, y:0, tagline:"Varios campos y agroindustria", custom:true,
    feats:[["Campos y estaciones ilimitados",1],["Todas las alertas y modelos",1],["Históricos ilimitados",1],["Usuarios ilimitados",1],["Mapa de cuarteles",1],["API + integración a certificación (GlobalGAP)",1],["Trazabilidad de exportación",1],["Soporte 24/7 + SLA",1]]},
@@ -690,12 +690,12 @@ routes.planes=()=>{
     <div class="grid g3" style="margin-top:24px">
       ${PLANS.map(p=>{
         const price = p.custom?null:(y?p.y:p.m);
-        const label = p.custom?`<div class="price">A medida</div>`:(price===0?`<div class="price">Gratis</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`);
+        const label = p.custom?`<div class="price">A medida</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`;
         return `<div class="card plan ${p.pop?"pop":""}">${p.pop?'<span class="pill">Más popular</span>':""}
           <h3 style="font-size:20px">${esc(p.name)}</h3><p class="muted" style="font-size:13px">${esc(p.tagline)}</p>
           <div style="margin:14px 0">${label}</div>
           <ul class="feat">${p.feats.map(f=>`<li class="${f[1]?"":"no"}">${esc(f[0])}</li>`).join("")}</ul>
-          <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/contacto">${t("contact_sales")}</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">${price===0?t("free_start"):"Elegir "+esc(p.name)}</button>`}</div>
+          <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/contacto">${t("contact_sales")}</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">Elegir ${esc(p.name)}</button>`}</div>
         </div>`;}).join("")}
     </div>
     <div class="card" style="margin-top:26px">
@@ -798,7 +798,7 @@ routes.registro=()=>`
         <div class="regstep" data-step="2" style="display:none">
           <div class="field"><label>${t("company")}</label><input required placeholder="AgroDemo SpA"></div>
           <div class="field"><label>${t("country_region")}</label><input placeholder="Maule, Chile"></div>
-          <div class="field"><label>${t("crop")}</label><select><option>Frutales</option><option>Vid</option><option>Hortalizas</option><option>Cereales</option><option>Otro</option></select></div>
+          <div class="field"><label>${t("crop")}</label><select><option>Cerezo</option><option>Palto</option><option>Kiwi</option><option>Arándano</option><option>Uva</option><option>Nogal</option><option>Otro</option></select></div>
           <button type="button" class="btn primary block" data-next>${t("continue")}</button>
         </div>
         <div class="regstep" data-step="3" style="display:none">
@@ -879,7 +879,7 @@ routes.contacto=()=>{
       <div class="field"><label for="co_company">Empresa</label><input id="co_company" placeholder="AgroDemo SpA"></div></div>
       <div class="grid g2"><div class="field"><label for="co_email">Email</label><input id="co_email" type="email" required placeholder="tu@empresa.cl"></div>
       <div class="field"><label for="co_phone">Teléfono</label><input id="co_phone" placeholder="+56 9 ..."></div></div>
-      <div class="grid g2"><div class="field"><label for="co_crop">Cultivo</label><select id="co_crop"><option>Frutales</option><option>Vid</option><option>Hortalizas</option><option>Cereales</option><option>Otro</option></select></div>
+      <div class="grid g2"><div class="field"><label for="co_crop">Cultivo</label><select id="co_crop"><option>Cerezo</option><option>Palto</option><option>Kiwi</option><option>Arándano</option><option>Uva</option><option>Nogal</option><option>Otro</option></select></div>
       <div class="field"><label for="co_ha">Hectáreas (aprox.)</label><input id="co_ha" inputmode="numeric" placeholder="50"></div></div>
       <div class="field"><label for="co_msg">Mensaje</label><input id="co_msg" value="${co_q}" placeholder="¿Qué necesitas monitorear?"></div>
       <button class="btn primary block" type="submit">Enviar solicitud</button>
@@ -971,14 +971,14 @@ function appPage(sess,page){
       ${kpi("Empresas","24","+3 este mes","up")}${kpi("MRR","$3.480.000","+12%","up")}
       ${kpi("Dispositivos","412","98% en línea","")}${kpi("Alarmas activas","7","−2 vs ayer","down")}</div>
       ${tableCard("Empresas recientes",["Empresa","Plan","Dispositivos","Estado"],[
-        ["AgroDemo SpA","Pro","15",bdg("Activa","good")],["Viñas del Maule","Empresa","82",bdg("Activa","good")],
-        ["Frutícola Norte","Pro","9",bdg("Pago pendiente","warn")],["Hortalizas Sur","Starter","2",bdg("Trial","muted")]])}`;
+        ["AgroDemo SpA","Producción","15",bdg("Activa","good")],["Viñas del Maule","Empresa","82",bdg("Activa","good")],
+        ["Frutícola Norte","Producción","9",bdg("Pago pendiente","warn")],["Cerezos del Maule","Piloto","1",bdg("Piloto","muted")]])}`;
     if(R==="account_admin") return `<div class="kpis">
       ${kpi("Campos","6","","")}${kpi("Estaciones","15","14 en línea","")}
-      ${kpi("Usuarios","8 / 10","plan Pro","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
+      ${kpi("Usuarios","8 / 10","plan Producción","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
       ${tableCard("Estado de campos",["Campo","Estaciones","Última alarma","Estado"],[
         ["Fundo Sur","6","Helada 04:12",bdg("Atención","warn")],["Parcela Río","4","—",bdg("Normal","good")],
-        ["Cuartel A","3","eCO₂ alto",bdg("Normal","good")],["Invernadero 1","2","—",bdg("Normal","good")]])}`;
+        ["Cuartel A","3","—",bdg("Normal","good")],["Nogales Alto","2","—",bdg("Normal","good")]])}`;
     if(R==="agronomo") return `<div class="kpis">
       ${kpi("Campos analizados","6","","")}${kpi("Grados-día","1.245","+38 sem","up")}
       ${kpi("Riesgo helada","Alto","Fundo Sur","down")}${kpi("Reportes","12","este mes","")}</div>
@@ -1014,13 +1014,13 @@ function appPage(sess,page){
       ].map(r=>`<div class="card"><span class="ic">${icon(r[0])}</span><h3 style="margin-top:13px">${r[1]}</h3><p>${r[2]}</p></div>`).join("")}</div>`;
   if(page==="mantenimiento") return tableCard("Mantenimiento",["Dispositivo","Tarea","Programada","Estado"],[
     ["AME-07","Cambiar batería","Hoy",bdg("Pendiente","warn")],["AME-09","Revisar antena celular","Mañana",bdg("Pendiente","warn")],
-    ["AME-03","Calibrar SGP30","12/07",bdg("Programada","muted")],["AME-01","Limpieza de sensores","Hecha 28/06",bdg("Completada","good")]]);
+    ["AME-03","Calibrar sonda de suelo","12/07",bdg("Programada","muted")],["AME-01","Limpieza de sensores","Hecha 28/06",bdg("Completada","good")]]);
   if(page==="empresas") return tableCard("Empresas (tenants)",["Empresa","Plan","Usuarios","Dispositivos","MRR","Estado"],[
-    ["AgroDemo SpA","Pro","8","15","$290.000",bdg("Activa","good")],["Viñas del Maule","Empresa","34","82","$0 (anual)",bdg("Activa","good")],
-    ["Frutícola Norte","Pro","5","9","$29.000",bdg("Pendiente","warn")],["Hortalizas Sur","Starter","1","2","$0",bdg("Trial","muted")]]);
+    ["AgroDemo SpA","Producción","8","15","$290.000",bdg("Activa","good")],["Viñas del Maule","Empresa","34","82","$1.560.000",bdg("Activa","good")],
+    ["Frutícola Norte","Producción","5","9","$37.500",bdg("Pendiente","warn")],["Cerezos del Maule","Piloto","1","1","a medida",bdg("Piloto","muted")]]);
   if(page==="planes") return `<div class="kpis">${kpi("MRR","$3.480.000","+12%","up")}${kpi("ARR","$41.760.000","","")}${kpi("Suscripciones","22","","")}${kpi("Churn","1.8%","−0.3","down")}</div>
     ${tableCard("Suscripciones por plan",["Plan","Empresas","Ingreso mensual","Tendencia"],[
-      ["Starter","9","$0","+2"],["Pro","11","$319.000","+1"],["Empresa","4","$3.161.000","="]])}`;
+      ["Piloto","9","a medida","+2"],["Producción","11","$412.500","+1"],["Empresa","4","$3.161.000","="]])}`;
   if(page==="usuarios"){
     const scope = R==="superadmin"?"todas las empresas":esc(sess.org);
     return `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
@@ -1036,22 +1036,22 @@ function appPage(sess,page){
     ["AME-07","Cuartel A","CSQ 8","42%",bdg("Señal baja","warn")],["AME-09","Parcela Río","—","—",bdg("Sin datos","bad")]]);
   if(page==="campos") return `<div class="kpis">${kpi("Campos","6","")}${kpi("Hectáreas","148","")}${kpi("Estaciones","15","")}${kpi("Alarmas hoy","3","")}</div>
     ${tableCard("Campos",["Campo","Hectáreas","Estaciones","Cultivo","Estado"],[
-      ["Fundo Sur","42","6","Cerezos",bdg("Atención","warn")],["Parcela Río","30","4","Vid",bdg("Normal","good")],
-      ["Cuartel A","20","3","Hortalizas",bdg("Normal","good")],["Invernadero 1","6","2","Tomate",bdg("Normal","good")]])}`;
+      ["Fundo Sur","42","6","Cerezo",bdg("Atención","warn")],["Parcela Río","30","4","Uva",bdg("Normal","good")],
+      ["Cuartel A","20","3","Kiwi",bdg("Normal","good")],["Nogales Alto","6","2","Nogal",bdg("Normal","good")]])}`;
   if(page==="estaciones") return tableCard("Estaciones",["Estación","Campo","Temp","Humedad","Batería","Estado"],[
     ["AME-01","Fundo Sur","2.1 °C","88%","81%",bdg("Helada","bad")],["AME-02","Fundo Sur","6.4 °C","72%","76%",bdg("Normal","good")],
     ["AME-07","Cuartel A","8.0 °C","60%","42%",bdg("Batería baja","warn")]]);
   if(page==="alarmas") return tableCard("Alarmas",["Fecha","Estación","Tipo","Valor","Estado"],[
     ["Hoy 04:12","AME-01","Helada","2.1 °C",bdg("Activa","bad")],["Ayer 16:40","AME-07","Batería baja","3.4 V",bdg("Atendida","good")],
-    ["Ayer 10:05","AME-02","eCO₂ alto","1612 ppm",bdg("Repuesta","good")]]);
+    ["Ayer 10:05","AME-02","Humedad de suelo baja","18%",bdg("Repuesta","good")]]);
   if(page==="reportes") return `<div class="grid g2">
-    ${["Resumen semanal · Fundo Sur","Heladas del mes","Calidad de aire · Cuartel A","Consumo y batería"].map(t=>`<div class="card"><h3>${t}</h3><p class="muted">Informe generado a partir de los históricos.</p><div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm" data-rep>PDF</button><button class="btn sm" data-rep>Excel</button></div></div>`).join("")}</div>`;
-  if(page==="facturacion") return `<div class="kpis">${kpi("Plan","Pro","")}${kpi("Próximo cobro","01/07","$290.000")}${kpi("Estaciones","15 / 15","límite del plan")}${kpi("Usuarios","8 / 10","")}</div>
+    ${["Resumen semanal · Fundo Sur","Heladas del mes","Horas-frío · Cuartel A","Consumo y batería"].map(t=>`<div class="card"><h3>${t}</h3><p class="muted">Informe generado a partir de los históricos.</p><div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm" data-rep>PDF</button><button class="btn sm" data-rep>Excel</button></div></div>`).join("")}</div>`;
+  if(page==="facturacion") return `<div class="kpis">${kpi("Plan","Producción","")}${kpi("Próximo cobro","01/07","$290.000")}${kpi("Estaciones","15 / 15","límite del plan")}${kpi("Usuarios","8 / 10","")}</div>
     <div class="card" style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-    <div><h3>Plan Pro · anual</h3><p class="muted">Renueva el 1 de julio de 2026.</p></div>
+    <div><h3>Plan Producción · anual</h3><p class="muted">Renueva el 1 de julio de 2026.</p></div>
     <div style="display:flex;gap:8px"><a class="btn sm" href="#/planes">Cambiar plan</a><button class="btn sm">Método de pago</button></div></div>
     ${tableCard("Historial de pagos",["Fecha","Concepto","Monto","Estado"],[
-      ["01/07/2025","Plan Pro anual","$290.000",bdg("Pagado","good")],["01/07/2024","Plan Pro anual","$290.000",bdg("Pagado","good")]])}`;
+      ["01/07/2025","Plan Producción anual","$290.000",bdg("Pagado","good")],["01/07/2024","Plan Producción anual","$290.000",bdg("Pagado","good")]])}`;
   if(page==="ajustes") return `<div class="card"><h3 style="margin-bottom:12px">Ajustes${R==="superadmin"?" de plataforma":" de empresa"}</h3>
     <div class="field"><label>Nombre</label><input value="${esc(sess.org)}"></div>
     <div class="field"><label>Zona horaria</label><select><option>America/Santiago</option><option>UTC</option></select></div>
