@@ -8,7 +8,7 @@ El repo se renombra de `comparador-planos` a **`luismartinez-saas-agricultura`**
 redirección automática). La carpeta local del autor es `C:\proyectos code\LM-SaaSAgricultura`
 (antes `LM-SaaSLecturaLTE`) — el nombre de la carpeta local es independiente del repo.
 El producto es una **plataforma agroclimática IoT (SaaS) para fruta de exportación**
-(cerezo, palto, kiwi, arándano, uva, nogal): estación **4G LTE** con sensores de
+(cerezo, palto, kiwi, arándano, uva, nogal): estación **celular (LTE-M/NB-IoT)** con sensores de
 **suelo y clima**, más una **plataforma SaaS** (web + dashboard + app Android) con
 **alerta de helada anticipada**, riego por humedad de suelo, horas-frío/grados-día,
 ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
@@ -44,12 +44,12 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 - `.github/workflows/` — `pages.yml` (deploy web+dashboard desde **main**), `android.yml` (APK).
 
 ## Hardware
-- Nodo **ESP32-S3** + módem **4G LTE CAT1** (A76XX / SIM7670), batería LiPo + panel
+- Nodo **ESP32-S3** + módem **celular LTE-M / NB-IoT** (elegido con el socio Luis Martínez: mejor cobertura rural que el 4G LTE Cat-1), batería LiPo + panel
   solar (autonomía declarada ≥ 7 días sin sol), buffer local si cae la señal.
 - Sensores (propuesta agroclimática): **suelo multiprofundidad 15/30/60 cm** (T + humedad),
   temp/HR aire, **pluviómetro**, **anemómetro**, **piranómetro** (radiación), punto de rocío,
   **mojado foliar**. Postcosecha: CO₂/COV (SGP30) para cámara (relegado).
-- Placa base real Makerfabs (repo original `4G-LTE-CAT1-Air-Monitor`). El HW con estos
+- Placa base real Makerfabs (repo original `4G-LTE-CAT1-Air-Monitor`; se migra al modelo **LTE-M/NB-IoT**). El HW con estos
   sensores agro es **propuesta técnica, no equipo físico existente** todavía.
 - Reporte por HTTP / MQTT(S) / API.
 
