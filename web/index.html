@@ -351,24 +351,24 @@ function mark(size=32){return `<svg class="mark" width="${size}" height="${size}
 </svg>`;}
 
 /* ---------- catálogo, planes, datos demo ---------- */
-/* Catálogo de hardware AgroSense / Makerfabs (proveedor).
-   Sin precio por ahora → se muestra "Próximamente". Para habilitar la venta,
+/* Dos líneas de hardware (el cliente compra el equipo) + un add-on de postcosecha.
+   Sin precio online por ahora → se muestra "Cotizar". Para habilitar la venta,
    basta con añadir a cada producto: price:<CLP> y buyUrl:"<enlace MercadoLibre>". */
 const PRODUCTS = [
-  {id:"modeloA", cat:"Modelo A", name:"Estación agroclimática completa",
-   desc:"Nodo ESP32-S3 celular (LTE-M/NB-IoT) con panel solar. Mide todo el clima y suelo del campo: suelo 15/30/60 cm, T/HR de aire, pluviómetro, anemómetro, piranómetro y mojado foliar. Habilita helada, riego, horas-frío, grados-día, ET₀ y rosa de vientos."},
-  {id:"modeloB", cat:"Modelo B", name:"Nodo rugerizado a batería",
-   desc:"Datalogger STM32 IP67 (tipo NORVI), celular (LTE-M/NB-IoT), batería de 5–7 años sin panel. Enfocado en helada y suelo por cuartel: T de aire y sonda de suelo 15/30/60 cm (RS-485). Instalar y olvidar."},
-  {id:"camara", cat:"Postcosecha", name:"Módulo atmósfera controlada",
-   desc:"Monitoreo de cámara de guarda (postcosecha): temperatura, humedad y CO₂. Módulo secundario, independiente de la estación de campo."},
+  {id:"norvi", cat:"Hardware · Nodo a batería", name:"Nodo NORVI (batería)",
+   desc:"Datalogger STM32 IP67, celular (LTE-M/NB-IoT), batería de 5–7 años sin panel. Off-the-shelf, instalar y olvidar. Habilita los planes Light y Standard (helada y riego por cuartel) con T de aire y sonda de suelo 15/30/60 (RS-485)."},
+  {id:"solar", cat:"Hardware · Estación solar", name:"Estación ESP32-S3 solar",
+   desc:"Nodo ESP32-S3 con panel solar y el set completo de sensores: suelo 15/30/60, T/HR de aire, pluviómetro, anemómetro, piranómetro y mojado foliar. Escala hasta el plan Full (ET₀, viento, lluvia, radiación)."},
+  {id:"camara", cat:"Add-on · Postcosecha", name:"Módulo atmósfera controlada",
+   desc:"Monitoreo de cámara de guarda (postcosecha): temperatura, humedad y CO₂. Add-on independiente de la estación de campo."},
 ];
 const PLANS = [
-  {id:"piloto", name:"Piloto", m:0, y:0, custom:true, tagline:"1 campo · 1 estación · 1 temporada",
-   feats:[["1 campo · 1 estación",1],["Alerta de helada + suelo",1],["Históricos de la temporada",1],["1 usuario",1],["Reportes PDF/Excel",1],["App móvil",1],["Multicampo",0],["API / certificación",0]]},
-  {id:"produccion", name:"Producción", m:37500, y:373500, pop:true, tagline:"Por campo en producción",
-   feats:[["Campos y estaciones ampliables",1],["Alertas ilimitadas (helada, riego, plaga)",1],["Históricos completos",1],["Equipo con roles",1],["Mapa de cuarteles",1],["Reportes y trazabilidad",1],["App móvil",1],["API / certificación",0]]},
-  {id:"empresa", name:"Multicampo / Empresa", m:0, y:0, tagline:"Varios campos y agroindustria", custom:true,
-   feats:[["Campos y estaciones ilimitados",1],["Todas las alertas y modelos",1],["Históricos ilimitados",1],["Usuarios ilimitados",1],["Mapa de cuarteles",1],["API + integración a certificación (GlobalGAP)",1],["Trazabilidad de exportación",1],["Soporte 24/7 + SLA",1]]},
+  {id:"light", name:"Light", m:15000, y:149400, tagline:"Alerta de helada, por cuartel",
+   feats:[["Alerta de helada anticipada",1],["Punto de rocío",1],["Riego por humedad de suelo (15/30/60)",0],["Horas-frío y grados-día por cultivo",0],["ET₀ y balance hídrico",0],["Viento, lluvia y radiación",0],["Mojado foliar (botrytis)",0],["App, alarmas push, históricos y mapa",1]]},
+  {id:"standard", name:"Standard", m:25000, y:249000, pop:true, tagline:"Helada + riego + frío",
+   feats:[["Alerta de helada anticipada",1],["Punto de rocío",1],["Riego por humedad de suelo (15/30/60)",1],["Horas-frío y grados-día por cultivo",1],["ET₀ y balance hídrico",0],["Viento, lluvia y radiación",0],["Mojado foliar (botrytis)",0],["App, alarmas push, históricos y mapa",1]]},
+  {id:"full", name:"Full", m:35000, y:348600, tagline:"Estación completa: todos los modelos",
+   feats:[["Alerta de helada anticipada",1],["Punto de rocío",1],["Riego por humedad de suelo (15/30/60)",1],["Horas-frío y grados-día por cultivo",1],["ET₀ y balance hídrico",1],["Viento, lluvia y radiación",1],["Mojado foliar (botrytis)",1],["App, alarmas push, históricos y mapa",1]]},
 ];
 const USECASES = [
   {emoji:"❄️",t:"Protección de heladas",d:"Proyección de la mínima y aviso anticipado para activar aspersión o calefacción a tiempo.",te:"Frost protection",de:"Minimum-temperature projection and early alert to trigger sprinklers or heaters in time."},
@@ -654,14 +654,14 @@ const ICONS = {
 function icon(name){return `<svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||""}</svg>`;}
 const MOD_ICONS=["frost","drop","thermo","leaf","grid","report"];
 const ROLE_ICONS={superadmin:"shield",account_admin:"building",field_supervisor:"sprout",agronomo:"flask",tecnico:"gear",visor:"eye"};
-const PROD_ICONS={modeloA:"signal",modeloB:"shield",camara:"thermo"};
+const PROD_ICONS={norvi:"shield",solar:"sun",camara:"thermo"};
 const NAV_ICONS={monitoreo:"signal",resumen:"dash",empresas:"building",planes:"card",usuarios:"users",dispositivos:"signal",ajustes:"gear",campos:"sprout",facturacion:"card",estaciones:"signal",alarmas:"bell",reportes:"report",analitica:"trend",recomendaciones:"leaf",mantenimiento:"gear"};
 
 /* ---------- productos ---------- */
 routes.productos=()=>`
   <section class="block"><div class="wrap">
     <p class="eyebrow">${t("nav_hw")}</p><h1 class="h2">Equipos para el campo</h1>
-    <p class="sub">Dos modelos de estación, ambos <b>celulares</b> (LTE-M/NB-IoT, sin gateway ni WiFi): cada equipo va <b>directo a la nube</b>. Eliges <b>un modelo por campo</b> y el <b>dashboard se adapta</b> a los sensores de ese modelo. <b>La venta online estará disponible próximamente.</b></p>
+    <p class="sub">Dos líneas de hardware, ambas <b>celulares</b> (LTE-M/NB-IoT, sin gateway ni WiFi) y <b>directo a la nube</b>: el <b>nodo NORVI a batería</b> (para planes Light/Standard) y la <b>estación ESP32-S3 solar</b> (habilita el plan Full). El cliente <b>compra el equipo</b> y el <b>dashboard se adapta</b> a sus sensores. <b>La venta online estará disponible próximamente.</b></p>
     <div class="grid g4">
       ${PRODUCTS.map(p=>`<div class="card prod" style="display:flex;flex-direction:column">
         <div class="prodimg">${icon(PROD_ICONS[p.id]||"signal")}</div>
@@ -684,20 +684,21 @@ routes.planes=()=>{
   const y=store.billing==="y";
   return `<section class="block"><div class="wrap">
     <div class="center"><h1 class="h2">Precios simples, escala cuando quieras</h1>
-    <p class="sub" style="margin:0 auto 14px">Cambia de plan en cualquier momento. Sin permanencia.</p>
+    <p class="sub" style="margin:0 auto 14px">Precio <b>por equipo/mes</b>. El hardware se compra una vez; el plan es el software y las alertas. Cambia de plan cuando quieras, sin permanencia.</p>
     <div class="toggle" role="group" aria-label="Periodo de facturación"><button data-bill="m" class="${y?"":"on"}" aria-pressed="${y?"false":"true"}">Mensual</button><button data-bill="y" class="${y?"on":""}" aria-pressed="${y?"true":"false"}">Anual <span style="color:var(--brand)">−17%</span></button></div>
     <p class="muted" style="font-size:12.5px;margin-top:10px">✓ Sin permanencia · ✓ Precios en CLP · ✓ Cancela cuando quieras · ✓ Soporte en español (Chile)</p></div>
     <div class="grid g3" style="margin-top:24px">
       ${PLANS.map(p=>{
         const price = p.custom?null:(y?p.y:p.m);
-        const label = p.custom?`<div class="price">A medida</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`;
+        const label = p.custom?`<div class="price">A medida</div>`:`<div class="price">${fmtCLP(y?Math.round(p.y/12):p.m)}<small>/equipo·mes</small></div><div class="muted" style="font-size:12px">${y?"facturado anual "+fmtCLP(p.y):"facturado mensual"}</div>`;
         return `<div class="card plan ${p.pop?"pop":""}">${p.pop?'<span class="pill">Más popular</span>':""}
           <h3 style="font-size:20px">${esc(p.name)}</h3><p class="muted" style="font-size:13px">${esc(p.tagline)}</p>
           <div style="margin:14px 0">${label}</div>
-          <ul class="feat">${p.feats.map(f=>`<li class="${f[1]?"":"no"}">${esc(f[0])}</li>`).join("")}</ul>
+          <ul class="feat">${p.feats.filter(f=>f[1]).map(f=>`<li>${esc(f[0])}</li>`).join("")}</ul>
           <div style="margin-top:auto">${p.custom?`<a class="btn block" href="#/contacto">${t("contact_sales")}</a>`:`<button class="btn ${p.pop?"primary":""} block" data-plan="${p.id}">Elegir ${esc(p.name)}</button>`}</div>
         </div>`;}).join("")}
     </div>
+    <p class="muted" style="text-align:center;font-size:13px;margin-top:16px">¿Varios campos o agroindustria? <a href="#/contacto" style="color:var(--brand)">Cotización a medida</a> con API, integración a certificación (GlobalGAP) y SLA.</p>
     <div class="card" style="margin-top:26px">
       <h3 style="margin-bottom:10px">Comparativa</h3>
       <div class="compare">
@@ -711,14 +712,14 @@ routes.planes=()=>{
     </div>
   </div></section>`;
 };
-const PLAN_FEATURES=["Estaciones incluidas","Tiempo real y alarmas","Retención de históricos","Usuarios","Mapa de sensores","Reportes PDF/Excel","Roles y equipo","Soporte"];
+const PLAN_FEATURES=["Alerta de helada anticipada","Punto de rocío","Riego por humedad de suelo (15/30/60)","Horas-frío y grados-día por cultivo","ET₀ y balance hídrico","Viento, lluvia y radiación","Mojado foliar (botrytis)","App, alarmas push, históricos y mapa"];
 const PLAN_FAQ=[
-  ["¿Qué cuenta como una estación?","Cada nodo celular con sus sensores en una parcela. Puedes mover una estación entre campos sin costo."],
-  ["¿Cómo pruebo la plataforma antes de contratar?","Con el plan Piloto: 1 campo, 1 estación y 1 temporada, dirigido y a medida. No hay plan gratis permanente, pero sí una evaluación acotada con tus propios cuarteles."],
+  ["¿El precio es por equipo?","Sí: el plan se cobra por equipo (estación) al mes. El hardware se compra una sola vez; el plan es el software y las alertas. Puedes mover un equipo entre campos sin costo."],
+  ["¿Cuál plan elijo: Light, Standard o Full?","Light = solo alerta de helada. Standard = helada + riego por humedad de suelo + horas-frío. Full = todo, con ET₀, viento, lluvia, radiación y mojado foliar (requiere la estación solar completa)."],
+  ["¿NORVI a batería o estación solar?","El nodo NORVI (batería 5–7 años, off-the-shelf) cubre los planes Light y Standard. La estación ESP32-S3 solar habilita el plan Full con todos los sensores de clima."],
+  ["¿Cómo pruebo antes de contratar?","Con una evaluación piloto acotada: 1 campo, 1 estación, 1 temporada con tus propios cuarteles. No hay plan gratis permanente."],
   ["¿Por qué pagar si el Estado avisa gratis?","La alerta pública (agromet.cl) es zonal y conviene tenerla. Aquí pagas resolución por cuartel, el dato de tu sitio y acción integrada (riego, horas-frío, ET₀), no solo el aviso."],
-  ["¿Puedo cambiar o cancelar el plan?","Sí, en cualquier momento desde Facturación. Sin permanencia ni multas."],
-  ["¿Cómo se factura el plan anual?","Un solo cobro al año con ~17% de descuento frente al mensual. El precio mostrado es el equivalente por mes."],
-  ["¿Qué incluye el plan Empresa?","Estaciones y usuarios ilimitados, API, jerarquía de roles completa y soporte 24/7 con SLA. Se cotiza según tu operación."],
+  ["¿Puedo cambiar o cancelar el plan?","Sí, en cualquier momento desde Facturación. Sin permanencia ni multas. El plan anual tiene ~17% de descuento frente al mensual."],
 ];
 
 /* ---------- checkout (simulado) ---------- */
@@ -1069,7 +1070,7 @@ function bindCommon(){
   document.querySelectorAll("[data-quote]").forEach(b=>b.onclick=()=>{try{sessionStorage.setItem("mk.quote",b.dataset.quote);}catch(e){}});
   document.querySelectorAll("[data-bill]").forEach(b=>b.onclick=()=>{store.billing=b.dataset.bill;router();});
   document.querySelectorAll("[data-plan]").forEach(b=>b.onclick=()=>{const p=PLANS.find(x=>x.id===b.dataset.plan);
-    if(p.m===0&&p.y===0){go("#/registro");return;}  // Starter: crear cuenta de verdad
+    if(p.m===0&&p.y===0){go("#/registro");return;}  // plan a medida: ir a registro
     addToCart({id:"plan_"+p.id,name:"Plan "+p.name+(store.billing==="y"?" (anual)":" (mensual)"),price:store.billing==="y"?p.y:p.m});go("#/checkout");});
   // checkout
   document.querySelectorAll("[data-inc]").forEach(b=>b.onclick=()=>{const c=store.cart;const i=c.find(x=>x.id===b.dataset.inc);if(i){i.qty++;store.cart=c;router();}});
@@ -1098,10 +1099,11 @@ function bindCommon(){
       const bad=inputs.find(i=>!i.checkValidity());
       if(bad){bad.reportValidity();return;}
       step=Math.min(3,step+1);show(step);});
-    rf.onsubmit=e=>{e.preventDefault();const pid=(document.getElementById("regPlan")||{}).value||"starter";
+    rf.onsubmit=e=>{e.preventDefault();const pid=(document.getElementById("regPlan")||{}).value;
       const u=DEMO_USERS["admin@demo.cl"];store.session={...u,email:"admin@demo.cl"};
-      if(pid==="starter"){toast(t("create_account")+" ✓");go("#/app");}
-      else{addToCart({id:"plan_"+pid,name:"Plan "+pid,price:PLANS.find(p=>p.id===pid).y});go("#/checkout");}};
+      const pl=PLANS.find(p=>p.id===pid);
+      if(!pl){toast(t("create_account")+" ✓");go("#/app");}
+      else{addToCart({id:"plan_"+pl.id,name:"Plan "+pl.name+" (anual)",price:pl.y});go("#/checkout");}};
   }
   // contacto (lead)
   const cf=document.getElementById("contactForm");
