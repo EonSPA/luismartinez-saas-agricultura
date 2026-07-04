@@ -47,7 +47,7 @@ acumulación de frío distintos por especie y fenología, configurables por cuar
 | `hardware/` | Planos y referencia de firmware del nodo. |
 | `brochure/` | Brochure comercial en PDF (`brochure.html` → `Brochure-Marca.pdf`). |
 | `example/` | Firmware del hardware base (Makerfabs) — referencia/legado. |
-| `docs/` | Estudio de mercado y mapeo sensor→dato. |
+| `docs/` | Estudio de mercado, mapeo sensor→dato y arquitectura de escalamiento. |
 
 ## Hardware
 
