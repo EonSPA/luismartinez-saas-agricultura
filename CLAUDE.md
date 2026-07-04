@@ -95,9 +95,9 @@ por usuario + sugerencias auto-generadas desde las alertas; parte vacía). Ver p
 **Roles — SIMPLIFICADO (2026-07-04):** ya **no** son 6. Por cliente: **1 Admin** (gestiona
 usuarios/config/facturación) + **Operadores** (ven y operan, sin gestión). **La cantidad de
 usuarios va según los equipos contratados; los adicionales se cobran aparte.** Aparte queda el
-**Super Admin de plataforma** (interno de Sembu, ve todas las empresas). ⚠️ El área RBAC de la
-**web** (`web/index.html`, `DEMO_USERS`/`ROLES` con 6 roles) **aún NO está migrada** a este modelo —
-pendiente alinearla con el dashboard.
+**Super Admin de plataforma** (interno de Sembu, ve todas las empresas). ✅ **Web migrada** (2026-07-04):
+`DEMO_USERS`/`ROLES`/`NAV`/`appPage` de `web/index.html` pasaron de 6 roles a **superadmin (plataforma) +
+admin + operador**; login demo con 3 botones; tabla de Equipo Admin/Operador + nota de usuarios-por-equipos.
 
 ## Planes (referencia, CLP) — sin plan gratis
 - **Piloto** — a medida, 1 campo · 1 estación · 1 temporada (prueba dirigida).
