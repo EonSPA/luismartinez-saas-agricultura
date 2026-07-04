@@ -88,8 +88,16 @@ Riego por **humedad de suelo** (15/30/60 cm) · **Horas-Frío (<7,2°C) + Porcio
 **ET₀ (Penman-Monteith)** y balance hídrico · Rosa de vientos y lluvia · Mapa de cuarteles ·
 Recomendaciones por cultivo · Históricos/Reportes · Alarmas (push). Módulo secundario
 **Atmósfera Controlada** (postcosecha).
-**Roles multiempresa (6):** Super Admin, Admin de Cuenta, Supervisor de Campo,
-Agrónomo/Analista, Técnico/Operador, Visor.
+**Nuevas (2026-07-04, dashboard demo):** **Mensajes del equipo** (canal interno del cliente,
+solo entre sus usuarios, sin soporte) y **Agenda de trabajos** (calendario semanal + asignación
+por usuario + sugerencias auto-generadas desde las alertas; parte vacía). Ver pestañas "Tareas" y
+"Mensajes" en `dashboard/index.html`.
+**Roles — SIMPLIFICADO (2026-07-04):** ya **no** son 6. Por cliente: **1 Admin** (gestiona
+usuarios/config/facturación) + **Operadores** (ven y operan, sin gestión). **La cantidad de
+usuarios va según los equipos contratados; los adicionales se cobran aparte.** Aparte queda el
+**Super Admin de plataforma** (interno de Sembu, ve todas las empresas). ⚠️ El área RBAC de la
+**web** (`web/index.html`, `DEMO_USERS`/`ROLES` con 6 roles) **aún NO está migrada** a este modelo —
+pendiente alinearla con el dashboard.
 
 ## Planes (referencia, CLP) — sin plan gratis
 - **Piloto** — a medida, 1 campo · 1 estación · 1 temporada (prueba dirigida).

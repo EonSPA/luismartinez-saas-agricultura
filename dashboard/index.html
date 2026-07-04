@@ -45,6 +45,34 @@
   .chip .dic{color:var(--brand)}
   h3.ct .dic{color:var(--brand);width:1em;height:1em}
   .swd{display:inline-block;width:8px;height:8px;border-radius:2px;vertical-align:middle;margin-right:2px}
+  /* equipo / mensajes / agenda */
+  .av{width:28px;height:28px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--brand);flex:none}
+  .msg{display:flex;gap:9px;margin:10px 0;align-items:flex-start}
+  .msg .bub{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 11px;max-width:74%}
+  .msg.me{flex-direction:row-reverse}
+  .msg.me .bub{background:rgba(79,224,162,.12);border-color:rgba(79,224,162,.3)}
+  .msg .who{font-size:11px;color:var(--muted);margin-bottom:2px}
+  .msg .txt{font-size:13px;line-height:1.4}
+  .compose{display:flex;gap:8px;margin-top:14px}
+  .compose input{flex:1;min-width:60px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--txt);font-size:13px}
+  .compose select{background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--txt);padding:0 8px;font-size:12px}
+  .wkstrip{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+  .wkday{flex:1;min-width:62px;border:1px solid var(--line);border-radius:10px;padding:8px 6px;text-align:center;background:var(--panel);cursor:pointer}
+  .wkday.on{background:rgba(79,224,162,.14);border-color:var(--brand)}
+  .wkday .d{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+  .wkday .n{font-size:18px;font-weight:800;line-height:1.2}
+  .wkday .c{font-size:9px;color:var(--brand);height:12px}
+  .task{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .task:last-child{border-bottom:none}
+  .task .cb{width:20px;height:20px;border:2px solid var(--line);border-radius:6px;cursor:pointer;flex:none;display:grid;place-items:center;color:transparent}
+  .task .cb .dic{width:13px;height:13px}
+  .task.done .cb{background:var(--brand);border-color:var(--brand);color:#04121e}
+  .task.done .tt{text-decoration:line-through;color:var(--muted)}
+  .task .tt{flex:1;font-size:13px}
+  .task select{background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:11px;padding:4px 6px}
+  .sugg{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:12.5px}
+  .sugg:last-child{border-bottom:none}
+  .btnx{background:var(--panel2);border:1px solid var(--line);border-radius:8px;color:var(--brand);font-weight:700;font-size:12px;padding:6px 10px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
   .chip b{color:var(--txt)}
   .cropsel{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:3px 6px 3px 11px}
   .cropsel select{background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font:inherit;font-size:12px}
@@ -165,6 +193,10 @@
   <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21c4-4.4 6-7.6 6-10.5A6 6 0 0 0 6 10.5C6 13.4 8 16.6 12 21z"/><circle cx="12" cy="10.3" r="2.3"/></symbol>
   <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4z"/><path d="M9 4v14M15 6v14"/></symbol>
   <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3.2h6M10 3.2v5.6l-4.8 8.1A1.9 1.9 0 0 0 6.8 20h10.4a1.9 1.9 0 0 0 1.6-3.1L14 8.8V3.2"/><path d="M8 14.6h8"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 3.4V16.5H4a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/><path d="M7.5 9.5h9M7.5 12.5h6"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 9.5h17M8 3.5v3M16 3.5v3"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
 </defs></svg>
 <div class="demobar" id="demobar"><svg class="dic"><use href="#i-flask"/></svg> <b>DEMO — datos simulados</b> · escenario ilustrativo: cerezos en Curicó, madrugada con helada · no son lecturas reales de un cliente</div>
 <header>
@@ -205,6 +237,8 @@
     <button class="tab" data-tab="hist">Históricos</button>
     <button class="tab" data-tab="cuarteles">Mapa</button>
     <button class="tab" data-tab="alarmas">Alarmas</button>
+    <button class="tab" data-tab="tareas">Tareas</button>
+    <button class="tab" data-tab="mensajes">Mensajes</button>
     <button class="tab" data-tab="config">Configuración</button>
   </div></div>
 </header>
@@ -597,9 +631,85 @@ function viewConfig(){
       </tbody></table>
     </div>
   </div>
+  <div class="card" style="margin-top:14px"><h4 style="margin-bottom:8px">${ic("user")} Usuarios del cliente</h4>
+    <table><tbody>
+      ${TEAM.map(u=>`<tr><td>${esc(u.name)}</td><td><span class="badge b-${u.role==='Admin'?'good':'muted'}">${esc(u.role)}</span></td><td class="muted" style="text-align:right">${u.id===ME?'conectado':''}</td></tr>`).join("")}
+    </tbody></table>
+    <div class="note" style="margin-top:10px">El <b>Admin</b> gestiona usuarios, configuración y facturación; los <b>Operadores</b> ven y operan sin gestión. La cantidad de usuarios va <b>según los equipos contratados</b>; los adicionales se cobran aparte.</div>
+  </div>
   <div class="note">${ic("flask")} Umbrales editables por cultivo y estado fenológico en la versión desplegada. Datos de esta pantalla: <b>simulados (demo)</b>.</div>`;
 }
-const VIEWS={vivo:viewVivo,hist:viewHist,cuarteles:viewCuarteles,alarmas:viewAlarmas,config:viewConfig};
+/* ---- equipo del cliente, mensajes y agenda (demo, en memoria) ---- */
+const TEAM = [
+  {id:"u1", name:"Diego Fuentes", role:"Admin",     ini:"DF"},
+  {id:"u2", name:"Pedro Soto",    role:"Operador",  ini:"PS"},
+  {id:"u3", name:"Ana Díaz",      role:"Operadora", ini:"AD"},
+];
+let ME = "u1"; // usuario conectado = Admin
+const userById = id => TEAM.find(u=>u.id===id) || TEAM[0];
+const firstName = id => userById(id).name.split(" ")[0];
+const nowHM = () => { const d=new Date(); return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); };
+
+let MSGS = [
+  {u:"u2", t:"03:05", txt:"Voy en camino al Cuartel 1 a dejar lista la aspersión antihelada."},
+  {u:"u1", t:"03:08", txt:"Dale. La mínima proyectada es −2,5 °C a las 05:20, no esperemos."},
+  {u:"u3", t:"03:16", txt:"Reviso la batería del AME-07 que quedó en 42%."},
+];
+
+// semana actual (new Date() sí funciona en el navegador)
+const DOW = ["dom","lun","mar","mié","jue","vie","sáb"];
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const WEEK = (()=>{ const o=[],b=new Date(); b.setHours(0,0,0,0); for(let i=0;i<7;i++){const d=new Date(b); d.setDate(b.getDate()+i); o.push(d);} return o; })();
+let SELDAY = iso(WEEK[0]);
+let TASKS = [
+  {id:1, title:"Activar aspersión antihelada — Cuartel 1", day:iso(WEEK[0]), time:"04:30", who:"u2", done:false},
+  {id:2, title:"Revisar batería AME-07 (42%)",             day:iso(WEEK[0]), time:"09:00", who:"u3", done:false},
+];
+let TASKSEQ = 3;
+const SUGGESTIONS = [
+  "Activar aspersión antihelada — Cuartel 1 (Cerezo)",
+  "Verificar antena / señal AME-07 (CSQ 8)",
+  "Recalibrar sonda de suelo 15 cm — Cuartel 3",
+  "Revisar drenaje tras riego — Parcela Río",
+];
+
+function viewMensajes(){
+  const rows = MSGS.map(m=>{ const u=userById(m.u), me=m.u===ME;
+    return `<div class="msg ${me?'me':''}"><span class="av">${u.ini}</span><div class="bub"><div class="who">${esc(u.name)} · ${m.t}</div><div class="txt">${esc(m.txt)}</div></div></div>`; }).join("");
+  return `<h3 class="ct">${ic("chat")} Mensajes del equipo</h3>
+  <div class="sub">Canal interno de ${esc(CAMPOS[CAMPO].name)} · ${TEAM.length} usuarios. Solo entre el equipo del cliente. (Demo)</div>
+  <div class="card" style="margin-top:8px">
+    ${rows || '<p class="muted">Sin mensajes aún.</p>'}
+    <div class="compose"><input id="msgInput" placeholder="Escribe un mensaje…" aria-label="Mensaje"><button class="btn primary sm" data-send>Enviar</button></div>
+  </div>`;
+}
+
+function viewTareas(){
+  const strip = WEEK.map(d=>{ const day=iso(d), cnt=TASKS.filter(t=>t.day===day).length, today=day===iso(WEEK[0]);
+    return `<div class="wkday ${day===SELDAY?'on':''}" data-day="${day}"><div class="d">${DOW[d.getDay()]}${today?' · hoy':''}</div><div class="n">${d.getDate()}</div><div class="c">${cnt?('● '+cnt):''}</div></div>`; }).join("");
+  const opt = who => TEAM.map(u=>`<option value="${u.id}"${u.id===who?' selected':''}>${esc(firstName(u.id))}</option>`).join("");
+  const dayTasks = TASKS.filter(t=>t.day===SELDAY);
+  const tasks = dayTasks.length ? dayTasks.map(t=>`<div class="task ${t.done?'done':''}"><span class="cb" data-done="${t.id}">${ic("check")}</span><span class="tt">${esc(t.title)}${t.time?` <span class="muted" style="font-size:11px">· ${t.time}</span>`:''}</span><select data-who="${t.id}" aria-label="Asignar">${opt(t.who)}</select><span class="btnx" data-del="${t.id}" title="Eliminar">✕</span></div>`).join("")
+    : '<p class="muted" style="padding:12px 0">Sin tareas para este día. Agrégalas desde las sugerencias o crea una nueva.</p>';
+  const sugg = SUGGESTIONS.map((s,i)=>`<div class="sugg"><span>${ic("bulb")} ${esc(s)}</span><span class="btnx" data-sugg="${i}">${ic("plus")} Agregar</span></div>`).join("");
+  return `<h3 class="ct">${ic("calendar")} Agenda de trabajos</h3>
+  <div class="sub">Programa y asigna las tareas del campo en el calendario. Parte vacía; la plataforma te sugiere trabajos desde las alertas. (Demo)</div>
+  <div class="wkstrip" style="margin:10px 0 14px">${strip}</div>
+  <div class="grid g2">
+    <div class="card">
+      <h3 class="ct" style="font-size:13px">${ic("calendar")} Tareas del día</h3>
+      <div class="compose" style="margin:8px 0 4px"><input id="ntTitle" placeholder="Nueva tarea…" aria-label="Nueva tarea"><select id="ntWho" aria-label="Asignar a">${TEAM.map(u=>`<option value="${u.id}">${esc(firstName(u.id))}</option>`).join("")}</select><button class="btn primary sm" data-addtask>Agregar</button></div>
+      ${tasks}
+    </div>
+    <div class="card">
+      <h3 class="ct" style="font-size:13px">${ic("bulb")} Sugerencias de trabajo</h3>
+      <div class="sub" style="margin-bottom:4px">Generadas desde las alertas y recomendaciones de hoy.</div>
+      ${sugg}
+    </div>
+  </div>`;
+}
+
+const VIEWS={vivo:viewVivo,hist:viewHist,cuarteles:viewCuarteles,alarmas:viewAlarmas,tareas:viewTareas,mensajes:viewMensajes,config:viewConfig};
 let TAB="vivo";
 function render(){ destroyCMap(); $("view").innerHTML=VIEWS[TAB](); if(TAB==="cuarteles") initCuartelesMap(); }
 
@@ -607,6 +717,16 @@ function render(){ destroyCMap(); $("view").innerHTML=VIEWS[TAB](); if(TAB==="cu
 $("tabs").addEventListener("click",e=>{const b=e.target.closest(".tab");if(!b)return;
   TAB=b.dataset.tab; [...$("tabs").children].forEach(x=>x.classList.toggle("on",x===b)); render();
   window.scrollTo({top:0,behavior:"smooth"});});
+/* interacciones de Tareas y Mensajes (delegación sobre #view) */
+$("view").addEventListener("click",e=>{
+  const day=e.target.closest("[data-day]"); if(day){ SELDAY=day.dataset.day; render(); return; }
+  const sg=e.target.closest("[data-sugg]"); if(sg){ TASKS.push({id:TASKSEQ++,title:SUGGESTIONS[+sg.dataset.sugg],day:SELDAY,time:"",who:ME,done:false}); render(); return; }
+  const dn=e.target.closest("[data-done]"); if(dn){ const t=TASKS.find(x=>x.id==dn.dataset.done); if(t)t.done=!t.done; render(); return; }
+  const dl=e.target.closest("[data-del]"); if(dl){ TASKS=TASKS.filter(x=>x.id!=dl.dataset.del); render(); return; }
+  if(e.target.closest("[data-addtask]")){ const inp=$("ntTitle"), who=$("ntWho"), v=(inp.value||"").trim(); if(v){ TASKS.push({id:TASKSEQ++,title:v,day:SELDAY,time:"",who:who.value,done:false}); render(); } return; }
+  if(e.target.closest("[data-send]")){ const inp=$("msgInput"), v=(inp.value||"").trim(); if(v){ MSGS.push({u:ME,t:nowHM(),txt:v}); render(); } return; }
+});
+$("view").addEventListener("change",e=>{ const w=e.target.closest("[data-who]"); if(w){ const t=TASKS.find(x=>x.id==w.dataset.who); if(t)t.who=e.target.value; } });
 $("crop").addEventListener("change",e=>{CROP=e.target.value; render();});
 $("hw").addEventListener("change",e=>{ HWSEL=e.target.value; syncHw(); render(); });
 function syncHw(){
