@@ -388,19 +388,13 @@ const TT = o => lang==="en" ? o.te : o.t;
 const TD = o => lang==="en" ? o.de : o.d;
 const DEMO_USERS = {
   "super@demo.cl":{role:"superadmin", name:"Diego (Plataforma)", org:"Sembu"},
-  "admin@demo.cl":{role:"account_admin", name:"María (AgroDemo)", org:"AgroDemo SpA"},
-  "campo@demo.cl":{role:"field_supervisor", name:"Pedro (Fundo Sur)", org:"AgroDemo SpA"},
-  "agro@demo.cl":{role:"agronomo", name:"Carla (Agronomía)", org:"AgroDemo SpA"},
-  "tecnico@demo.cl":{role:"tecnico", name:"Jorge (Terreno)", org:"AgroDemo SpA"},
-  "visor@demo.cl":{role:"visor", name:"Invitado", org:"AgroDemo SpA"},
+  "admin@demo.cl":{role:"admin", name:"Diego Fuentes", org:"AgroDemo SpA"},
+  "operador@demo.cl":{role:"operador", name:"Pedro Soto", org:"AgroDemo SpA"},
 };
 const ROLES = {
-  superadmin:{label:"Super Admin", ico:"🛡️", level:0, color:"#c084fc"},
-  account_admin:{label:"Admin de Cuenta", ico:"🏢", level:1, color:"#38bdf8"},
-  field_supervisor:{label:"Supervisor de Campo", ico:"🌾", level:2, color:"#3ddc84"},
-  agronomo:{label:"Agrónomo / Analista", ico:"🔬", level:3, color:"#22d3ee"},
-  tecnico:{label:"Técnico / Operador", ico:"🛠️", level:4, color:"#f59e0b"},
-  visor:{label:"Visor", ico:"👁️", level:5, color:"#94a3b8"},
+  superadmin:{label:"Super Admin", level:0, color:"#c084fc"},
+  admin:{label:"Admin", level:1, color:"#38bdf8"},
+  operador:{label:"Operador", level:2, color:"#3ddc84"},
 };
 
 /* ---------- estado (carrito, sesión, ciclo de pago) ----------
@@ -609,12 +603,9 @@ routes.home=()=>`
   </div></section>`;
 function roleDesc(r){
   const d={
-    superadmin:["Administra empresas, planes, facturación y toda la flota de dispositivos.","Manages companies, plans, billing and the whole device fleet."],
-    account_admin:["Gestiona usuarios, campos, dispositivos y el plan de su empresa.","Manages users, fields, devices and the company plan."],
-    field_supervisor:["Supervisa sus campos y estaciones, atiende alarmas y genera reportes.","Supervises fields and stations, handles alarms and reports."],
-    agronomo:["Analítica, reportes y recomendaciones agronómicas a partir de los datos.","Analytics, reports and agronomic recommendations from the data."],
-    tecnico:["Opera dispositivos, configura sensores y resuelve alarmas.","Operates devices, configures sensors and resolves alarms."],
-    visor:["Acceso de solo lectura a dashboards y reportes.","Read-only access to dashboards and reports."],
+    superadmin:["Rol interno de Sembu: administra empresas, planes, facturación y toda la flota de dispositivos.","Sembu internal role: manages companies, plans, billing and the whole device fleet."],
+    admin:["Admin del cliente: gestiona usuarios, configuración y facturación de su empresa, además de operar el campo.","Client admin: manages users, settings and billing, plus field operations."],
+    operador:["Ve los datos y opera el campo (mensajes, tareas, alarmas), sin gestión de usuarios ni facturación.","Views data and operates the field (messages, tasks, alarms), without user or billing management."],
   };
   return (d[r]||["",""])[lang==="en"?1:0];
 }
@@ -653,7 +644,7 @@ const ICONS = {
 };
 function icon(name){return `<svg class="ico-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]||""}</svg>`;}
 const MOD_ICONS=["frost","drop","thermo","leaf","grid","report"];
-const ROLE_ICONS={superadmin:"shield",account_admin:"building",field_supervisor:"sprout",agronomo:"flask",tecnico:"gear",visor:"eye"};
+const ROLE_ICONS={superadmin:"shield",admin:"building",operador:"sprout"};
 const PROD_ICONS={norvi:"shield",solar:"sun",camara:"thermo"};
 const NAV_ICONS={monitoreo:"signal",resumen:"dash",empresas:"building",planes:"card",usuarios:"users",dispositivos:"signal",ajustes:"gear",campos:"sprout",facturacion:"card",estaciones:"signal",alarmas:"bell",reportes:"report",analitica:"trend",recomendaciones:"leaf",mantenimiento:"gear"};
 
@@ -830,7 +821,7 @@ const HELP=[
   {q:"¿Necesito WiFi en el campo?",a:"No. Las estaciones usan red celular (LTE-M/NB-IoT). El WiFi solo se usa, opcionalmente, para el portal de configuración inicial."},
   {q:"¿Cómo creo alarmas?",a:"En el dashboard, pestaña Alarmas: define umbrales (mín/máx), cambios bruscos y caída de señal por sensor; recibes aviso visual, sonoro y notificación."},
   {q:"¿Puedo exportar los datos?",a:"Sí, desde Históricos y desde la ficha de cada estación en el mapa: exporta a CSV, Excel y PDF."},
-  {q:"¿Cómo invito a mi equipo?",a:"En la plataforma, sección Equipo/Usuarios, invita por email y asigna un rol según la jerarquía (Admin, Supervisor, Agrónomo, Técnico o Visor)."},
+  {q:"¿Cómo invito a mi equipo?",a:"En la plataforma, sección Equipo/Usuarios, invita por email y asigna un rol: Admin (gestiona) u Operador (ve y opera). La cantidad de usuarios va según los equipos contratados."},
   {q:"¿Cómo cambio de plan?",a:"En Facturación puedes subir o bajar de plan en cualquier momento, sin permanencia."},
 ];
 routes.ayuda=()=>`
@@ -892,30 +883,20 @@ routes.contacto=()=>{
 /* ====================================================================
    Plataforma con RBAC
    ==================================================================== */
-const MON = ["monitoreo","Monitoreo en vivo","🛰️"];
+const MON = ["monitoreo","Monitoreo en vivo"];
 const NAV = {
   superadmin:[MON,
-    ["resumen","Resumen","📊"],["empresas","Empresas","🏢"],["planes","Planes y MRR","💳"],
-    ["usuarios","Usuarios","👥"],["dispositivos","Dispositivos","📡"],["ajustes","Ajustes","⚙️"],
+    ["resumen","Resumen"],["empresas","Empresas"],["planes","Planes y MRR"],
+    ["usuarios","Usuarios"],["dispositivos","Dispositivos"],["ajustes","Ajustes"],
   ],
-  account_admin:[MON,
-    ["resumen","Resumen","📊"],["campos","Campos","🌾"],["dispositivos","Dispositivos","📡"],
-    ["usuarios","Equipo","👥"],["facturacion","Facturación","💳"],["ajustes","Ajustes","⚙️"],
+  admin:[MON,
+    ["resumen","Resumen"],["campos","Campos"],["dispositivos","Dispositivos"],
+    ["alarmas","Alarmas"],["usuarios","Equipo"],["reportes","Reportes"],
+    ["facturacion","Facturación"],["ajustes","Ajustes"],
   ],
-  field_supervisor:[MON,
-    ["resumen","Resumen","📊"],["campos","Mis campos","🌾"],["estaciones","Estaciones","📡"],
-    ["alarmas","Alarmas","🔔"],["reportes","Reportes","📋"],
-  ],
-  agronomo:[MON,
-    ["resumen","Resumen","📊"],["analitica","Analítica","📈"],["campos","Campos","🌾"],
-    ["reportes","Reportes","📋"],["recomendaciones","Recomendaciones","🌱"],
-  ],
-  tecnico:[MON,
-    ["resumen","Resumen","📊"],["estaciones","Estaciones","📡"],["dispositivos","Dispositivos","🔧"],
-    ["alarmas","Alarmas","🔔"],["mantenimiento","Mantenimiento","🛠️"],
-  ],
-  visor:[MON,
-    ["resumen","Resumen","📊"],["campos","Campos","🌾"],["estaciones","Estaciones","📡"],
+  operador:[MON,
+    ["resumen","Resumen"],["campos","Campos"],["estaciones","Estaciones"],
+    ["alarmas","Alarmas"],["reportes","Reportes"],
   ],
 };
 function renderApp(parts){
@@ -974,30 +955,12 @@ function appPage(sess,page){
       ${tableCard("Empresas recientes",["Empresa","Plan","Dispositivos","Estado"],[
         ["AgroDemo SpA","Producción","15",bdg("Activa","good")],["Viñas del Maule","Empresa","82",bdg("Activa","good")],
         ["Frutícola Norte","Producción","9",bdg("Pago pendiente","warn")],["Cerezos del Maule","Piloto","1",bdg("Piloto","muted")]])}`;
-    if(R==="account_admin") return `<div class="kpis">
+    if(R==="admin") return `<div class="kpis">
       ${kpi("Campos","6","","")}${kpi("Estaciones","15","14 en línea","")}
-      ${kpi("Usuarios","8 / 10","plan Producción","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
+      ${kpi("Usuarios","8","según equipos","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
       ${tableCard("Estado de campos",["Campo","Estaciones","Última alarma","Estado"],[
         ["Fundo Sur","6","Helada 04:12",bdg("Atención","warn")],["Parcela Río","4","—",bdg("Normal","good")],
         ["Cuartel A","3","—",bdg("Normal","good")],["Nogales Alto","2","—",bdg("Normal","good")]])}`;
-    if(R==="agronomo") return `<div class="kpis">
-      ${kpi("Campos analizados","6","","")}${kpi("Grados-día","1.245","+38 sem","up")}
-      ${kpi("Riesgo helada","Alto","Fundo Sur","down")}${kpi("Reportes","12","este mes","")}</div>
-      ${tableCard("Índices por campo",["Campo","Grados-día","Estrés hídrico","Riesgo"],[
-        ["Fundo Sur","312","Bajo",bdg("Helada","bad")],["Parcela Río","288","Medio",bdg("Normal","good")],
-        ["Cuartel A","265","Alto",bdg("Riego","warn")]])}`;
-    if(R==="tecnico") return `<div class="kpis">
-      ${kpi("Dispositivos","15","14 en línea","")}${kpi("Alarmas abiertas","3","1 crítica","down")}
-      ${kpi("Batería baja","2","a revisar","warn")}${kpi("Mantenciones","1","programada","")}</div>
-      ${tableCard("Atención requerida",["Dispositivo","Campo","Problema","Prioridad"],[
-        ["AME-07","Cuartel A","Batería 42%",bdg("Media","warn")],["AME-09","Parcela Río","Sin datos 2 h",bdg("Alta","bad")],
-        ["AME-01","Fundo Sur","Alarma helada",bdg("Alta","bad")]])}`;
-    if(R==="visor") return `<div class="kpis">
-      ${kpi("Campos","6","solo lectura","")}${kpi("Estaciones","15","14 en línea","")}
-      ${kpi("Alarmas activas","1","","")}${kpi("Temp media","6,8 °C","","")}</div>
-      ${tableCard("Estaciones",["Estación","Campo","Temp","Estado"],[
-        ["AME-01","Fundo Sur","2,1 °C",bdg("Helada","bad")],["AME-02","Fundo Sur","6,4 °C",bdg("Normal","good")],
-        ["AME-07","Cuartel A","8,0 °C",bdg("Normal","good")]])}`;
     return `<div class="kpis">
       ${kpi("Mis campos","2","","")}${kpi("Estaciones","9","9 en línea","")}
       ${kpi("Alarmas activas","1","helada","")}${kpi("Batería media","82%","","up")}</div>
@@ -1027,10 +990,10 @@ function appPage(sess,page){
     return `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
       <p class="muted">Usuarios de ${scope}</p><button class="btn primary sm" data-invite>+ Invitar usuario</button></div>
       ${tableCard("Usuarios",["Nombre","Email","Rol","Estado"],[
-        ["María Pérez","admin@demo.cl",bdg("Admin de Cuenta","muted"),bdg("Activo","good")],
-        ["Pedro Soto","campo@demo.cl",bdg("Supervisor","muted"),bdg("Activo","good")],
-        ["Ana Díaz","ana@demo.cl",bdg("Supervisor","muted"),bdg("Invitado","warn")],
-        ["Luis Rojas","luis@demo.cl",bdg("Supervisor","muted"),bdg("Activo","good")]])}`;
+        ["Diego Fuentes","admin@demo.cl",bdg("Admin","good"),bdg("Activo","good")],
+        ["Pedro Soto","operador@demo.cl",bdg("Operador","muted"),bdg("Activo","good")],
+        ["Ana Díaz","ana@demo.cl",bdg("Operadora","muted"),bdg("Invitada","warn")]])}
+      <p class="muted" style="font-size:12.5px;margin-top:10px">La cantidad de usuarios va según los equipos contratados; los adicionales se cobran aparte.</p>`;
   }
   if(page==="dispositivos") return tableCard("Dispositivos",["ID","Campo","Señal","Batería","Estado"],[
     ["AME-01","Fundo Sur","CSQ 24","81%",bdg("En línea","good")],["AME-02","Fundo Sur","CSQ 19","76%",bdg("En línea","good")],
@@ -1084,7 +1047,7 @@ function bindCommon(){
   // login
   const lb=document.getElementById("loginBtn");
   if(lb)lb.onclick=()=>{const email=(document.getElementById("lg_email").value||"").trim().toLowerCase();
-    const u=DEMO_USERS[email]||{role:"account_admin",name:email.split("@")[0]||"Usuario",org:"AgroDemo SpA"};
+    const u=DEMO_USERS[email]||{role:"admin",name:email.split("@")[0]||"Usuario",org:"AgroDemo SpA"};
     store.session={...u,email};toast("Bienvenido/a");go("#/app");};
   document.querySelectorAll("[data-demo]").forEach(b=>b.onclick=()=>{const email=b.dataset.demo;store.session={...DEMO_USERS[email],email};go("#/app");});
   // idioma
