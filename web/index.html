@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="Plataforma SaaS de monitoreo agrícola inteligente: estaciones celulares, sensores, alarmas y analítica de campo.">
+<meta name="theme-color" content="#1a2c26">
 <title>Sembu — Monitoreo agrícola inteligente</title>
 <style>
   :root{
@@ -12,7 +13,7 @@
     --sky:#38bdf8;--good:#22c55e;--warn:#fbbf24;--bad:#fb7185;--shadow:0 10px 40px rgba(0,0,0,.28);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;overflow-x:hidden}
+  html{scroll-behavior:smooth;overflow-x:hidden;color-scheme:dark}
   body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
     line-height:1.5;min-height:100vh;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
@@ -343,7 +344,7 @@ const I18N = {
 const t = k => (I18N[lang] && I18N[lang][k]) || I18N.es[k] || k;
 function setLang(l){lang=l;try{localStorage.setItem("mk.lang",l);}catch(e){}router();}
 
-function mark(size=32){return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 48 48" fill="none">
+function mark(size=32){return `<svg class="mark" width="${size}" height="${size}" viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
   <rect width="48" height="48" rx="12" fill="url(#bg)"/>
   <g fill="none" stroke="#04121e" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5"/></g><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/>
   
@@ -613,7 +614,7 @@ function roleDesc(r){
 function roleCard(r,desc){const R=ROLES[r];return `<div class="card"><span class="ic" style="border-color:${R.color}66;color:${R.color}">${icon(ROLE_ICONS[r])}</span>
   <h3 style="margin-top:14px">${R.label}</h3><p>${desc}</p></div>`;}
 function miniKpi(l,v,d){return `<div style="flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px"><div style="font-size:10px;color:var(--muted)">${l}</div><div style="font-size:16px;font-weight:800">${v}</div></div>`;}
-function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block"><polyline fill="none" stroke="#3ddc84" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
+function miniChart(big){const w=big?320:300,h=big?150:90;const pts=[];for(let i=0;i<24;i++){pts.push(`${i/23*w},${h-12-(Math.sin(i/3)+1)/2*(h-30)-Math.random()*6}`);}return `<svg width="100%" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="display:block" aria-hidden="true" focusable="false"><polyline fill="none" stroke="#3ddc84" stroke-width="2.5" points="${pts.join(" ")}"/><polyline fill="none" stroke="#f59e0b" stroke-width="2" opacity=".8" points="${pts.map((p,i)=>{const[x,y]=p.split(",");return x+","+(+y+14)}).join(" ")}"/></svg>`;}
 
 /* ---------- íconos de línea propios (sin emoji, sin dependencias) ---------- */
 const ICONS = {
@@ -724,14 +725,14 @@ routes.checkout=()=>{
     <div class="checkout">
       <form class="card" id="checkoutForm">
         <h3 style="margin-bottom:12px">Datos de facturación</h3>
-        <div class="field"><label for="ck_name">Empresa / Nombre</label><input id="ck_name" required placeholder="AgroDemo SpA"></div>
-        <div class="grid g2"><div class="field"><label for="ck_rut">RUT</label><input id="ck_rut" required placeholder="76.123.456-7"></div>
-        <div class="field"><label for="ck_email">Email</label><input id="ck_email" type="email" required placeholder="tu@correo.cl"></div></div>
-        <div class="field"><label for="ck_addr">Dirección</label><input id="ck_addr" required placeholder="Camino al fundo km 4, Región"></div>
+        <div class="field"><label for="ck_name">Empresa / Nombre</label><input id="ck_name" name="name" autocomplete="organization" required placeholder="AgroDemo SpA"></div>
+        <div class="grid g2"><div class="field"><label for="ck_rut">RUT</label><input id="ck_rut" name="rut" autocomplete="off" spellcheck="false" required placeholder="76.123.456-7"></div>
+        <div class="field"><label for="ck_email">Email</label><input id="ck_email" name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="off" required placeholder="tu@correo.cl"></div></div>
+        <div class="field"><label for="ck_addr">Dirección</label><input id="ck_addr" name="address" autocomplete="street-address" required placeholder="Camino al fundo km 4, Región"></div>
         <h3 style="margin:18px 0 12px">Pago</h3>
-        <div class="field"><label for="ck_card">Número de tarjeta</label><input id="ck_card" required inputmode="numeric" pattern="[0-9 ]{12,23}" placeholder="4242 4242 4242 4242"></div>
-        <div class="grid g2"><div class="field"><label for="ck_exp">Vencimiento</label><input id="ck_exp" required pattern="[0-9]{2}/[0-9]{2}" placeholder="12/29"></div>
-        <div class="field"><label for="ck_cvc">CVC</label><input id="ck_cvc" required inputmode="numeric" pattern="[0-9]{3,4}" placeholder="123"></div></div>
+        <div class="field"><label for="ck_card">Número de tarjeta</label><input id="ck_card" name="cardnumber" autocomplete="cc-number" required inputmode="numeric" pattern="[0-9 ]{12,23}" placeholder="4242 4242 4242 4242"></div>
+        <div class="grid g2"><div class="field"><label for="ck_exp">Vencimiento</label><input id="ck_exp" name="exp" autocomplete="cc-exp" required pattern="[0-9]{2}/[0-9]{2}" placeholder="12/29"></div>
+        <div class="field"><label for="ck_cvc">CVC</label><input id="ck_cvc" name="cvc" autocomplete="cc-csc" required inputmode="numeric" pattern="[0-9]{3,4}" placeholder="123"></div></div>
         <button class="btn primary block lg" id="payBtn" type="button">Pagar ${fmtCLP(cartTotal()*1.19)}</button>
         <p class="muted center" style="font-size:12px;margin-top:10px">🔒 Demo · listo para integrar Stripe</p>
       </form>
@@ -759,8 +760,8 @@ routes.login=()=>`
     <div class="card">
       <div class="brand" style="justify-content:center;margin-bottom:6px">${mark(30)} ${esc(BRAND)}</div>
       <p class="muted center" style="margin-bottom:18px">Entra a la plataforma</p>
-      <div class="field"><label>Email</label><input id="lg_email" placeholder="tu@empresa.cl" value="admin@demo.cl"></div>
-      <div class="field"><label>Contraseña</label><input id="lg_pass" type="password" placeholder="••••••••" value="demo"></div>
+      <div class="field"><label for="lg_email">Email</label><input id="lg_email" name="email" type="email" autocomplete="username" spellcheck="false" autocapitalize="off" placeholder="tu@empresa.cl" value="admin@demo.cl"></div>
+      <div class="field"><label for="lg_pass">Contraseña</label><input id="lg_pass" name="password" type="password" autocomplete="current-password" placeholder="••••••••" value="demo"></div>
       <div style="text-align:right;margin:-6px 0 12px"><a href="#/recuperar" style="color:var(--brand);font-size:12px">${t("forgot")}</a></div>
       <button class="btn primary block" id="loginBtn">${t("signin")}</button>
       <div class="muted center" style="font-size:12px;margin:16px 0 8px">${t("demo_as")}</div>
@@ -782,14 +783,14 @@ routes.registro=()=>`
       <div id="regSteps" class="muted center" style="font-size:12px;margin-bottom:16px">Paso <b id="regN">1</b> de 3</div>
       <form id="regForm">
         <div class="regstep" data-step="1">
-          <div class="field"><label>${t("full_name")}</label><input required placeholder="María Pérez"></div>
-          <div class="field"><label>Email</label><input type="email" required placeholder="tu@empresa.cl"></div>
-          <div class="field"><label>${t("password")}</label><input type="password" required placeholder="••••••••"></div>
+          <div class="field"><label>${t("full_name")}</label><input name="name" autocomplete="name" required placeholder="María Pérez"></div>
+          <div class="field"><label>Email</label><input name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="off" required placeholder="tu@empresa.cl"></div>
+          <div class="field"><label>${t("password")}</label><input name="password" type="password" autocomplete="new-password" required placeholder="••••••••"></div>
           <button type="button" class="btn primary block" data-next>${t("continue")}</button>
         </div>
         <div class="regstep" data-step="2" style="display:none">
-          <div class="field"><label>${t("company")}</label><input required placeholder="AgroDemo SpA"></div>
-          <div class="field"><label>${t("country_region")}</label><input placeholder="Maule, Chile"></div>
+          <div class="field"><label>${t("company")}</label><input name="organization" autocomplete="organization" required placeholder="AgroDemo SpA"></div>
+          <div class="field"><label>${t("country_region")}</label><input name="country" autocomplete="country-name" placeholder="Maule, Chile"></div>
           <div class="field"><label>${t("crop")}</label><select><option>Cerezo</option><option>Palto</option><option>Kiwi</option><option>Arándano</option><option>Uva</option><option>Nogal</option><option>Otro</option></select></div>
           <button type="button" class="btn primary block" data-next>${t("continue")}</button>
         </div>
@@ -809,7 +810,7 @@ routes.recuperar=()=>`
     <div class="card">
       <div class="brand" style="justify-content:center;margin-bottom:6px">${mark(30)} ${esc(BRAND)}</div>
       <p class="muted center" style="margin-bottom:16px">${t("reset_intro")}</p>
-      <div class="field"><label>Email</label><input id="rc_email" type="email" placeholder="tu@empresa.cl"></div>
+      <div class="field"><label for="rc_email">Email</label><input id="rc_email" name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="off" placeholder="tu@empresa.cl"></div>
       <button class="btn primary block" id="resetBtn">${t("send_link")}</button>
       <p class="muted center" style="font-size:12px;margin-top:14px"><a href="#/login" style="color:var(--brand)">← ${t("back_login")}</a></p>
     </div>
@@ -867,10 +868,10 @@ routes.contacto=()=>{
     <p class="eyebrow">${t("contact_sales")}</p><h1 class="h2">${qp?"Cotiza tu equipo":"Hablemos de tu operación"}</h1>
     <p class="sub">${qp?`Solicita la cotización de <b>${esc(qp)}</b>. `:""}Cuéntanos tu cultivo y superficie y te armamos una propuesta (equipos + plan). Respondemos en horario hábil.</p>
     <form id="contactForm" class="card">
-      <div class="grid g2"><div class="field"><label for="co_name">Nombre</label><input id="co_name" required placeholder="María Pérez"></div>
-      <div class="field"><label for="co_company">Empresa</label><input id="co_company" placeholder="AgroDemo SpA"></div></div>
-      <div class="grid g2"><div class="field"><label for="co_email">Email</label><input id="co_email" type="email" required placeholder="tu@empresa.cl"></div>
-      <div class="field"><label for="co_phone">Teléfono</label><input id="co_phone" placeholder="+56 9 ..."></div></div>
+      <div class="grid g2"><div class="field"><label for="co_name">Nombre</label><input id="co_name" name="name" autocomplete="name" required placeholder="María Pérez"></div>
+      <div class="field"><label for="co_company">Empresa</label><input id="co_company" name="organization" autocomplete="organization" placeholder="AgroDemo SpA"></div></div>
+      <div class="grid g2"><div class="field"><label for="co_email">Email</label><input id="co_email" name="email" type="email" autocomplete="email" spellcheck="false" autocapitalize="off" required placeholder="tu@empresa.cl"></div>
+      <div class="field"><label for="co_phone">Teléfono</label><input id="co_phone" name="tel" type="tel" autocomplete="tel" placeholder="+56 9 …"></div></div>
       <div class="grid g2"><div class="field"><label for="co_crop">Cultivo</label><select id="co_crop"><option>Cerezo</option><option>Palto</option><option>Kiwi</option><option>Arándano</option><option>Uva</option><option>Nogal</option><option>Otro</option></select></div>
       <div class="field"><label for="co_ha">Hectáreas (aprox.)</label><input id="co_ha" inputmode="numeric" placeholder="50"></div></div>
       <div class="field"><label for="co_msg">Mensaje</label><input id="co_msg" value="${co_q}" placeholder="¿Qué necesitas monitorear?"></div>

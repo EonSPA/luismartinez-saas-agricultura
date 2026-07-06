@@ -23,8 +23,9 @@
     --shadow:0 10px 40px rgba(0,0,0,.28);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html{overflow-x:hidden}
+  html{overflow-x:hidden;color-scheme:dark}
   body{background:var(--bg);color:var(--txt);font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.45;-webkit-text-size-adjust:100%}
+  :focus-visible{outline:2px solid var(--brand2);outline-offset:2px;border-radius:6px}
   .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
   /* DEMO banner */
   .demobar{background:repeating-linear-gradient(45deg,rgba(245,158,11,.14),rgba(245,158,11,.14) 12px,rgba(245,158,11,.06) 12px,rgba(245,158,11,.06) 24px);
@@ -198,7 +199,7 @@
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5.5v13M5.5 12h13"/></symbol>
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></symbol>
 </defs></svg>
-<div class="demobar" id="demobar"><svg class="dic"><use href="#i-flask"/></svg> <b>DEMO — datos simulados</b> · escenario ilustrativo: cerezos en Curicó, madrugada con helada · no son lecturas reales de un cliente</div>
+<div class="demobar" id="demobar"><svg class="dic" aria-hidden="true" focusable="false"><use href="#i-flask"/></svg> <b>DEMO — datos simulados</b> · escenario ilustrativo: cerezos en Curicó, madrugada con helada · no son lecturas reales de un cliente</div>
 <header>
   <div class="wrap hd">
     <span class="brand">
@@ -227,9 +228,9 @@
           <option value="ciruelo">Ciruelo</option>
         </select>
       </span>
-      <span class="chip"><svg class="dic"><use href="#i-clock"/></svg><b id="clock">05:20</b></span>
-      <span class="chip"><svg class="dic"><use href="#i-signal"/></svg><b>LTE-M</b> · CSQ 21</span>
-      <span class="chip" id="powChip"><svg class="dic"><use href="#i-battery"/></svg> <b>82%</b> · solar</span>
+      <span class="chip"><svg class="dic" aria-hidden="true" focusable="false"><use href="#i-clock"/></svg><b id="clock">05:20</b></span>
+      <span class="chip"><svg class="dic" aria-hidden="true" focusable="false"><use href="#i-signal"/></svg><b>LTE-M</b> · CSQ 21</span>
+      <span class="chip" id="powChip"><svg class="dic" aria-hidden="true" focusable="false"><use href="#i-battery"/></svg> <b>82%</b> · solar</span>
     </span>
   </div>
   <div class="wrap"><div class="tabs" id="tabs">
@@ -270,7 +271,7 @@ const SCN = {
 /* Formato chileno: coma decimal para valores de display (no para coordenadas SVG). */
 const dec = v => (''+v).replace('.', ',');
 /* Ícono de línea (referencia a un <symbol> del documento). */
-const ic = n => `<svg class="dic"><use href="#i-${n}"/></svg>`;
+const ic = n => `<svg class="dic" aria-hidden="true" focusable="false"><use href="#i-${n}"/></svg>`;
 /* Requerimientos y modelos por cultivo (metas de frío, base GDD, plaga por grados-día, umbral de daño por helada) */
 const CROPS = {
   cerezo:  {name:"Cerezo",       chillHF:1100, chillPor:65, gddBase:10, pest:"Drosophila suzukii", frostCrit:-1.1, stage:"Brotación / inicio floración"},
@@ -680,7 +681,7 @@ function viewMensajes(){
   <div class="sub">Canal interno de ${esc(CAMPOS[CAMPO].name)} · ${TEAM.length} usuarios. Solo entre el equipo del cliente. (Demo)</div>
   <div class="card" style="margin-top:8px">
     ${rows || '<p class="muted">Sin mensajes aún.</p>'}
-    <div class="compose"><input id="msgInput" placeholder="Escribe un mensaje…" aria-label="Mensaje"><button class="btn primary sm" data-send>Enviar</button></div>
+    <div class="compose"><input id="msgInput" name="message" autocomplete="off" placeholder="Escribe un mensaje…" aria-label="Mensaje"><button class="btn primary sm" data-send>Enviar</button></div>
   </div>`;
 }
 
@@ -698,7 +699,7 @@ function viewTareas(){
   <div class="grid g2">
     <div class="card">
       <h3 class="ct" style="font-size:13px">${ic("calendar")} Tareas del día</h3>
-      <div class="compose" style="margin:8px 0 4px"><input id="ntTitle" placeholder="Nueva tarea…" aria-label="Nueva tarea"><select id="ntWho" aria-label="Asignar a">${TEAM.map(u=>`<option value="${u.id}">${esc(firstName(u.id))}</option>`).join("")}</select><button class="btn primary sm" data-addtask>Agregar</button></div>
+      <div class="compose" style="margin:8px 0 4px"><input id="ntTitle" name="task" autocomplete="off" placeholder="Nueva tarea…" aria-label="Nueva tarea"><select id="ntWho" aria-label="Asignar a">${TEAM.map(u=>`<option value="${u.id}">${esc(firstName(u.id))}</option>`).join("")}</select><button class="btn primary sm" data-addtask>Agregar</button></div>
       ${tasks}
     </div>
     <div class="card">
