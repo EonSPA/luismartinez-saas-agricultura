@@ -954,8 +954,8 @@ function appPage(sess,page){
       ${kpi("Empresas","24","+3 este mes","up")}${kpi("MRR","$3.480.000","+12%","up")}
       ${kpi("Dispositivos","412","98% en línea","")}${kpi("Alarmas activas","7","−2 vs ayer","down")}</div>
       ${tableCard("Empresas recientes",["Empresa","Plan","Dispositivos","Estado"],[
-        ["AgroDemo SpA","Producción","15",bdg("Activa","good")],["Viñas del Maule","Empresa","82",bdg("Activa","good")],
-        ["Frutícola Norte","Producción","9",bdg("Pago pendiente","warn")],["Cerezos del Maule","Piloto","1",bdg("Piloto","muted")]])}`;
+        ["AgroDemo SpA","Standard","15",bdg("Activa","good")],["Viñas del Maule","Full","82",bdg("Activa","good")],
+        ["Frutícola Norte","Light","9",bdg("Pago pendiente","warn")],["Cerezos del Maule","Piloto","1",bdg("Piloto","muted")]])}`;
     if(R==="admin") return `<div class="kpis">
       ${kpi("Campos","6","","")}${kpi("Estaciones","15","14 en línea","")}
       ${kpi("Usuarios","8","según equipos","")}${kpi("Alarmas hoy","3","2 atendidas","")}</div>
@@ -981,11 +981,11 @@ function appPage(sess,page){
     ["AME-07","Cambiar batería","Hoy",bdg("Pendiente","warn")],["AME-09","Revisar antena celular","Mañana",bdg("Pendiente","warn")],
     ["AME-03","Calibrar sonda de suelo","12/07",bdg("Programada","muted")],["AME-01","Limpieza de sensores","Hecha 28/06",bdg("Completada","good")]]);
   if(page==="empresas") return tableCard("Empresas (tenants)",["Empresa","Plan","Usuarios","Dispositivos","MRR","Estado"],[
-    ["AgroDemo SpA","Producción","8","15","$290.000",bdg("Activa","good")],["Viñas del Maule","Empresa","34","82","$1.560.000",bdg("Activa","good")],
-    ["Frutícola Norte","Producción","5","9","$37.500",bdg("Pendiente","warn")],["Cerezos del Maule","Piloto","1","1","a medida",bdg("Piloto","muted")]]);
+    ["AgroDemo SpA","Standard","8","15","$210.000",bdg("Activa","good")],["Viñas del Maule","Full","34","82","$1.804.000",bdg("Activa","good")],
+    ["Frutícola Norte","Light","5","9","$72.000",bdg("Pendiente","warn")],["Cerezos del Maule","Piloto","1","1","a medida",bdg("Piloto","muted")]]);
   if(page==="planes") return `<div class="kpis">${kpi("MRR","$3.480.000","+12%","up")}${kpi("ARR","$41.760.000","","")}${kpi("Suscripciones","22","","")}${kpi("Churn","1,8%","−0,3","down")}</div>
     ${tableCard("Suscripciones por plan",["Plan","Empresas","Ingreso mensual","Tendencia"],[
-      ["Piloto","9","a medida","+2"],["Producción","11","$412.500","+1"],["Empresa","4","$3.161.000","="]])}`;
+      ["Piloto","9","a medida","+2"],["Light","5","$360.000","+1"],["Standard","6","$1.120.000","+1"],["Full","2","$2.000.000","="]])}`;
   if(page==="usuarios"){
     const scope = R==="superadmin"?"todas las empresas":esc(sess.org);
     return `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
@@ -1011,12 +1011,12 @@ function appPage(sess,page){
     ["Ayer 10:05","AME-02","Humedad de suelo baja","18%",bdg("Repuesta","good")]]);
   if(page==="reportes") return `<div class="grid g2">
     ${["Resumen semanal · Fundo Sur","Heladas del mes","Horas-frío · Cuartel A","Consumo y batería"].map(t=>`<div class="card"><h3>${t}</h3><p class="muted">Informe generado a partir de los históricos.</p><div style="margin-top:10px;display:flex;gap:8px"><button class="btn sm" data-rep>PDF</button><button class="btn sm" data-rep>Excel</button></div></div>`).join("")}</div>`;
-  if(page==="facturacion") return `<div class="kpis">${kpi("Plan","Producción","")}${kpi("Próximo cobro","01/07","$290.000")}${kpi("Estaciones","15 / 15","límite del plan")}${kpi("Usuarios","8 / 10","")}</div>
+  if(page==="facturacion") return `<div class="kpis">${kpi("Plan","Standard","")}${kpi("Próximo cobro","01/08","$210.000")}${kpi("Equipos","15","Standard · $14.000 c/u")}${kpi("Usuarios","8 / 10","según equipos")}</div>
     <div class="card" style="margin-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
-    <div><h3>Plan Producción · anual</h3><p class="muted">Renueva el 1 de julio de 2026.</p></div>
+    <div><h3>Plan Standard · mensual</h3><p class="muted">Se cobra el 1 de cada mes · 15 equipos × $14.000.</p></div>
     <div style="display:flex;gap:8px"><a class="btn sm" href="#/planes">Cambiar plan</a><button class="btn sm">Método de pago</button></div></div>
     ${tableCard("Historial de pagos",["Fecha","Concepto","Monto","Estado"],[
-      ["01/07/2025","Plan Producción anual","$290.000",bdg("Pagado","good")],["01/07/2024","Plan Producción anual","$290.000",bdg("Pagado","good")]])}`;
+      ["01/07/2026","Plan Standard · julio","$210.000",bdg("Pagado","good")],["01/06/2026","Plan Standard · junio","$210.000",bdg("Pagado","good")]])}`;
   if(page==="ajustes") return `<div class="card"><h3 style="margin-bottom:12px">Ajustes${R==="superadmin"?" de plataforma":" de empresa"}</h3>
     <div class="field"><label>Nombre</label><input value="${esc(sess.org)}"></div>
     <div class="field"><label>Zona horaria</label><select><option>America/Santiago</option><option>UTC</option></select></div>
