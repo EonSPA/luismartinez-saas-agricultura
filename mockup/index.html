@@ -748,6 +748,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .alarm.done{opacity:.55}
 
   #cmap{height:210px;border-radius:15px;overflow:hidden;border:1px solid var(--line);margin-bottom:13px;background:var(--bg2)}
+  .mapoff{position:absolute;left:8px;right:8px;bottom:8px;z-index:650;background:rgba(16,27,22,.93);border:1px solid var(--line);border-radius:9px;padding:7px 10px;font-size:11px;color:var(--muted);text-align:center;pointer-events:none}
   .leaflet-container{background:var(--bg2);font:inherit}
   .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--txt);box-shadow:0 6px 24px rgba(0,0,0,.5)}
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;margin:11px 13px}
@@ -997,7 +998,8 @@ function initMap(){
   if(!window.L){ el.innerHTML='<div style="padding:22px;color:var(--muted);font-size:12.5px;text-align:center">El mapa se carga con conexión a internet.</div>'; return; }
   if(MAP){try{MAP.remove()}catch(e){}}
   MAP=L.map(el,{scrollWheelZoom:false}).setView(campo().center,campo().zoom);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · CARTO'}).addTo(MAP);
+  const _tl=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · CARTO'}).addTo(MAP);
+  let _tferr=false; _tl.on('tileerror',()=>{ if(_tferr)return; _tferr=true; const n=document.createElement('div'); n.className='mapoff'; n.textContent='Sin conexión — se muestra la posición relativa de los cuarteles'; el.appendChild(n); });
   const pts=[];
   campo().cuarteles.forEach(q=>{ pts.push([q.lat,q.lng]); const col=ST[cstate(q.t)][2];
     q._m=L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#04121e',fillColor:col,fillOpacity:.95}).addTo(MAP)

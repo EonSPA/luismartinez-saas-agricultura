@@ -91,6 +91,8 @@ El usuario en terreno (admin/operador de un campo) abre el celular para **reacci
 | **Estado por cuartel** | Saber **qué cuartel** está en riesgo y hacia dónde ir a proteger. |
 | **Notificaciones push** | Es el canal que dispara la reacción; sin push, la alerta anticipada no sirve en el celular. |
 | **Tareas del día** | El operador ve y marca los trabajos asignados (riego, revisión) en terreno. |
+| **Exportar y compartir** | Generar un reporte (helada/semanal/históricos) y enviarlo por WhatsApp/correo al agrónomo o al equipo. *(Añadido al alcance a pedido; ver mockup.)* |
+| **Cambio de campo** | El usuario opera varios campos; debe alternar entre ellos y ver el estado de cada uno. *(Añadido al alcance a pedido; ver mockup.)* |
 
 ### SECUNDARIA (útil, no bloqueante para v1)
 - **Históricos / Reportes** (consulta, no el momento de terreno).

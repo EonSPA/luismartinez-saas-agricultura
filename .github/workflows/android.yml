@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build APK — wrapper legacy del dashboard Sembu
 
 # Compila el APK de depuración de la app (Capacitor) y lo publica como artefacto.
 on:
@@ -26,7 +26,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -54,26 +54,26 @@ jobs:
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: air-monitor-debug-apk
+          name: sembu-dashboard-debug-apk
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
 
       - name: Prepare APK with friendly name
-        run: cp android/app/build/outputs/apk/debug/app-debug.apk air-monitor.apk
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk sembu.apk
 
       - name: Publish APK to Release (descarga pública sin login)
         uses: softprops/action-gh-release@v2
         with:
           tag_name: android-latest
-          name: Air Monitor — APK (último build)
+          name: Sembu — APK (wrapper del dashboard · build de prueba)
           prerelease: true
           fail_on_unmatched_files: true
-          files: app/air-monitor.apk
+          files: app/sembu.apk
           body: |
-            APK de depuración del **Air Monitor** generado automáticamente.
+            APK de depuración del wrapper **Sembu** (dashboard) generado automáticamente.
 
             - Commit: `${{ github.sha }}`
             - Build: run #${{ github.run_number }}
 
-            Descarga directa: **air-monitor.apk** (abajo en *Assets*).
-            Instálalo en el teléfono (permite "orígenes desconocidos") o con `adb install air-monitor.apk`.
+            Descarga directa: **sembu.apk** (abajo en *Assets*).
+            Instálalo en el teléfono (permite "orígenes desconocidos") o con `adb install sembu.apk`.

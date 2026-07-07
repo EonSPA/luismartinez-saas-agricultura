@@ -1,8 +1,8 @@
 {
-  "name": "air-monitor-app",
+  "name": "sembu-app",
   "version": "1.0.0",
   "private": true,
-  "description": "App móvil (Android/iOS) del 4G LTE CAT1 Air Monitor — Capacitor envuelve el dashboard web.",
+  "description": "App móvil (Android) de Sembu — wrapper Capacitor del dashboard (legacy). La app definitiva se construye en la Etapa B: Vite + React + Capacitor 8.",
   "scripts": {
     "sync-web": "node ./scripts/sync-web.mjs",
     "add:android": "cap add android",
