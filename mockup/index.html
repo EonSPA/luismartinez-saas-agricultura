@@ -669,7 +669,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </style>
 <style>
   :root{
-    --bg:#1a2c26; --bg2:#213730; --panel:#284139; --panel2:#304d44; --line:#446056;
+    --bg:#1a2c26; --bg2:#213730; --panel:#284139; --panel2:#304d44; --line:#446056; --line2:#385046;
     --txt:#f0f7f2; --muted:#bcd0c7; --brand:#4fe0a2; --brand2:#a3e635; --accent:#f59e0b;
     --sky:#38bdf8; --frost:#7dd3fc; --good:#22c55e; --warn:#fbbf24; --bad:#fb7185; --soil:#c08457;
     --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
@@ -689,16 +689,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
   svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
   .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
   .chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.02em}
-  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:14px;
-    padding:15px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;background:var(--panel2);color:var(--txt)}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;background:var(--panel2);color:var(--txt)}
   .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e}
   .btn.sm{padding:11px 13px;font-size:13px;border-radius:12px;width:auto}
   .btn:active{transform:scale(.98)}
   .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,#3ddc84,#a3e635);display:grid;place-items:center;flex:none}
   .logo svg{width:27px;height:27px}
+  .tap{cursor:pointer} .tap:active{transform:scale(.985)}
 
-  #login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 22px;gap:4px;background:
-    radial-gradient(120% 60% at 80% 0%, rgba(79,224,162,.14), transparent 60%), var(--bg)}
+  #login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 22px;gap:4px;background:radial-gradient(120% 60% at 80% 0%, rgba(79,224,162,.14), transparent 60%), var(--bg)}
   #login .brand{display:flex;align-items:center;gap:11px;margin-bottom:26px} #login .brand b{font-size:22px;letter-spacing:-.01em}
   #login h1{font-size:24px;line-height:1.2;letter-spacing:-.02em;margin-bottom:6px}
   #login p.s{color:var(--muted);font-size:14px;margin-bottom:22px}
@@ -706,32 +705,35 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
   .field input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:13px;color:var(--txt);padding:14px;font-size:15px;font-family:var(--font)}
   .field input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
-  .demo{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+  .lnk{color:var(--brand);font-size:12px;text-align:right;margin:-6px 2px 4px;cursor:pointer}
+  .demo{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
   .demo .lbl{font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;letter-spacing:.05em}
   .rolebtn{display:flex;align-items:center;gap:11px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px 13px;margin-bottom:8px;color:var(--txt);font-family:var(--font);cursor:pointer;text-align:left}
   .rolebtn .ri{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
   .rolebtn b{font-size:14px} .rolebtn small{color:var(--muted);font-size:11.5px}
 
-  .apphdr{padding:6px 16px 10px;display:flex;align-items:center;gap:10px;flex:none}
+  .apphdr{padding:6px 14px 10px;display:flex;align-items:center;gap:9px;flex:none}
   .apphdr .t{font-size:19px;font-weight:700;letter-spacing:-.01em}
-  .fieldsel{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px 11px;font-size:12.5px;color:var(--muted)}
-  .fieldsel b{color:var(--txt)}
   .iconbtn{width:40px;height:40px;border-radius:11px;background:var(--panel);border:1px solid var(--line);color:var(--txt);display:grid;place-items:center;position:relative;flex:none;cursor:pointer}
   .iconbtn .dotb{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--bad);border:2px solid var(--panel)}
+  .avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e;font-weight:800;display:grid;place-items:center;border:none;cursor:pointer;font-size:15px;flex:none;font-family:var(--font)}
+  .fieldsel{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin-bottom:13px;cursor:pointer}
+  .fieldsel b{color:var(--txt)} .fieldsel .cv{margin-left:auto;color:var(--muted)}
 
-  .hero{border:1px solid color-mix(in srgb,var(--bad) 45%,var(--line));border-radius:18px;overflow:hidden;background:linear-gradient(160deg, color-mix(in srgb,var(--bad) 15%,var(--panel)), var(--panel));margin-bottom:13px}
+  .hero{border-radius:18px;overflow:hidden;margin-bottom:13px;border:1px solid var(--hl)}
   .hero .top{padding:14px 15px 6px;display:flex;align-items:center;gap:9px}
   .hero .big{padding:0 15px 4px;display:flex;align-items:flex-end;gap:8px}
-  .hero .big .deg{font-size:56px;font-weight:750;line-height:.95;letter-spacing:-.03em;color:var(--frost)}
+  .hero .big .deg{font-size:56px;font-weight:750;line-height:.95;letter-spacing:-.03em}
   .hero .big .u{font-size:18px;color:var(--muted);padding-bottom:11px}
   .hero .facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:8px}
   .hero .facts div{background:var(--panel);padding:11px 14px}
   .hero .facts .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
   .hero .facts .v{font-size:16px;font-weight:700;margin-top:2px}
-  .action{background:color-mix(in srgb,var(--frost) 13%,var(--panel));border-top:1px solid var(--line);padding:12px 15px;font-size:13px;line-height:1.5}
-  .action b{color:var(--frost)}
+  .action{background:var(--panel);border-top:1px solid var(--line);padding:12px 15px;font-size:13px;line-height:1.5}
+  .action b{color:var(--hc)}
+  .actbtn{margin-top:10px;background:var(--panel2);border:1px solid var(--hl);color:var(--hc);border-radius:11px;padding:10px 13px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:7px;width:100%;justify-content:center}
   .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
-  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px;cursor:pointer}
   .kpi .kt{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em} .kpi .kt svg{width:15px;height:15px}
   .kpi .kv{font-size:22px;font-weight:750;margin-top:6px;letter-spacing:-.01em} .kpi .kv small{font-size:12px;color:var(--muted);font-weight:500}
   .kpi .ks{font-size:11px;color:var(--muted);margin-top:1px}
@@ -740,7 +742,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .alarm{display:flex;gap:12px;padding:14px;border-radius:15px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px;align-items:flex-start}
   .alarm .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none}
   .alarm .tt{font-weight:700;font-size:14.5px} .alarm .ds{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.4}
-  .alarm .meta{color:var(--muted);font-size:11px;margin-top:6px;display:flex;gap:8px;align-items:center}
+  .alarm .meta{color:var(--muted);font-size:11px;margin-top:6px}
   .arow{display:flex;gap:8px;margin-top:10px}
   .achip{background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:8px 12px;font-size:12.5px;font-weight:600;font-family:var(--font);cursor:pointer;display:flex;align-items:center;gap:6px}
   .alarm.done{opacity:.55}
@@ -750,8 +752,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--panel);color:var(--txt);box-shadow:0 6px 24px rgba(0,0,0,.5)}
   .leaflet-popup-content{font-size:12.5px;line-height:1.5;margin:11px 13px}
   .leaflet-container a.leaflet-popup-close-button{color:var(--muted)}
-  .leaflet-bar a{background:var(--panel);color:var(--txt);border-color:var(--line)}
-  .leaflet-bar a:hover{background:var(--panel2)}
+  .leaflet-bar a{background:var(--panel);color:var(--txt);border-color:var(--line)} .leaflet-bar a:hover{background:var(--panel2)}
   .leaflet-control-attribution{background:rgba(10,20,13,.72)!important;color:var(--muted)!important;font-size:9px}
   .leaflet-control-attribution a{color:var(--muted)!important}
   .qt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:9px;cursor:pointer}
@@ -760,43 +761,48 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .qt .tmp{font-size:19px;font-weight:750;font-family:var(--mono)}
 
   .daystrip{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto}
-  .day{min-width:44px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 4px;font-size:11px;color:var(--muted);flex:none}
+  .day{min-width:44px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 4px;font-size:11px;color:var(--muted);flex:none;cursor:pointer}
   .day.on{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e;border-color:transparent;font-weight:700} .day b{display:block;font-size:16px;margin-top:2px}
+  .day .cnt{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--brand);margin-top:3px}
   .task{display:flex;gap:12px;align-items:flex-start;padding:13px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
   .cb{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex:none;display:grid;place-items:center;cursor:pointer;margin-top:1px}
   .cb.on{background:var(--brand);border-color:var(--brand)} .cb svg{width:15px;height:15px;stroke:#04121e;stroke-width:3;opacity:0} .cb.on svg{opacity:1}
   .task .tt{font-weight:650;font-size:14px} .task.done .tt{text-decoration:line-through;color:var(--muted)} .task .as{color:var(--muted);font-size:12px;margin-top:3px}
+  .empty{text-align:center;color:var(--muted);font-size:13px;padding:24px 10px}
 
-  /* EXPORTAR */
   .exp{display:flex;gap:12px;align-items:center;padding:14px;border-radius:15px;background:var(--panel);border:1px solid var(--line);margin-bottom:11px}
   .exp .ei{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--brand) 14%,transparent);color:var(--brand)}
   .exp .tt{font-weight:700;font-size:14px} .exp .ds{color:var(--muted);font-size:12px;margin-top:2px}
   .exp .fmt{font-size:10px;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 6px;margin-top:6px;display:inline-block}
-  .expbtns{display:flex;gap:8px;margin-top:11px}
+  .expbtns{display:flex;gap:8px}
 
   .nav{position:absolute;left:0;right:0;bottom:0;height:76px;background:rgba(20,35,29,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:flex;padding:6px 2px 14px}
   .nav button{flex:1;background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;font-family:var(--font);font-size:10px;font-weight:600;cursor:pointer;padding:6px 0;position:relative}
   .nav button.on{color:var(--brand)} .nav button svg{width:22px;height:22px}
   .nav .nb{position:absolute;top:2px;right:calc(50% - 18px);min-width:15px;height:15px;background:var(--bad);color:#fff;border-radius:9px;font-size:9.5px;font-weight:700;display:grid;place-items:center;padding:0 4px}
 
-  #push{position:absolute;top:8px;left:8px;right:8px;background:rgba(30,48,40,.97);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb,var(--frost) 40%,var(--line));border-radius:16px;padding:12px 13px;display:flex;gap:11px;align-items:flex-start;z-index:60;box-shadow:0 12px 34px rgba(0,0,0,.5);transform:translateY(-160%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  #push{position:absolute;top:8px;left:8px;right:8px;background:rgba(30,48,40,.97);backdrop-filter:blur(8px);border:1px solid color-mix(in srgb,var(--frost) 40%,var(--line));border-radius:16px;padding:12px 13px;display:flex;gap:11px;align-items:flex-start;z-index:60;box-shadow:0 12px 34px rgba(0,0,0,.5);transform:translateY(-160%);transition:transform .35s cubic-bezier(.2,.8,.2,1);cursor:pointer}
   #push.show{transform:translateY(0)}
   #push .pi{width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--frost) 20%,transparent);display:grid;place-items:center;flex:none;color:var(--frost)}
   #push .pt{font-size:12.5px;font-weight:700} #push .pb{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4} #push .pn{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
   .fab{position:absolute;right:14px;bottom:90px;background:var(--panel);border:1px solid var(--line);color:var(--brand);border-radius:999px;padding:9px 14px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 
-  /* share sheet */
   #scrim{position:absolute;inset:0;background:rgba(4,12,9,.55);z-index:70;opacity:0;pointer-events:none;transition:opacity .25s}
   #scrim.show{opacity:1;pointer-events:auto}
-  #sheet{position:absolute;left:0;right:0;bottom:0;z-index:71;background:var(--bg2);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:10px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+  #sheet{position:absolute;left:0;right:0;bottom:0;z-index:71;background:var(--bg2);border-top:1px solid var(--line);border-radius:22px 22px 0 0;padding:10px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(115%);transition:transform .3s cubic-bezier(.2,.8,.2,1);max-height:82%;overflow-y:auto}
   #sheet.show{transform:translateY(0)}
   #sheet .grab{width:38px;height:4px;border-radius:3px;background:var(--line);margin:4px auto 12px}
-  #sheet .sh{font-weight:700;font-size:14px;margin-bottom:2px} #sheet .ss{color:var(--muted);font-size:12px;margin-bottom:14px}
-  .shareopts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 6px;margin-bottom:6px}
+  #sheet .sh{font-weight:700;font-size:15px;margin-bottom:2px} #sheet .ss{color:var(--muted);font-size:12px;margin-bottom:14px}
+  .shareopts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 6px;margin-bottom:6px}
   .so{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;color:var(--txt);font-family:var(--font);font-size:11px;cursor:pointer}
-  .so .sc{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;border:1px solid var(--line)}
-  .so .sc svg{width:24px;height:24px}
-  #toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:80;background:rgba(16,27,22,.96);border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:9px;transform:translateY(160%);transition:transform .3s;box-shadow:0 8px 26px rgba(0,0,0,.45)}
+  .so .sc{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;border:1px solid var(--line)} .so .sc svg{width:24px;height:24px}
+  .srow{display:flex;align-items:center;gap:12px;padding:14px 2px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--txt);width:100%;background:none;font-family:var(--font);text-align:left}
+  .srow:last-child{border-bottom:none} .srow .si{width:38px;height:38px;border-radius:11px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;flex:none}
+  .srow.on2 .si,.srow.on2 b{color:var(--brand)} .srow.danger,.srow.danger .si{color:var(--bad)}
+  .srow b{font-size:14px;font-weight:600} .srow small{color:var(--muted);font-size:12px;display:block;font-weight:400}
+  .tg{width:44px;height:26px;border-radius:20px;background:var(--line);position:relative;flex:none;transition:.2s} .tg.on{background:var(--brand)} .tg span{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s} .tg.on span{left:21px}
+  .sform input,.sform select{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--txt);padding:13px;font-size:14px;font-family:var(--font);margin-bottom:10px}
+  #toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:80;background:rgba(16,27,22,.97);border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:9px;transform:translateY(180%);transition:transform .3s;box-shadow:0 8px 26px rgba(0,0,0,.45)}
   #toast.show{transform:translateY(0)} #toast svg{width:18px;height:18px;color:var(--brand);flex:none}
 </style>
 </head>
@@ -812,7 +818,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
   <div id="push" onclick="dismissPush(true)">
     <div class="pi"><svg class="i" viewBox="0 0 24 24"><path d="M12 2v20M4 7l16 10M20 7L4 17M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M4 7l.3-4M4 7l-3 1M20 17l3-1M20 17l-.3 4"/></svg></div>
-    <div class="sp"><div class="pn">Sembu · ahora</div><div class="pt">❄️ Helada en Fundo Sur</div><div class="pb">Mínima −2,5 °C en ~2 h. Protege el Cuartel 1 (Santina).</div></div>
+    <div class="sp"><div class="pn">Sembu · ahora</div><div class="pt">❄️ Helada en el campo</div><div class="pb" id="pushBody">Mínima −2,5 °C en ~2 h. Protege el cuartel más frío.</div></div>
   </div>
 
   <div id="login">
@@ -821,11 +827,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <p class="s">Alerta de helada, riego y alarmas de tus estaciones, en tiempo real.</p>
     <div class="field"><label>Email</label><input type="email" value="operador@demo.cl" autocomplete="username"></div>
     <div class="field"><label>Contraseña</label><input type="password" value="demo" autocomplete="current-password"></div>
-    <button class="btn primary" onclick="enter()" style="margin-top:6px">Entrar</button>
+    <div class="lnk" onclick="toast('Te enviamos un enlace de recuperación (demo).')">¿Olvidaste tu contraseña?</div>
+    <button class="btn primary" onclick="enter()">Entrar</button>
     <div class="demo">
       <div class="lbl">O ENTRA COMO (DEMO)</div>
-      <button class="rolebtn" onclick="enter('operador')"><span class="ri" id="riOp" style="border:1px solid #3ddc8466;color:#3ddc84"></span><span class="sp"><b>Operador</b><br><small>Pedro Soto · Fundo Sur</small></span></button>
-      <button class="rolebtn" onclick="enter('admin')"><span class="ri" id="riAd" style="border:1px solid #38bdf866;color:#38bdf8"></span><span class="sp"><b>Administrador</b><br><small>Diego Fuentes · AgroDemo SpA</small></span></button>
+      <button class="rolebtn" onclick="enter('operador')"><span class="ri" id="riOp" style="border:1px solid #3ddc8466;color:#3ddc84"></span><span class="sp"><b>Operador</b><br><small>Pedro Soto · ve y opera en terreno</small></span></button>
+      <button class="rolebtn" onclick="enter('admin')"><span class="ri" id="riAd" style="border:1px solid #38bdf866;color:#38bdf8"></span><span class="sp"><b>Administrador</b><br><small>Diego Fuentes · gestiona el equipo</small></span></button>
     </div>
   </div>
 
@@ -833,6 +840,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="apphdr">
       <div class="sp"><div class="t" id="scrTitle">Tiempo real</div></div>
       <button class="iconbtn" onclick="tab('alarmas')" aria-label="Alarmas"><svg class="i" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/></svg><span class="dotb" id="hdrDot"></span></button>
+      <button class="avatar" id="avatar" onclick="openMenu()">P</button>
     </div>
     <div class="scroll"><div class="pad" id="view"></div></div>
     <button class="fab" onclick="firePush()">🔔 Simular alerta</button>
@@ -840,12 +848,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
   </div>
 
   <div id="scrim" onclick="closeSheet()"></div>
-  <div id="sheet">
-    <div class="grab"></div>
-    <div class="sh" id="sheetTitle">Compartir</div>
-    <div class="ss" id="sheetSub">Elige cómo enviar el archivo</div>
-    <div class="shareopts" id="shareopts"></div>
-  </div>
+  <div id="sheet"><div class="grab"></div><div class="sh" id="sheetTitle"></div><div class="ss" id="sheetSub"></div><div id="sheetBody"></div></div>
   <div id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12l5 5L20 6"/></svg><span id="toastMsg"></span></div>
 </div>
 
@@ -857,72 +860,68 @@ svg.leaflet-image-layer.leaflet-interactive path {
 //# sourceMappingURL=leaflet.js.map</script>
 <script>
 const LOGO='<svg viewBox="0 0 48 48" fill="none"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5" stroke="#04121e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/></svg>';
-const P={
-  home:'<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
-  bell:'<path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/>',
-  map:'<path d="M9 4L3 6.5v14L9 18l6 2.5 6-2.5v-14L15 6.5 9 4z"/><path d="M9 4v14M15 6.5v14"/>',
-  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',
-  share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',
-  frost:'<path d="M12 2v20M4 7l16 10M20 7L4 17M9 5l3-3 3 3M9 19l3 3 3-3M4 7l0-3M4 7l-3 0"/>',
-  drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',
-  wind:'<path d="M3 8h11a3 3 0 100-6M3 12h16a3 3 0 110 6M3 16h8a2.5 2.5 0 110 5"/>',
-  bat:'<rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 10v4"/>',
-  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  check:'<path d="M5 12l5 5L20 6"/>',
-  sprout:'<path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/>',
-  bld:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M10 21v-4h4v4"/>',
-  pin:'<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
-  doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/>',
-  table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>',
-  dl:'<path d="M12 3v12M7 11l5 5 5-5M4 20h16"/>',
-  chat:'<path d="M21 12a8 8 0 01-11.5 7.2L4 21l1.8-5.5A8 8 0 1121 12z"/>',
-  mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
-  link:'<path d="M9 15l6-6M10.5 6.5l1-1a4 4 0 015.5 5.5l-1 1M13.5 17.5l-1 1a4 4 0 01-5.5-5.5l1-1"/>',
-  dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>'
-};
+const P={home:'<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',bell:'<path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/>',map:'<path d="M9 4L3 6.5v14L9 18l6 2.5 6-2.5v-14L15 6.5 9 4z"/><path d="M9 4v14M15 6.5v14"/>',cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>',frost:'<path d="M12 2v20M4 7l16 10M20 7L4 17M9 5l3-3 3 3M9 19l3 3 3-3M4 7l0-3M4 7l-3 0"/>',drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',wind:'<path d="M3 8h11a3 3 0 100-6M3 12h16a3 3 0 110 6M3 16h8a2.5 2.5 0 110 5"/>',bat:'<rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 10v4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',check:'<path d="M5 12l5 5L20 6"/>',sprout:'<path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/>',bld:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M10 21v-4h4v4"/>',pin:'<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',doc:'<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/>',table:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/>',dl:'<path d="M12 3v12M7 11l5 5 5-5M4 20h16"/>',chat:'<path d="M21 12a8 8 0 01-11.5 7.2L4 21l1.8-5.5A8 8 0 1121 12z"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',link:'<path d="M9 15l6-6M10.5 6.5l1-1a4 4 0 015.5 5.5l-1 1M13.5 17.5l-1 1a4 4 0 01-5.5-5.5l1-1"/>',dots:'<circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/>',swap:'<path d="M7 4L3 8l4 4M3 8h13M17 20l4-4-4-4M21 16H8"/>',out:'<path d="M15 4h3a2 2 0 012 2v12a2 2 0 01-2 2h-3M10 17l-5-5 5-5M5 12h11"/>',gear:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>',plus:'<path d="M12 5v14M5 12h14"/>'};
 const ic=(n,c='')=>`<svg class="i ${c}" viewBox="0 0 24 24">${P[n]||''}</svg>`;
 document.getElementById('loginLogo').innerHTML=LOGO;
-document.getElementById('riOp').innerHTML=ic('sprout');
-document.getElementById('riAd').innerHTML=ic('bld');
+document.getElementById('riOp').innerHTML=ic('sprout'); document.getElementById('riAd').innerHTML=ic('bld');
+const deg=t=>(t<0?'−':'')+Math.abs(t).toFixed(1).replace('.',',');
 
-// ---------- datos dummy (Curicó, coords reales) ----------
-const CAMPO='Fundo Sur · Curicó';
-const CENTER=[-34.9885,-71.2322], ZOOM=15;
-let CUARTELES=[
-  {id:'C1',v:'Cerezo Santina',ha:'6 ha',t:'−1,4',st:'helada',c:'var(--bad)',cc:'#fb7185',lat:-34.9865,lng:-71.2345,dev:'AME-01'},
-  {id:'C2',v:'Cerezo Lapins',ha:'5 ha',t:'−0,3',st:'riesgo',c:'var(--warn)',cc:'#fbbf24',lat:-34.9892,lng:-71.2358,dev:'AME-02'},
-  {id:'C3',v:'Cerezo Regina',ha:'4 ha',t:'1,2',st:'ok',c:'var(--good)',cc:'#22c55e',lat:-34.9905,lng:-71.2318,dev:'AME-03'},
-  {id:'C4',v:'Cerezo Kordia',ha:'3 ha',t:'2,0',st:'ok',c:'var(--good)',cc:'#22c55e',lat:-34.9878,lng:-71.2295,dev:'AME-04'},
-];
+const CAMPOS={
+  sur:{name:'Fundo Sur · Curicó',center:[-34.9885,-71.2322],zoom:15,cuarteles:[
+    {id:'C1',v:'Cerezo Santina',ha:'6 ha',t:-1.4,dev:'AME-01',lat:-34.9865,lng:-71.2345},
+    {id:'C2',v:'Cerezo Lapins',ha:'5 ha',t:-0.3,dev:'AME-02',lat:-34.9892,lng:-71.2358},
+    {id:'C3',v:'Cerezo Regina',ha:'4 ha',t:1.2,dev:'AME-03',lat:-34.9905,lng:-71.2318},
+    {id:'C4',v:'Cerezo Kordia',ha:'3 ha',t:2.0,dev:'AME-04',lat:-34.9878,lng:-71.2295}]},
+  norte:{name:'Fundo Norte · Molina',center:[-34.9588,-71.2048],zoom:15,cuarteles:[
+    {id:'N1',v:'Arándano Duke',ha:'5 ha',t:2.1,dev:'AME-07',lat:-34.9575,lng:-71.2065},
+    {id:'N2',v:'Kiwi Hayward',ha:'6 ha',t:0.4,dev:'AME-08',lat:-34.9598,lng:-71.2038},
+    {id:'N3',v:'Nogal Chandler',ha:'9 ha',t:1.8,dev:'AME-09',lat:-34.9572,lng:-71.2022},
+    {id:'N4',v:'Cerezo Kordia',ha:'4 ha',t:-0.3,dev:'AME-10',lat:-34.9603,lng:-71.2071}]},
+  rio:{name:'Parcela Río · S. Familia',center:[-35.0122,-71.2600],zoom:15,cuarteles:[
+    {id:'R1',v:'Uva Thompson',ha:'7 ha',t:3.2,dev:'AME-11',lat:-35.0110,lng:-71.2615},
+    {id:'R2',v:"Ciruelo D'Agen",ha:'3 ha',t:2.4,dev:'AME-12',lat:-35.0132,lng:-71.2588},
+    {id:'R3',v:'Cerezo Santina',ha:'5 ha',t:1.1,dev:'AME-13',lat:-35.0125,lng:-71.2575}]},
+};
+let campoId='sur';
+const campo=()=>CAMPOS[campoId];
+function cstate(t){ return t<=-1.1?'helada':t<=0.5?'riesgo':'ok'; }
+const ST={helada:['Helada','var(--bad)','#fb7185'],riesgo:['Riesgo','var(--warn)','#fbbf24'],ok:['OK','var(--good)','#22c55e']};
+
+const TEAM=['Pedro Soto','Ana Díaz','Diego Fuentes'];
+let ME={name:'Pedro Soto',role:'Operador',initial:'P'};
+let notifOn=true;
 let ALARMS=[
-  {id:1,ic:'frost',c:'var(--bad)',t:'Helada — riesgo de daño',d:'Cuartel C1 (Santina) bajo el umbral del cerezo. Mínima proyectada −2,5 °C.',m:'hace 8 min',ack:false},
+  {id:1,ic:'frost',c:'var(--bad)',t:'Helada — riesgo de daño',d:'Cuartel bajo el umbral del cultivo. Mínima proyectada −2,5 °C.',m:'hace 8 min',ack:false},
   {id:2,ic:'bat',c:'var(--warn)',t:'Batería baja',d:'Estación AME-07 al 18%. Revisar panel solar.',m:'hace 1 h',ack:false},
-  {id:3,ic:'drop',c:'var(--sky)',t:'Riego — humedad baja',d:'Suelo 15 cm del cuartel C3 bajo el punto de riego (22%).',m:'hace 3 h',ack:false},
-];
+  {id:3,ic:'drop',c:'var(--sky)',t:'Riego — humedad baja',d:'Suelo 15 cm bajo el punto de riego (22%).',m:'hace 3 h',ack:false}];
 let TASKS=[
-  {id:1,t:'Activar aspersión antihelada · C1',as:'Pedro Soto',done:false},
-  {id:2,t:'Revisar sonda de suelo · C3',as:'Ana Díaz',done:false},
-  {id:3,t:'Calibrar anemómetro · estación AME-03',as:'Pedro Soto',done:true},
-];
+  {id:1,day:7,t:'Activar aspersión antihelada · C1',as:'Pedro Soto',done:false},
+  {id:2,day:7,t:'Revisar sonda de suelo · C3',as:'Ana Díaz',done:false},
+  {id:3,day:7,t:'Calibrar anemómetro · AME-03',as:'Pedro Soto',done:true},
+  {id:4,day:8,t:'Recorrer cuarteles tras la helada',as:'Pedro Soto',done:false},
+  {id:5,day:6,t:'Cargar combustible calefactores',as:'Ana Díaz',done:true}];
+let seq=5, SELDAY=7;
 const REPORTS=[
   {id:'helada',ic:'frost',t:'Reporte de helada — hoy',d:'Evento nocturno, mínimas por cuartel y acciones.',fmt:'PDF'},
   {id:'semana',ic:'doc',t:'Resumen semanal del campo',d:'Temperaturas, horas-frío, riego y alarmas.',fmt:'PDF'},
   {id:'hist',ic:'table',t:'Históricos de sensores',d:'Serie completa para Excel / agrónomo.',fmt:'CSV'},
-  {id:'cuarteles',ic:'map',t:'Estado de cuarteles',d:'Ficha por cuartel con última lectura.',fmt:'PDF'},
-];
-const stbadge={helada:['Helada','var(--bad)'],riesgo:['Riesgo','var(--warn)'],ok:['OK','var(--good)']};
+  {id:'cuarteles',ic:'map',t:'Estado de cuarteles',d:'Ficha por cuartel con última lectura.',fmt:'PDF'}];
 
 let CURTAB='inicio', MAP=null;
 const TABS=[['inicio','Inicio','home'],['alarmas','Alarmas','bell'],['cuarteles','Cuarteles','map'],['tareas','Tareas','cal'],['exportar','Exportar','share']];
 const TITLES={inicio:'Tiempo real',alarmas:'Alarmas',cuarteles:'Cuarteles',tareas:'Tareas',exportar:'Exportar y compartir'};
 
-function enter(role){ document.getElementById('login').style.display='none'; document.getElementById('app').style.display='flex'; tab('inicio'); setTimeout(firePush,900); }
+function enter(role){
+  ME = role==='admin'?{name:'Diego Fuentes',role:'Administrador',initial:'D'}:{name:'Pedro Soto',role:'Operador',initial:'P'};
+  document.getElementById('avatar').textContent=ME.initial;
+  document.getElementById('login').style.display='none'; document.getElementById('app').style.display='flex';
+  tab('inicio'); setTimeout(firePush,900);
+}
+function logout(){ closeSheet(); if(MAP){try{MAP.remove()}catch(e){}MAP=null;} document.getElementById('app').style.display='none'; document.getElementById('login').style.display='flex'; }
 function tab(name){ if(MAP&&name!=='cuarteles'){try{MAP.remove()}catch(e){}MAP=null;} CURTAB=name; document.getElementById('scrTitle').textContent=TITLES[name]; renderNav(); render(); document.querySelector('.scroll').scrollTop=0; }
-
 function renderNav(){
   const openA=ALARMS.filter(a=>!a.ack).length;
-  document.getElementById('nav').innerHTML=TABS.map(([id,lbl,icn])=>
-    `<button class="${id===CURTAB?'on':''}" onclick="tab('${id}')">${ic(icn)}${id==='alarmas'&&openA?`<span class="nb">${openA}</span>`:''}<span>${lbl}</span></button>`).join('');
+  document.getElementById('nav').innerHTML=TABS.map(([id,lbl,icn])=>`<button class="${id===CURTAB?'on':''}" onclick="tab('${id}')">${ic(icn)}${id==='alarmas'&&openA?`<span class="nb">${openA}</span>`:''}<span>${lbl}</span></button>`).join('');
   document.getElementById('hdrDot').style.display=openA?'block':'none';
 }
 function render(){
@@ -934,34 +933,46 @@ function render(){
   else if(CURTAB==='exportar') v.innerHTML=viewExportar();
 }
 
+function heroInfo(){
+  const cs=campo().cuarteles, worst=cs.reduce((a,b)=>b.t<a.t?b:a), s=cstate(worst.t), min=worst.t-1.1;
+  const map={helada:{lbl:'HELADA — riesgo de daño',col:'var(--bad)',hl:'color-mix(in srgb,var(--bad) 45%,var(--line))',bg:'linear-gradient(160deg,color-mix(in srgb,var(--bad) 15%,var(--panel)),var(--panel))'},
+    riesgo:{lbl:'Riesgo de helada',col:'var(--warn)',hl:'color-mix(in srgb,var(--warn) 40%,var(--line))',bg:'linear-gradient(160deg,color-mix(in srgb,var(--warn) 13%,var(--panel)),var(--panel))'},
+    ok:{lbl:'Sin riesgo de helada ahora',col:'var(--good)',hl:'var(--line)',bg:'var(--panel)'}};
+  return {worst,s,min,...map[s]};
+}
 function viewInicio(){
+  const h=heroInfo();
+  const act = h.s==='ok'
+    ? `${ic('check','')}&nbsp;<b>Todo en orden.</b> Sin riesgo de daño por helada en las próximas horas. Se monitorea la mínima.`
+    : `${ic('frost','')}&nbsp;<b>Acción ahora:</b> activa <b>riego por aspersión</b> sobre copa antes de llegar a 0 °C. Ventana ~120 min.
+       <button class="actbtn" onclick="quickTask()">${ic('plus','')} Crear tarea: activar aspersión</button>`;
   return `
-  <div class="fieldsel row" style="margin-bottom:13px">${ic('pin')}<span>Campo · <b>${CAMPO}</b></span><span class="sp"></span>${ic('home','')}</div>
-  <div class="hero">
-    <div class="top"><span class="chip" style="background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)">● HELADA — riesgo de daño</span></div>
-    <div class="big"><span class="deg">−1,4</span><span class="u">°C · aire</span></div>
+  <div class="fieldsel tap" onclick="openCampoPicker()">${ic('pin')}<span>Campo · <b>${campo().name}</b></span><span class="cv">${ic('swap','')}</span></div>
+  <div class="hero" style="--hl:${h.hl};--hc:${h.col};background:${h.bg}">
+    <div class="top"><span class="chip" style="background:color-mix(in srgb,${h.col} 22%,transparent);color:${h.col}">● ${h.lbl}</span></div>
+    <div class="big"><span class="deg" style="color:${h.s==='ok'?'var(--good)':'var(--frost)'}">${deg(h.worst.t)}</span><span class="u">°C · ${h.worst.id}</span></div>
     <div class="facts">
-      <div><div class="k">Mínima estimada</div><div class="v" style="color:var(--bad)">−2,5 °C</div></div>
+      <div><div class="k">Mínima estimada</div><div class="v" style="color:${h.col}">${deg(h.min)} °C</div></div>
       <div><div class="k">Hora de la mínima</div><div class="v">~05:20 <small class="muted" style="font-size:11px">(120 min)</small></div></div>
-      <div><div class="k">Umbral cerezo</div><div class="v">−1,1 °C</div></div>
+      <div><div class="k">Umbral cultivo</div><div class="v">−1,1 °C</div></div>
       <div><div class="k">Viento · rocío</div><div class="v">1,6 · −3,4</div></div>
     </div>
-    <div class="action">${ic('frost','')}&nbsp;<b>Acción ahora:</b> activa <b>riego por aspersión</b> sobre copa antes de llegar a 0 °C. Ventana ~120 min.</div>
+    <div class="action">${act}</div>
   </div>
   <div class="kpis">
-    <div class="kpi"><div class="kt">${ic('drop')} Suelo 15 cm</div><div class="kv">22<small>%</small></div><div class="ks">bajo punto de riego</div></div>
-    <div class="kpi"><div class="kt">${ic('wind')} Viento</div><div class="kv">1,6<small> km/h</small></div><div class="ks">calmo · helada radiativa</div></div>
-    <div class="kpi"><div class="kt">${ic('clock')} Horas-frío</div><div class="kv">1.148</div><div class="ks">acumuladas temporada</div></div>
-    <div class="kpi"><div class="kt">${ic('bat')} Estación</div><div class="kv">82<small>%</small></div><div class="ks">solar · señal LTE-M</div></div>
+    <div class="kpi" onclick="toast('Suelo 15 cm: 22% — bajo el punto de riego (30%). Conviene regar.')"><div class="kt">${ic('drop')} Suelo 15 cm</div><div class="kv">22<small>%</small></div><div class="ks">bajo punto de riego</div></div>
+    <div class="kpi" onclick="toast('Viento 1,6 km/h — calmo. Favorece helada radiativa.')"><div class="kt">${ic('wind')} Viento</div><div class="kv">1,6<small> km/h</small></div><div class="ks">calmo · helada radiativa</div></div>
+    <div class="kpi" onclick="toast('Horas-frío 1.148 acumuladas — buen avance del receso.')"><div class="kt">${ic('clock')} Horas-frío</div><div class="kv">1.148</div><div class="ks">acumuladas temporada</div></div>
+    <div class="kpi" onclick="toast('Estación 82% batería · panel solar · señal LTE-M estable.')"><div class="kt">${ic('bat')} Estación</div><div class="kv">82<small>%</small></div><div class="ks">solar · señal LTE-M</div></div>
   </div>
   <div class="h2">Cuarteles en riesgo</div>
-  ${CUARTELES.filter(c=>c.st!=='ok').map(c=>qtRow(c,true)).join('')}
-  <button class="btn" style="margin-top:2px" onclick="tab('cuarteles')">Ver el mapa de cuarteles →</button>`;
+  ${campo().cuarteles.filter(c=>cstate(c.t)!=='ok').map(c=>qtRow(c,true)).join('')||'<div class="card muted" style="text-align:center;font-size:13px">Ningún cuartel en riesgo ahora ✓</div>'}
+  <button class="btn" style="margin-top:8px" onclick="tab('cuarteles')">Ver el mapa de cuarteles →</button>`;
 }
-function qtRow(c,nav){return `
-  <div class="qt" onclick="${nav?"tab('cuarteles')":`focusCuartel('${c.id}')`}"><div class="bar" style="background:${c.c}"></div>
+function qtRow(c,nav){const s=cstate(c.t),col=ST[s][1];return `
+  <div class="qt" onclick="${nav?"tab('cuarteles')":`focusCuartel('${c.id}')`}"><div class="bar" style="background:${col}"></div>
     <div class="sp"><div class="nm">${c.id} · ${c.v}</div><div class="sub">${c.ha}</div></div>
-    <div style="text-align:right"><div class="tmp" style="color:${c.c}">${c.t}°</div><span class="chip" style="background:color-mix(in srgb,${stbadge[c.st][1]} 18%,transparent);color:${stbadge[c.st][1]};margin-top:3px">${stbadge[c.st][0]}</span></div></div>`;}
+    <div style="text-align:right"><div class="tmp" style="color:${col}">${deg(c.t)}°</div><span class="chip" style="background:color-mix(in srgb,${col} 18%,transparent);color:${col};margin-top:3px">${ST[s][0]}</span></div></div>`;}
 
 function viewAlarmas(){
   const open=ALARMS.filter(a=>!a.ack), done=ALARMS.filter(a=>a.ack);
@@ -970,81 +981,87 @@ function viewAlarmas(){
     ${done.length?`<div class="h2">Reconocidas</div>${done.map(alarmCard).join('')}`:''}`;
 }
 function alarmCard(a){return `
-  <div class="alarm ${a.ack?'done':''}">
-    <div class="ico" style="background:color-mix(in srgb,${a.c} 18%,transparent);color:${a.c}">${ic(a.ic)}</div>
+  <div class="alarm ${a.ack?'done':''}"><div class="ico" style="background:color-mix(in srgb,${a.c} 18%,transparent);color:${a.c}">${ic(a.ic)}</div>
     <div class="sp"><div class="tt">${a.t}</div><div class="ds">${a.d}</div><div class="meta">● ${a.m}${a.ack?' · reconocida':''}</div>
       ${a.ack?'':`<div class="arow"><button class="achip" onclick="ackAlarm(${a.id})">${ic('check','')} Reconocer</button><button class="achip" onclick="openShare('Alerta: ${a.t.replace(/'/g,'')}')">${ic('share','')} Compartir</button></div>`}</div></div>`;}
-function ackAlarm(id){const a=ALARMS.find(x=>x.id===id);if(a)a.ack=true;renderNav();render();}
+function ackAlarm(id){const a=ALARMS.find(x=>x.id===id);if(a){a.ack=true;toast('Alarma reconocida — el equipo la ve como atendida.');}renderNav();render();}
 
 function viewCuarteles(){
   return `<div id="cmap"></div>
-  <div class="row" style="margin:0 2px 10px"><span class="muted" style="font-size:12px">${ic('pin','')} ${CAMPO} · 4 cuarteles</span><span class="sp"></span>
+  <div class="row" style="margin:0 2px 10px"><span class="muted" style="font-size:12px">${ic('pin','')} ${campo().name} · ${campo().cuarteles.length} cuarteles</span><span class="sp"></span>
     <button class="achip" onclick="openShare('Estado de cuarteles')">${ic('share','')} Compartir</button></div>
-  ${CUARTELES.map(c=>qtRow(c,false)).join('')}`;
+  ${campo().cuarteles.map(c=>qtRow(c,false)).join('')}`;
 }
 function initMap(){
   const el=document.getElementById('cmap'); if(!el) return;
-  if(!window.L){ el.innerHTML='<div style="padding:20px;color:var(--muted);font-size:12.5px;text-align:center">Mapa: se carga con conexión.</div>'; return; }
+  if(!window.L){ el.innerHTML='<div style="padding:22px;color:var(--muted);font-size:12.5px;text-align:center">El mapa se carga con conexión a internet.</div>'; return; }
   if(MAP){try{MAP.remove()}catch(e){}}
-  MAP=L.map(el,{scrollWheelZoom:false,attributionControl:true}).setView(CENTER,ZOOM);
+  MAP=L.map(el,{scrollWheelZoom:false}).setView(campo().center,campo().zoom);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · CARTO'}).addTo(MAP);
   const pts=[];
-  CUARTELES.forEach(q=>{ pts.push([q.lat,q.lng]);
-    q._m=L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#04121e',fillColor:q.cc,fillOpacity:.95}).addTo(MAP)
-      .bindPopup(`<b>${q.id} · ${q.v}</b><br>${q.ha} · <b style="color:${q.cc}">${q.t} °C</b><br>Dispositivo ${q.dev} · ● en línea<br><span style="opacity:.6">Demo · coords simuladas</span>`);
-  });
+  campo().cuarteles.forEach(q=>{ pts.push([q.lat,q.lng]); const col=ST[cstate(q.t)][2];
+    q._m=L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#04121e',fillColor:col,fillOpacity:.95}).addTo(MAP)
+      .bindPopup(`<b>${q.id} · ${q.v}</b><br>${q.ha} · <b style="color:${col}">${deg(q.t)} °C</b><br>Dispositivo ${q.dev} · ● en línea<br><span style="opacity:.6">Demo · coords simuladas</span>`); });
   if(pts.length) MAP.fitBounds(pts,{padding:[34,34],maxZoom:16});
   setTimeout(()=>{try{MAP.invalidateSize()}catch(e){}},70);
 }
-function focusCuartel(id){const q=CUARTELES.find(x=>x.id===id);if(q&&MAP){MAP.setView([q.lat,q.lng],17);q._m&&q._m.openPopup();document.querySelector('.scroll').scrollTop=0;}}
+function focusCuartel(id){const q=campo().cuarteles.find(x=>x.id===id);if(q&&MAP){MAP.setView([q.lat,q.lng],17);q._m&&q._m.openPopup();document.querySelector('.scroll').scrollTop=0;}}
 
+const DAYS=[['L',5],['M',6],['M',7],['J',8],['V',9],['S',10],['D',11]];
 function viewTareas(){
-  const days=[['L',5],['M',6],['M',7],['J',8],['V',9],['S',10],['D',11]];
-  const open=TASKS.filter(t=>!t.done);
+  const list=TASKS.filter(t=>t.day===SELDAY), open=list.filter(t=>!t.done);
   return `
-  <div class="daystrip">${days.map((d,i)=>`<div class="day ${i===2?'on':''}">${d[0]}<b>${d[1]}</b></div>`).join('')}</div>
-  <div class="h2" style="margin-top:0">Hoy · ${open.length} pendientes</div>
-  ${TASKS.map(taskRow).join('')}
-  <button class="btn" style="margin-top:6px" onclick="toast('Sugerencia: «Activar aspersión C1» viene de la alerta de helada.')">+ Nueva tarea</button>`;
+  <div class="daystrip">${DAYS.map(([d,n])=>{const has=TASKS.some(t=>t.day===n&&!t.done);return `<div class="day ${n===SELDAY?'on':''}" onclick="selectDay(${n})">${d}<b>${n}</b>${has&&n!==SELDAY?'<span class="cnt"></span>':''}</div>`;}).join('')}</div>
+  <div class="h2" style="margin-top:0">${SELDAY===7?'Hoy':'Día '+SELDAY} · ${open.length} pendientes</div>
+  ${list.length?list.map(taskRow).join(''):'<div class="empty">Sin tareas este día.<br>Toca "+ Nueva tarea" para agregar una.</div>'}
+  <button class="btn" style="margin-top:6px" onclick="openNewTask()">${ic('plus','')} Nueva tarea</button>`;
 }
-function taskRow(t){return `
-  <div class="task ${t.done?'done':''}"><div class="cb ${t.done?'on':''}" onclick="toggleTask(${t.id})">${ic('check','')}</div>
-    <div class="sp"><div class="tt">${t.t}</div><div class="as">Asignada a ${t.as}</div></div></div>`;}
+function taskRow(t){return `<div class="task ${t.done?'done':''}"><div class="cb ${t.done?'on':''}" onclick="toggleTask(${t.id})">${ic('check','')}</div>
+  <div class="sp"><div class="tt">${t.t}</div><div class="as">Asignada a ${t.as}</div></div></div>`;}
 function toggleTask(id){const t=TASKS.find(x=>x.id===id);if(t)t.done=!t.done;render();}
+function selectDay(n){SELDAY=n;render();}
+function quickTask(){TASKS.push({id:++seq,day:7,t:'Activar aspersión antihelada · '+heroInfo().worst.id,as:ME.name,done:false});toast('Tarea creada y asignada a '+ME.name+'.');tab('tareas');}
 
-// ---------- exportar / compartir ----------
 function viewExportar(){
   return `<p class="muted" style="font-size:13px;margin:2px 2px 14px">Genera un archivo con la información del campo y compártelo por WhatsApp, correo o con tu agrónomo.</p>
   ${REPORTS.map(r=>`
-    <div class="exp"><div class="ei">${ic(r.ic)}</div>
-      <div class="sp"><div class="tt">${r.t}</div><div class="ds">${r.d}</div><span class="fmt">${ic('dl','')} ${r.fmt}</span></div></div>
+    <div class="exp"><div class="ei">${ic(r.ic)}</div><div class="sp"><div class="tt">${r.t}</div><div class="ds">${r.d}</div><span class="fmt">${ic('dl','')} ${r.fmt}</span></div></div>
     <div class="expbtns" style="margin:-4px 0 14px">
-      <button class="btn sm" style="flex:1" onclick="toast('Generando ${r.fmt}: ${r.t}…')">${ic('dl','')} Exportar</button>
-      <button class="btn sm primary" style="flex:1" onclick="openShare('${r.t}')">${ic('share','')} Compartir</button>
-    </div>`).join('')}`;
+      <button class="btn sm" style="flex:1" onclick="toast('${r.fmt} generado ✓ · ${r.t}')">${ic('dl','')} Exportar</button>
+      <button class="btn sm primary" style="flex:1" onclick="openShare('${r.t}')">${ic('share','')} Compartir</button></div>`).join('')}`;
 }
 
-// share sheet
+function openSheet(title,sub,body){document.getElementById('sheetTitle').textContent=title;document.getElementById('sheetSub').textContent=sub;document.getElementById('sheetBody').innerHTML=body;document.getElementById('scrim').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function closeSheet(){document.getElementById('scrim').classList.remove('show');document.getElementById('sheet').classList.remove('show');}
+
 let shareName='';
 const SHARE=[['chat','WhatsApp'],['mail','Correo'],['link','Copiar enlace'],['dots','Más apps']];
-function openShare(name){
-  shareName=name;
-  document.getElementById('sheetSub').textContent='«'+name+'»';
-  document.getElementById('shareopts').innerHTML=SHARE.map(([i,l],k)=>
-    `<button class="so" onclick="doShare('${l}')"><span class="sc" style="${k===0?'background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)':''}">${ic(i)}</span>${l}</button>`).join('');
-  document.getElementById('scrim').classList.add('show');
-  document.getElementById('sheet').classList.add('show');
-}
-function closeSheet(){document.getElementById('scrim').classList.remove('show');document.getElementById('sheet').classList.remove('show');}
+function openShare(name){shareName=name;openSheet('Compartir','«'+name+'»',`<div class="shareopts">${SHARE.map(([i,l],k)=>`<button class="so" onclick="doShare('${l}')"><span class="sc" style="${k===0?'background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)':''}">${ic(i)}</span>${l}</button>`).join('')}</div>`);}
 function doShare(target){closeSheet();setTimeout(()=>toast('Compartido por '+target+': «'+shareName+'»'),180);}
 
-// toast
+function openMenu(){openSheet(ME.name,ME.role+' · '+campo().name,
+  `<button class="srow" onclick="openCampoPicker()"><span class="si">${ic('swap')}</span><span class="sp"><b>Cambiar de campo</b><small>${campo().name}</small></span>${ic('map','')}</button>
+   <div class="srow on2"><span class="si">${ic('bell')}</span><span class="sp"><b>Notificaciones</b><small>Alertas de helada y alarmas</small></span><div class="tg ${notifOn?'on':''}" id="tgNotif" onclick="toggleNotif(event)"><span></span></div></div>
+   <button class="srow" onclick="closeSheet();tab('exportar')"><span class="si">${ic('gear')}</span><span class="sp"><b>Reportes y datos</b><small>Exportar y compartir</small></span>${ic('share','')}</button>
+   <button class="srow danger" onclick="logout()"><span class="si">${ic('out')}</span><span class="sp"><b>Cerrar sesión</b></span></button>`);}
+function toggleNotif(e){e.stopPropagation();notifOn=!notifOn;document.getElementById('tgNotif').classList.toggle('on',notifOn);toast(notifOn?'Notificaciones activadas.':'Notificaciones en silencio.');}
+
+function openCampoPicker(){openSheet('Cambiar de campo','Elige el campo a monitorear',
+  Object.entries(CAMPOS).map(([id,c])=>{const worst=c.cuarteles.reduce((a,b)=>b.t<a.t?b:a);const s=cstate(worst.t);return `<button class="srow" onclick="setCampo('${id}')"><span class="si" style="color:${ST[s][1]}">${ic('pin')}</span><span class="sp"><b>${c.name}</b><small>${c.cuarteles.length} cuarteles · mín. ${deg(worst.t)} °C</small></span>${id===campoId?ic('check',''):''}</button>`;}).join(''));}
+function setCampo(id){campoId=id;closeSheet();toast('Campo: '+CAMPOS[id].name);render();}
+
+function openNewTask(){openSheet('Nueva tarea','Día '+SELDAY+(SELDAY===7?' (hoy)':''),
+  `<div class="sform"><input id="ntText" placeholder="Ej: Revisar aspersores del C2" autocomplete="off">
+   <select id="ntWho">${TEAM.map(u=>`<option>${u}</option>`).join('')}</select>
+   <button class="btn primary" onclick="addTask()">Agregar tarea</button></div>`);
+  setTimeout(()=>{const i=document.getElementById('ntText');i&&i.focus();},250);}
+function addTask(){const el=document.getElementById('ntText');const txt=(el&&el.value.trim())||'';if(!txt){toast('Escribe la tarea.');return;}
+  TASKS.push({id:++seq,day:SELDAY,t:txt,as:document.getElementById('ntWho').value,done:false});closeSheet();render();toast('Tarea agregada ✓');}
+
 let toastT=null;
 function toast(msg){document.getElementById('toastMsg').textContent=msg;const t=document.getElementById('toast');t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2600);}
-
-// push
 let pushT=null;
-function firePush(){const p=document.getElementById('push');p.classList.add('show');clearTimeout(pushT);pushT=setTimeout(()=>p.classList.remove('show'),5200);}
+function firePush(){const h=heroInfo();document.getElementById('pushBody').textContent=h.s==='ok'?('Sin riesgo en '+campo().name+' ahora. Todo monitoreado.'):('Mínima '+deg(h.min)+' °C en ~2 h. Protege el cuartel '+h.worst.id+'.');const p=document.getElementById('push');p.classList.add('show');clearTimeout(pushT);pushT=setTimeout(()=>p.classList.remove('show'),5200);}
 function dismissPush(go){document.getElementById('push').classList.remove('show');if(go)tab('inicio');}
 </script>
 </body>
