@@ -803,8 +803,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .srow b{font-size:14px;font-weight:600} .srow small{color:var(--muted);font-size:12px;display:block;font-weight:400}
   .tg{width:44px;height:26px;border-radius:20px;background:var(--line);position:relative;flex:none;transition:.2s} .tg.on{background:var(--brand)} .tg span{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s} .tg.on span{left:21px}
   .sform input,.sform select{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:12px;color:var(--txt);padding:13px;font-size:14px;font-family:var(--font);margin-bottom:10px}
-  #toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:80;background:rgba(16,27,22,.97);border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:9px;transform:translateY(180%);transition:transform .3s;box-shadow:0 8px 26px rgba(0,0,0,.45)}
-  #toast.show{transform:translateY(0)} #toast svg{width:18px;height:18px;color:var(--brand);flex:none}
+  #toast{position:absolute;left:16px;right:16px;bottom:96px;z-index:80;background:rgba(16,27,22,.97);border:1px solid var(--line);border-radius:13px;padding:12px 14px;font-size:13px;display:flex;align-items:center;gap:9px;transform:translateY(20px);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s,transform .25s,visibility .25s;box-shadow:0 8px 26px rgba(0,0,0,.45)}
+  #toast.show{transform:translateY(0);opacity:1;visibility:visible;pointer-events:auto} #toast svg{width:18px;height:18px;color:var(--brand);flex:none}
 </style>
 </head>
 <body>
