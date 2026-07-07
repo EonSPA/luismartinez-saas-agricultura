@@ -756,6 +756,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
   .leaflet-bar a{background:var(--panel);color:var(--txt);border-color:var(--line)} .leaflet-bar a:hover{background:var(--panel2)}
   .leaflet-control-attribution{background:rgba(10,20,13,.72)!important;color:var(--muted)!important;font-size:9px}
   .leaflet-control-attribution a{color:var(--muted)!important}
+  .leaflet-control-layers{background:var(--panel)!important;color:var(--txt);border:1px solid var(--line)!important;border-radius:9px;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+  .leaflet-control-layers-toggle{background-color:var(--panel)}
+  .leaflet-control-layers-expanded{padding:8px 10px} .leaflet-control-layers label{color:var(--txt);font-size:12.5px;display:flex;align-items:center;gap:6px}
   .qt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:9px;cursor:pointer}
   .qt .bar{width:5px;align-self:stretch;border-radius:3px;flex:none}
   .qt .nm{font-weight:700;font-size:14.5px} .qt .sub{color:var(--muted);font-size:12px;margin-top:1px}
@@ -998,8 +1001,11 @@ function initMap(){
   if(!window.L){ el.innerHTML='<div style="padding:22px;color:var(--muted);font-size:12.5px;text-align:center">El mapa se carga con conexión a internet.</div>'; return; }
   if(MAP){try{MAP.remove()}catch(e){}}
   MAP=L.map(el,{scrollWheelZoom:false}).setView(campo().center,campo().zoom);
-  const _tl=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · CARTO'}).addTo(MAP);
-  let _tferr=false; _tl.on('tileerror',()=>{ if(_tferr)return; _tferr=true; const n=document.createElement('div'); n.className='mapoff'; n.textContent='Sin conexión — se muestra la posición relativa de los cuarteles'; el.appendChild(n); });
+  const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri · Maxar · Earthstar Geographics'});
+  const calle=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,subdomains:'abcd',attribution:'&copy; OpenStreetMap · CARTO'});
+  sat.addTo(MAP);
+  L.control.layers({'Satélite':sat,'Mapa':calle},null,{position:'topright'}).addTo(MAP);
+  let _tferr=false; sat.on('tileerror',()=>{ if(_tferr)return; _tferr=true; const n=document.createElement('div'); n.className='mapoff'; n.textContent='Sin conexión — se muestra la posición relativa de los cuarteles'; el.appendChild(n); });
   const pts=[];
   campo().cuarteles.forEach(q=>{ pts.push([q.lat,q.lng]); const col=ST[cstate(q.t)][2];
     q._m=L.circleMarker([q.lat,q.lng],{radius:11,weight:2,color:'#04121e',fillColor:col,fillOpacity:.95}).addTo(MAP)
