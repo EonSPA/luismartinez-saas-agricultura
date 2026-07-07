@@ -71,7 +71,20 @@ El gratis cubre alerta **zonal** con estaciones **dispersas**. El pago se justif
 - **Pricing**: **conseguir el precio de Instacrops** antes de fijar; $37.500/mes es placeholder.
 - **Research pendiente**: cerrar Wiseconn/Semios/Metos reales (hoy bloqueados por proxy).
 
-## 8. Fuentes (verificadas / consultadas)
+## 8. Research primario cualitativo — entrevista con agricultor (Marcelo Gonzales, WhatsApp, 2026-07-07)
+> Fuente: conversación directa con un agricultor de 2 campos (Chile). Es una entrevista puntual, **no una encuesta representativa** — se registra como research primario cualitativo, no como dato de mercado generalizable. Cero invención: son sus palabras, no estimaciones del equipo.
+
+- **Pérdida por helada severa: 20–25 millones CLP/hectárea** cuando el daño es severo (cifra dada por el agricultor, sin verificación externa).
+- **Asimetría exportación vs. mercado interno**: en el mercado nacional vende "por escalera de daño" (baja de categoría según el daño, sigue vendiendo más barato); en exportación **es todo o nada** — la fruta dañada por helada queda descartada, sin escalera de precio. Confirma en terreno el ángulo "la exportación no tolera daño parcial" ya usado en el posicionamiento (sección 7).
+- **Mitigación en terreno — dos métodos, ninguno universal**:
+  - **Ventiladores**: los más usados, pero no siempre suficientes.
+  - **Riego/aspersión**: más efectivo contra la helada, pero limitado por **caudal de agua insuficiente para cubrir todo el campo**; y en **floración/cuaja** el agua **aumenta el riesgo de hongos**, por lo que no siempre es la opción correcta según el estado fenológico.
+  - **Cítricos son la excepción**: para cítricos el agua ayuda en cualquier estado fenológico, sin ese trade-off de hongos.
+  - Por el riesgo "todo o nada" de la exportación, **varios campos han optado por techos** (cobertura física) en vez de depender solo de ventiladores/agua.
+- **Implicancia de producto**: valida en terreno que "avisar que hay helada" no basta (ya en el posicionamiento, sección 7) — el valor está en **integrar la recomendación de mitigación por cultivo y estado fenológico** (¿ventilador, agua o ninguno, según el riesgo de hongos en esa etapa?), no solo emitir la alerta.
+- **Contexto operativo del predio** (dato adicional, no directamente de helada): entre sus 2 campos circulan **~30 tractores**, camionetas de encargados, un camión de cosecha y una retroexcavadora — posible insumo a futuro para un eventual módulo de seguimiento de flota/trabajos de campo. Fuera del alcance actual del producto; no se toma acción sobre esto ahora.
+
+## 9. Fuentes (verificadas / consultadas)
 - Instacrops: https://www.instacrops.com/ · Forbes Chile · Diario Financiero · FreshPlaza · TechCrunch
 - Agurotech: https://www.agurotech.com/en/solutions/frost-monitoring · /sensor-technology · Royal Eijkelkamp · Tracxn
 - RAN-AGROMET: https://minagri.gob.cl/ (nota alertas) · https://www.agromet.cl · FIA · reporteagricola.cl
