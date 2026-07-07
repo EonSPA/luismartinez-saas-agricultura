@@ -1,18 +1,22 @@
-# Air Monitor — App móvil (Capacitor)
+# Sembu — App móvil (Capacitor) · wrapper legacy
+
+> **Nota (legacy):** este proyecto empaqueta el **dashboard actual** con Capacitor **6**.
+> La app **definitiva** de Sembu se construye en la **Etapa B** (Vite + React + **Capacitor 8**,
+> con backend real) — ver [`FASE2_PLAN.md`](../FASE2_PLAN.md). Este wrapper sirve como build de prueba.
 
 Empaqueta el **dashboard web** (`../dashboard`) como app nativa **Android** (e **iOS**)
 usando [Capacitor](https://capacitorjs.com). No se reescribe nada: el dashboard es la
 única fuente de verdad y se copia a `www/` antes de cada build.
 
-- **App ID:** `com.makerfabs.airmonitor`
-- **Nombre:** Air Monitor
+- **App ID:** `com.makerfabs.airmonitor` *(legacy; se renombra en la Etapa B)*
+- **Nombre:** Sembu
 - **Plugins nativos:** App, Geolocation, Local Notifications, Splash Screen, Status Bar
 
 ## Obtener el APK sin instalar nada (recomendado)
 
 Cada push que toque `app/` o `dashboard/` dispara el workflow
 [`Build Android APK`](../.github/workflows/android.yml) en GitHub Actions, que compila
-el APK de depuración y lo sube como **artefacto** `air-monitor-debug-apk`.
+el APK de depuración y lo sube como **artefacto** `sembu-dashboard-debug-apk`.
 Descárgalo desde la pestaña **Actions** del repositorio. También puedes lanzarlo a mano
 con **Run workflow** (workflow_dispatch).
 
