@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a2c26">
+<title>Sembu — App (mockup)</title>
+<style>
+  :root{
+    --bg:#1a2c26; --bg2:#213730; --panel:#284139; --panel2:#304d44; --line:#446056;
+    --txt:#f0f7f2; --muted:#bcd0c7; --brand:#4fe0a2; --brand2:#a3e635; --accent:#f59e0b;
+    --sky:#38bdf8; --frost:#7dd3fc; --good:#22c55e; --warn:#fbbf24; --bad:#fb7185; --soil:#c08457;
+    --font:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{background:#0e1713;font-family:var(--font);color:var(--txt);display:flex;justify-content:center;min-height:100vh}
+  /* phone frame (para preview en desktop; en el teléfono llena la pantalla) */
+  #phone{width:390px;max-width:100vw;min-height:100vh;background:var(--bg);position:relative;display:flex;flex-direction:column;overflow:hidden}
+  @media(min-width:430px){ body{align-items:center;padding:16px 0}
+    #phone{min-height:auto;height:844px;border-radius:38px;box-shadow:0 24px 70px rgba(0,0,0,.55);border:1px solid #2a3d35} }
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+  /* faux status bar */
+  .statusbar{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:12.5px;font-weight:600;color:var(--txt);flex:none}
+  .statusbar .r{display:flex;gap:5px;align-items:center}
+  .statusbar svg{width:15px;height:15px}
+  /* generic */
+  .scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .pad{padding:14px 16px 90px}
+  .row{display:flex;align-items:center;gap:10px}
+  .sp{flex:1}
+  .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .muted{color:var(--muted)}
+  svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+  .chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.02em}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;border:none;border-radius:14px;
+    padding:15px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;background:var(--panel2);color:var(--txt)}
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e}
+  .btn:active{transform:scale(.98)}
+  .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(145deg,#3ddc84,#a3e635);display:grid;place-items:center;flex:none}
+  .logo svg{width:27px;height:27px}
+
+  /* ===== LOGIN ===== */
+  #login{flex:1;display:flex;flex-direction:column;justify-content:center;padding:24px 22px;gap:4px;background:
+    radial-gradient(120% 60% at 80% 0%, rgba(79,224,162,.14), transparent 60%), var(--bg)}
+  #login .brand{display:flex;align-items:center;gap:11px;margin-bottom:26px}
+  #login .brand b{font-size:22px;letter-spacing:-.01em}
+  #login h1{font-size:24px;line-height:1.2;letter-spacing:-.02em;margin-bottom:6px}
+  #login p.s{color:var(--muted);font-size:14px;margin-bottom:22px}
+  .field{margin-bottom:12px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:600}
+  .field input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:13px;color:var(--txt);
+    padding:14px 14px;font-size:15px;font-family:var(--font)}
+  .field input:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+  .demo{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+  .demo .lbl{font-size:11px;color:var(--muted);text-align:center;margin-bottom:10px;letter-spacing:.05em}
+  .rolebtn{display:flex;align-items:center;gap:11px;width:100%;background:var(--panel);border:1px solid var(--line);
+    border-radius:13px;padding:12px 13px;margin-bottom:8px;color:var(--txt);font-family:var(--font);cursor:pointer;text-align:left}
+  .rolebtn .ri{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;flex:none}
+  .rolebtn b{font-size:14px} .rolebtn small{color:var(--muted);font-size:11.5px}
+
+  /* ===== APP HEADER ===== */
+  .apphdr{padding:6px 16px 10px;display:flex;align-items:center;gap:10px;flex:none}
+  .apphdr .t{font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .fieldsel{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);
+    border-radius:11px;padding:8px 11px;font-size:12.5px;color:var(--muted);max-width:100%}
+  .fieldsel b{color:var(--txt)}
+  .iconbtn{width:40px;height:40px;border-radius:11px;background:var(--panel);border:1px solid var(--line);
+    color:var(--txt);display:grid;place-items:center;position:relative;flex:none;cursor:pointer}
+  .iconbtn .dotb{position:absolute;top:8px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--bad);border:2px solid var(--panel)}
+
+  /* ===== FROST HERO ===== */
+  .hero{border:1px solid color-mix(in srgb,var(--bad) 45%,var(--line));border-radius:18px;overflow:hidden;
+    background:linear-gradient(160deg, color-mix(in srgb,var(--bad) 15%,var(--panel)), var(--panel));margin-bottom:13px}
+  .hero .top{padding:14px 15px 6px;display:flex;align-items:center;gap:9px}
+  .hero .big{padding:0 15px 4px;display:flex;align-items:flex-end;gap:8px}
+  .hero .big .deg{font-size:56px;font-weight:750;line-height:.95;letter-spacing:-.03em;color:var(--frost)}
+  .hero .big .u{font-size:18px;color:var(--muted);padding-bottom:11px}
+  .hero .facts{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:8px}
+  .hero .facts div{background:var(--panel);padding:11px 14px}
+  .hero .facts .k{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .hero .facts .v{font-size:16px;font-weight:700;margin-top:2px}
+  .action{background:color-mix(in srgb,var(--frost) 13%,var(--panel));border-top:1px solid var(--line);padding:12px 15px;font-size:13px;line-height:1.5}
+  .action b{color:var(--frost)}
+  /* KPI grid */
+  .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:13px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px 13px}
+  .kpi .kt{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .kpi .kt svg{width:15px;height:15px}
+  .kpi .kv{font-size:22px;font-weight:750;margin-top:6px;letter-spacing:-.01em}
+  .kpi .kv small{font-size:12px;color:var(--muted);font-weight:500}
+  .kpi .ks{font-size:11px;color:var(--muted);margin-top:1px}
+  .h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700;margin:18px 2px 10px}
+
+  /* ===== ALARMAS ===== */
+  .alarm{display:flex;gap:12px;padding:14px;border-radius:15px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px;align-items:flex-start}
+  .alarm .ico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;flex:none}
+  .alarm .tt{font-weight:700;font-size:14.5px}
+  .alarm .ds{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.4}
+  .alarm .meta{color:var(--muted);font-size:11px;margin-top:6px;display:flex;gap:8px;align-items:center}
+  .alarm .ack{margin-top:10px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);border-radius:10px;
+    padding:8px 12px;font-size:12.5px;font-weight:600;font-family:var(--font);cursor:pointer}
+  .alarm.done{opacity:.55}
+
+  /* ===== CUARTELES ===== */
+  .map{height:170px;border-radius:15px;border:1px solid var(--line);margin-bottom:13px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,#2a4139,#213730)}
+  .map .grid{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:34px 34px;opacity:.35}
+  .pin{position:absolute;width:26px;height:26px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);border:2px solid #04121e;box-shadow:0 3px 8px rgba(0,0,0,.4)}
+  .maplbl{position:absolute;bottom:9px;left:11px;background:rgba(14,23,19,.72);border:1px solid var(--line);border-radius:8px;padding:5px 9px;font-size:11px;color:var(--muted)}
+  .qt{display:flex;align-items:center;gap:12px;padding:13px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:9px;cursor:pointer}
+  .qt .bar{width:5px;align-self:stretch;border-radius:3px;flex:none}
+  .qt .nm{font-weight:700;font-size:14.5px} .qt .sub{color:var(--muted);font-size:12px;margin-top:1px}
+  .qt .tmp{font-size:19px;font-weight:750;font-family:var(--mono)}
+
+  /* ===== TAREAS ===== */
+  .daystrip{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto}
+  .day{min-width:44px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 4px;font-size:11px;color:var(--muted);flex:none}
+  .day.on{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#04121e;border-color:transparent;font-weight:700}
+  .day b{display:block;font-size:16px;margin-top:2px}
+  .task{display:flex;gap:12px;align-items:flex-start;padding:13px;border-radius:14px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px}
+  .cb{width:24px;height:24px;border-radius:8px;border:2px solid var(--line);flex:none;display:grid;place-items:center;cursor:pointer;margin-top:1px}
+  .cb.on{background:var(--brand);border-color:var(--brand)}
+  .cb svg{width:15px;height:15px;stroke:#04121e;stroke-width:3;opacity:0}
+  .cb.on svg{opacity:1}
+  .task .tt{font-weight:650;font-size:14px}
+  .task.done .tt{text-decoration:line-through;color:var(--muted)}
+  .task .as{color:var(--muted);font-size:12px;margin-top:3px}
+
+  /* ===== BOTTOM NAV ===== */
+  .nav{position:absolute;left:0;right:0;bottom:0;height:76px;background:rgba(20,35,29,.94);backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);display:flex;padding:6px 6px 14px}
+  .nav button{flex:1;background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-family:var(--font);font-size:10.5px;font-weight:600;cursor:pointer;padding:6px 0;position:relative}
+  .nav button.on{color:var(--brand)}
+  .nav button svg{width:23px;height:23px}
+  .nav .nb{position:absolute;top:2px;right:calc(50% - 20px);min-width:16px;height:16px;background:var(--bad);color:#fff;border-radius:9px;font-size:10px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+
+  /* ===== PUSH ===== */
+  #push{position:absolute;top:8px;left:8px;right:8px;background:rgba(30,48,40,.97);backdrop-filter:blur(8px);
+    border:1px solid color-mix(in srgb,var(--frost) 40%,var(--line));border-radius:16px;padding:12px 13px;display:flex;gap:11px;
+    align-items:flex-start;z-index:50;box-shadow:0 12px 34px rgba(0,0,0,.5);transform:translateY(-140%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  #push.show{transform:translateY(0)}
+  #push .pi{width:34px;height:34px;border-radius:9px;background:color-mix(in srgb,var(--frost) 20%,transparent);display:grid;place-items:center;flex:none;color:var(--frost)}
+  #push .pt{font-size:12.5px;font-weight:700}
+  #push .pb{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.4}
+  #push .pn{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .fab{position:absolute;right:14px;bottom:90px;background:var(--panel);border:1px solid var(--line);color:var(--brand);
+    border-radius:999px;padding:9px 14px;font-size:12px;font-weight:700;font-family:var(--font);cursor:pointer;z-index:20;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+</style>
+</head>
+<body>
+<div id="phone">
+  <div class="statusbar">
+    <span class="mono" id="clock">03:20</span>
+    <span class="r">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 8.5C6 4.5 18 4.5 22 8.5M5 12c4-3.5 10-3.5 14 0M8.5 15.5c2-1.7 5-1.7 7 0"/><circle cx="12" cy="19" r="1" fill="currentColor"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="10" rx="2.5"/><rect x="4" y="9" width="12" height="6" rx="1" fill="currentColor"/><path d="M22 10v4" stroke-linecap="round"/></svg>
+    </span>
+  </div>
+
+  <!-- PUSH banner -->
+  <div id="push" onclick="dismissPush(true)">
+    <div class="pi"><svg class="i" viewBox="0 0 24 24"><path d="M12 2v20M4 7l16 10M20 7L4 17M12 2l-3 3M12 2l3 3M12 22l-3-3M12 22l3-3M4 7l.3-4M4 7l-3 1M20 17l3-1M20 17l-.3 4"/></svg></div>
+    <div class="sp"><div class="pn">Sembu · ahora</div><div class="pt">❄️ Helada en Fundo Curicó</div><div class="pb">Mínima −2,5 °C en ~2 h. Protege el cuartel C1 (Santina).</div></div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="login">
+    <div class="brand"><span class="logo">__LOGO__</span><b>Sembu</b></div>
+    <h1>Cuida tu campo<br>desde el bolsillo.</h1>
+    <p class="s">Alerta de helada, riego y alarmas de tus estaciones, en tiempo real.</p>
+    <div class="field"><label>Email</label><input type="email" value="operador@demo.cl" autocomplete="username"></div>
+    <div class="field"><label>Contraseña</label><input type="password" value="demo" autocomplete="current-password"></div>
+    <button class="btn primary" onclick="enter()" style="margin-top:6px">Entrar</button>
+    <div class="demo">
+      <div class="lbl">O ENTRA COMO (DEMO)</div>
+      <button class="rolebtn" onclick="enter('operador')"><span class="ri" style="border:1px solid #3ddc8466;color:#3ddc84">__IC_SPROUT__</span><span class="sp"><b>Operador</b><br><small>Pedro Soto · Fundo Curicó</small></span></button>
+      <button class="rolebtn" onclick="enter('admin')"><span class="ri" style="border:1px solid #38bdf866;color:#38bdf8">__IC_BLD__</span><span class="sp"><b>Administrador</b><br><small>Diego Fuentes · AgroDemo SpA</small></span></button>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="app" style="display:none;flex-direction:column;flex:1;min-height:0">
+    <div class="apphdr">
+      <div class="sp"><div class="t" id="scrTitle">Tiempo real</div></div>
+      <button class="iconbtn" onclick="tab('alarmas')" aria-label="Alarmas"><svg class="i" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/></svg><span class="dotb" id="hdrDot"></span></button>
+    </div>
+    <div class="scroll"><div class="pad" id="view"></div></div>
+    <button class="fab" onclick="firePush()">🔔 Simular alerta</button>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</div>
+
+<script>
+// ---------- logo + iconos (S-tallo Sembu) ----------
+const LOGO='<svg viewBox="0 0 48 48" fill="none"><path d="M32 17 C 29 13 19 13 17 18 C 15 23 22 24.5 25 26 C 29 27.5 33 30 31 35 C 28.5 39.5 20 39 16.5 35.5" stroke="#04121e" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M32 17 C 35 15 38 16 39 13 C 36 11 32.5 13 32 17 Z" fill="#04121e"/></svg>';
+const P={
+  home:'<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+  bell:'<path d="M6 9a6 6 0 0112 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 004 0"/>',
+  map:'<path d="M9 4L3 6.5v14L9 18l6 2.5 6-2.5v-14L15 6.5 9 4z"/><path d="M9 4v14M15 6.5v14"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/>',
+  frost:'<path d="M12 2v20M4 7l16 10M20 7L4 17M9 5l3-3 3 3M9 19l3 3 3-3M4 7l0-3M4 7l-3 0"/>',
+  drop:'<path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/>',
+  wind:'<path d="M3 8h11a3 3 0 100-6M3 12h16a3 3 0 110 6M3 16h8a2.5 2.5 0 110 5"/>',
+  bat:'<rect x="2" y="7" width="17" height="10" rx="2.5"/><path d="M22 10v4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:'<path d="M5 12l5 5L20 6"/>',
+  sprout:'<path d="M12 21v-8M12 13c0-4 3-6 7-6 0 4-3 6-7 6zM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/>',
+  bld:'<rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M10 21v-4h4v4"/>',
+  pin:'<path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>'
+};
+const ic=(n,c='')=>`<svg class="i ${c}" viewBox="0 0 24 24">${P[n]}</svg>`;
+document.querySelectorAll('#login .logo, .brand .logo').forEach(e=>e.innerHTML=LOGO);
+document.getElementById('login').innerHTML=document.getElementById('login').innerHTML
+  .replace('__LOGO__',LOGO).replace('__IC_SPROUT__',ic('sprout')).replace('__IC_BLD__',ic('bld'));
+
+// ---------- datos dummy (Curicó, madrugada de helada) ----------
+const CAMPO='Fundo demo · Curicó';
+let CUARTELES=[
+  {id:'C1',v:'Cerezo Santina',ha:'4,2 ha',t:'−1,4',st:'helada',c:'var(--bad)'},
+  {id:'C2',v:'Cerezo Lapins',ha:'3,8 ha',t:'−0,3',st:'riesgo',c:'var(--warn)'},
+  {id:'C3',v:'Cerezo Regina',ha:'5,1 ha',t:'1,2',st:'ok',c:'var(--good)'},
+  {id:'C4',v:'Cerezo Kordia',ha:'2,9 ha',t:'2,0',st:'ok',c:'var(--good)'},
+];
+let ALARMS=[
+  {id:1,ic:'frost',c:'var(--bad)',t:'Helada — riesgo de daño',d:'Cuartel C1 (Santina) bajo el umbral del cerezo. Mínima proyectada −2,5 °C.',m:'hace 8 min',ack:false},
+  {id:2,ic:'bat',c:'var(--warn)',t:'Batería baja',d:'Estación AME-07 al 18%. Revisar panel solar.',m:'hace 1 h',ack:false},
+  {id:3,ic:'drop',c:'var(--sky)',t:'Riego — humedad baja',d:'Suelo 15 cm del cuartel C3 bajo el punto de riego (22%).',m:'hace 3 h',ack:false},
+];
+let TASKS=[
+  {id:1,t:'Activar aspersión antihelada · C1',as:'Pedro Soto',done:false},
+  {id:2,t:'Revisar sonda de suelo · C3',as:'Ana Díaz',done:false},
+  {id:3,t:'Calibrar anemómetro · estación AME-03',as:'Pedro Soto',done:true},
+];
+const stbadge={helada:['Helada','var(--bad)'],riesgo:['Riesgo','var(--warn)'],ok:['OK','var(--good)']};
+
+// ---------- navegación ----------
+let CURTAB='inicio';
+const TABS=[['inicio','Inicio','home'],['alarmas','Alarmas','bell'],['cuarteles','Cuarteles','map'],['tareas','Tareas','cal']];
+const TITLES={inicio:'Tiempo real',alarmas:'Alarmas',cuarteles:'Cuarteles',tareas:'Tareas'};
+
+function enter(role){ document.getElementById('login').style.display='none'; document.getElementById('app').style.display='flex'; tab('inicio'); setTimeout(firePush,900); }
+function tab(name){ CURTAB=name; document.getElementById('scrTitle').textContent=TITLES[name]; renderNav(); render(); document.querySelector('.scroll').scrollTop=0; }
+
+function renderNav(){
+  const openA=ALARMS.filter(a=>!a.ack).length;
+  document.getElementById('nav').innerHTML=TABS.map(([id,lbl,icn])=>
+    `<button class="${id===CURTAB?'on':''}" onclick="tab('${id}')">${ic(icn)}${id==='alarmas'&&openA?`<span class="nb">${openA}</span>`:''}<span>${lbl}</span></button>`).join('');
+  document.getElementById('hdrDot').style.display=openA?'block':'none';
+}
+
+function render(){
+  const v=document.getElementById('view');
+  if(CURTAB==='inicio') v.innerHTML=viewInicio();
+  else if(CURTAB==='alarmas') v.innerHTML=viewAlarmas();
+  else if(CURTAB==='cuarteles') v.innerHTML=viewCuarteles();
+  else if(CURTAB==='tareas') v.innerHTML=viewTareas();
+}
+
+function viewInicio(){
+  return `
+  <div class="fieldsel row" style="margin-bottom:13px">${ic('pin')}<span>Campo · <b>${CAMPO}</b></span><span class="sp"></span>${ic('home','')}</div>
+  <div class="hero">
+    <div class="top"><span class="chip" style="background:color-mix(in srgb,var(--bad) 22%,transparent);color:var(--bad)">● HELADA — riesgo de daño</span></div>
+    <div class="big"><span class="deg">−1,4</span><span class="u">°C · aire</span></div>
+    <div class="facts">
+      <div><div class="k">Mínima estimada</div><div class="v" style="color:var(--bad)">−2,5 °C</div></div>
+      <div><div class="k">Hora de la mínima</div><div class="v">~05:20 <small class="muted" style="font-size:11px">(120 min)</small></div></div>
+      <div><div class="k">Umbral cerezo</div><div class="v">−1,1 °C</div></div>
+      <div><div class="k">Viento · rocío</div><div class="v">1,6 · −3,4</div></div>
+    </div>
+    <div class="action">${ic('frost','')}&nbsp;<b>Acción ahora:</b> activa <b>riego por aspersión</b> sobre copa antes de llegar a 0 °C. Ventana ~120 min.</div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="kt">${ic('drop')} Suelo 15 cm</div><div class="kv">22<small>%</small></div><div class="ks">bajo punto de riego</div></div>
+    <div class="kpi"><div class="kt">${ic('wind')} Viento</div><div class="kv">1,6<small> km/h</small></div><div class="ks">calmo · helada radiativa</div></div>
+    <div class="kpi"><div class="kt">${ic('clock')} Horas-frío</div><div class="kv">1.148</div><div class="ks">acumuladas temporada</div></div>
+    <div class="kpi"><div class="kt">${ic('bat')} Estación</div><div class="kv">82<small>%</small></div><div class="ks">solar · señal LTE-M</div></div>
+  </div>
+  <div class="h2">Cuarteles en riesgo</div>
+  ${CUARTELES.filter(c=>c.st!=='ok').map(qtRow).join('')}
+  <div style="text-align:center;margin-top:6px"><button class="btn" style="width:auto;display:inline-flex;padding:11px 18px;font-size:13px" onclick="tab('cuarteles')">Ver todos los cuarteles →</button></div>`;
+}
+
+function qtRow(c){const[l,col]=stbadge[c.st];return `
+  <div class="qt" onclick="tab('cuarteles')"><div class="bar" style="background:${c.c}"></div>
+    <div class="sp"><div class="nm">${c.id} · ${c.v}</div><div class="sub">${c.ha}</div></div>
+    <div style="text-align:right"><div class="tmp" style="color:${c.c}">${c.t}°</div><span class="chip" style="background:color-mix(in srgb,${col} 18%,transparent);color:${col};margin-top:3px">${l}</span></div></div>`;}
+
+function viewAlarmas(){
+  const open=ALARMS.filter(a=>!a.ack), done=ALARMS.filter(a=>a.ack);
+  return `<div class="h2" style="margin-top:4px">Activas (${open.length})</div>
+    ${open.map(alarmCard).join('')||'<div class="card muted" style="text-align:center">Sin alarmas activas ✓</div>'}
+    ${done.length?`<div class="h2">Reconocidas</div>${done.map(alarmCard).join('')}`:''}`;
+}
+function alarmCard(a){return `
+  <div class="alarm ${a.ack?'done':''}">
+    <div class="ico" style="background:color-mix(in srgb,${a.c} 18%,transparent);color:${a.c}">${ic(a.ic)}</div>
+    <div class="sp"><div class="tt">${a.t}</div><div class="ds">${a.d}</div><div class="meta">● ${a.m}${a.ack?' · reconocida':''}</div>
+      ${a.ack?'':`<button class="ack" onclick="ackAlarm(${a.id})">${ic('check','')} Reconocer</button>`}</div></div>`;}
+function ackAlarm(id){const a=ALARMS.find(x=>x.id===id);if(a)a.ack=true;renderNav();render();}
+
+function viewCuarteles(){
+  return `
+  <div class="map"><div class="grid"></div>
+    ${CUARTELES.map((c,i)=>`<div class="pin" style="background:${c.c};left:${18+i*70}px;top:${40+(i%2)*60}px"></div>`).join('')}
+    <div class="maplbl">${ic('pin','')} ${CAMPO} · 4 cuarteles</div></div>
+  ${CUARTELES.map(qtRow).join('')}`;
+}
+
+function viewTareas(){
+  const days=[['L',5],['M',6],['M',7],['J',8],['V',9],['S',10],['D',11]];
+  const open=TASKS.filter(t=>!t.done), done=TASKS.filter(t=>t.done);
+  return `
+  <div class="daystrip">${days.map((d,i)=>`<div class="day ${i===2?'on':''}">${d[0]}<b>${d[1]}</b></div>`).join('')}</div>
+  <div class="h2" style="margin-top:0">Hoy · ${open.length} pendientes</div>
+  ${TASKS.map(taskRow).join('')}
+  <button class="btn" style="margin-top:6px" onclick="alert('Sugerencia auto: «Activar aspersión C1» viene de la alerta de helada.')">+ Nueva tarea</button>`;
+}
+function taskRow(t){return `
+  <div class="task ${t.done?'done':''}"><div class="cb ${t.done?'on':''}" onclick="toggleTask(${t.id})">${ic('check','')}</div>
+    <div class="sp"><div class="tt">${t.t}</div><div class="as">Asignada a ${t.as}</div></div></div>`;}
+function toggleTask(id){const t=TASKS.find(x=>x.id===id);if(t)t.done=!t.done;render();}
+
+// ---------- push ----------
+let pushT=null;
+function firePush(){const p=document.getElementById('push');p.classList.add('show');clearTimeout(pushT);pushT=setTimeout(()=>p.classList.remove('show'),5200);}
+function dismissPush(go){document.getElementById('push').classList.remove('show');if(go)tab('inicio');}
+</script>
+</body>
+</html>
