@@ -57,10 +57,14 @@ ET₀, históricos, alarmas, mapa de cuarteles, recomendaciones y reportes.
 ## Estructura del repo
 - `web/` — sitio de marketing (index.html). Se publica en GitHub Pages.
 - `dashboard/` — plataforma SaaS (PWA: manifest + `sw.js`). Se publica en GitHub Pages.
-- `app/` — app Android (Capacitor) que empaqueta el dashboard; build en `android.yml`.
+- `app/` — app Android (Capacitor) que empaqueta el dashboard; build en `android.yml`. **Legacy**
+  (Capacitor v6 "Air Monitor", `appId com.makerfabs.airmonitor`); rebrand visible a Sembu hecho, pero
+  **a reemplazar** por el stack de Etapa B (ver `ANALISIS_MOVIL.md`/`FASE2_PLAN.md`).
+- `mockup/` — **mockup móvil** (`index.html`, ~200 KB, autocontenido, 390px, branding Sembu). Prototipo
+  navegable de la app para enseñar a Luis; **publicado en Pages** → https://eonspa.github.io/luismartinez-saas-agricultura/mockup/
 - `mobile/`, `hardware/`, `example/` — firmware/ejemplos del nodo.
 - `brochure/` — brochure comercial: `brochure.html` (fuente) → `Brochure-Marca.pdf` (8 págs A4).
-- `.github/workflows/` — `pages.yml` (deploy web+dashboard desde **main**), `android.yml` (APK).
+- `.github/workflows/` — `pages.yml` (deploy web+dashboard+**mockup** desde **main**), `android.yml` (APK).
 
 ## Hardware
 - Nodo **ESP32-S3** + módem **celular LTE-M / NB-IoT** (elegido con el socio Luis Martínez: mejor cobertura rural que el 4G LTE Cat-1), batería LiPo + panel
@@ -105,9 +109,10 @@ admin + operador**; login demo con 3 botones; tabla de Equipo Admin/Operador + n
 - **Multicampo / Empresa** — a medida, ilimitado, API + integración a certificación (GlobalGAP) + SLA.
 
 ## Flujo de trabajo (git) — IMPORTANTE
-- Rama de desarrollo: `claude/4g-lte-air-monitor-integration-2f7fey`.
-- Se **espeja también a `main`** (Pages despliega desde main). Patrón usado:
-  `git push -u origin <rama>` y luego `git push origin HEAD:main`.
+- Rama de desarrollo: **rota por sesión** (`claude/*`); la sesión 2026-07-07 usa `claude/sigamos-whe00g`
+  (la antigua fue `claude/4g-lte-air-monitor-integration-2f7fey`). **No** pushear a otra rama sin permiso.
+- Se **espeja también a `main`** (Pages despliega desde main). Patrón vigente: rama → **PR → merge a `main`**
+  vía GitHub MCP (el push directo a `main` está bloqueado en la sesión; los push a la rama sí funcionan).
 - Mensajes de commit **en español**, terminando con las líneas `Co-Authored-By:`
   y `Claude-Session:` indicadas por el harness.
 - **No** incluir el identificador del modelo en commits, PRs, código ni artefactos.
@@ -119,7 +124,42 @@ admin + operador**; login demo con 3 botones; tabla de Equipo Admin/Operador + n
   screenshots** (Playwright/Chromium en `/opt/pw-browsers/chromium`) antes de entregar.
 - PDFs del brochure se generan con Chromium `page.pdf({format:'A4', printBackground:true, preferCSSPageSize:true})`.
 
-## Contexto de sesión (actualizado 2026-07-02)
+## Contexto de sesión (actualizado 2026-07-07)
+- **Sesión 2026-07-07 (móvil Etapa A + mockup en Pages + accesibilidad + pacto/finanzas privados):**
+  - **Rama de desarrollo de esta sesión: `claude/sigamos-whe00g`** (las ramas `claude/*` rotan por sesión;
+    el patrón sigue: rama → **PR → merge a `main`** vía GitHub MCP; el push directo a `main` está bloqueado).
+  - **Misión móvil — Etapa A HECHA (gate respetado, Etapa B NO iniciada):** llevar el SaaS web a app.
+    Entregables en el repo:
+    - `ANALISIS_MOVIL.md` — auditoría verificada: SPA estática hecha a mano, **sin backend/API/auth real**
+      (auth = `localStorage["mk.session"]`, datos 100% DEMO). CORE móvil: login · tiempo real/helada ·
+      alarmas · estado por cuartel · push · tareas · **exportar/compartir** · **cambio de campo**.
+    - `PREGUNTAS_CLIENTE.md` — 8 preguntas de decisión para el cliente.
+    - `FASE2_PLAN.md` — plan autocontenido de la Etapa B (stack: Vite+React+Capacitor 8, Node 22, JDK 21,
+      sin `android-actions/setup-android`, keystore fijo). **API_BASE: NO DEFINIDA** (bloqueante).
+    - **Gate/trigger de Etapa B:** `Ejecuta FASE2_PLAN.md con este feedback: <lo que diga Luis>`.
+      **No arrancar la Etapa B sin feedback del cliente.**
+  - **`mockup/index.html`** (autocontenido, 390px, branding Sembu real): prototipo **100% navegable** —
+    login demo (Operador/Admin), home helada, alarmas (reconocer/compartir), **Cuarteles con mapa real
+    Leaflet** (capa **satélite Esri World Imagery** por defecto + selector Satélite/Mapa; degrada con
+    gracia sin conexión), **Tareas**, **Exportar y compartir** (5ª pestaña, hoja nativa simulada), menú
+    de perfil con **cambio de campo** (Sur/Norte/Río). **Publicado en Pages** para enviar a Luis:
+    **https://eonspa.github.io/luismartinez-saas-agricultura/mockup/** (sin CSP → los tiles satelitales
+    cargan; en el dashboard la CSP los bloquea). `pages.yml` ahora copia `mockup/` a `_site/mockup`.
+  - **Auditoría técnica externa** `AUDITORIA_2026-07-07.md` (solo lectura): 23-ítems, TOP 3 = (1) sin
+    backend, (2) `app/` legacy no coincide con el stack exigido, (3) mockup depende de tiles por red.
+    Honestidad 15/15 HECHO, 0 overclaims. **Reparado** lo seguro: mockup offline-fallback, CORE
+    reconciliado, rebrand visible del wrapper legacy a Sembu (`android.yml` Node 20→22, artefacto/release
+    Sembu; `appId` legacy sin tocar). Bug del **toast fantasma** corregido (estado oculto opacity/visibility).
+  - **PRs mergeados a `main`:** **#37** (accesibilidad web/dashboard/brochure, skill `web-design-guidelines`) ·
+    **#38** (fix planes obsoletos del área demo — Light/Standard/Full a $8.000/$14.000/$22.000 por equipo·mes —
+    + toda la Etapa A móvil + mockup en Pages + auditoría).
+  - **⚠️ REGLA: material financiero/comercial NO va al repo público — solo Artifacts privados.** Creados
+    esta sesión (NO commiteados, solo en el scratchpad/Artifact): **modelo financiero** (planes por tamaño
+    de campo Chico/Mediano/Grande), **liquidador de socios/vendedores** (fee plataforma + comisión venta +
+    reparto 50/50), **pacto comercial EON–Luis** (PDF con logo real de EON: EON factura al cliente, Luis
+    boletea/factura a EON a fin de mes, sin equity, comisión trailing mientras dure el contrato del cliente,
+    exclusividad a Sembu) y **hoja de costos de HW** (landed cost import: estación A / nodo B). No poner sus
+    cifras aquí ni en la web.
 - **Sesión 2026-07-02 (rebrand + logo + auditoría, PRs #22–#26 ya en `main`):**
   - **Sembu** aplicado en todo el material + **logo «S» tallo** rediseñado (ver "Marca").
   - **Auditoría de consistencia** post-rebrand (4 agentes de solo lectura, una por superficie):
